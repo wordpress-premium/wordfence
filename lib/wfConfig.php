@@ -189,8 +189,9 @@ class wfConfig {
 		//Set as default only, not included automatically in the settings import/export or options page saving
 		'defaultsOnly' => array(
 			"apiKey" => array('value' => "", 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
-			'keyType' => array('value' => wfAPI::KEY_TYPE_FREE, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
+			'keyType' => array('value' => wfAPI::KEY_TYPE_PAID_CURRENT, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'isPaid' => array('value' => true, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
+            'keyExpDays' => array('value' => 365, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),					
 			'hasKeyConflict' => array('value' => false, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
 			'betaThreatDefenseFeed' => array('value' => false, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
 			'timeoffset_wf_updated' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
@@ -277,14 +278,6 @@ class wfConfig {
 		} else {
 			wfActivityReport::disableCronJob();
 		}
-		wfConfig::set('keyExpDays', 9999);
-	    wfConfig::set('isPaid', 1);
-	    wfConfig::set('keyType', wfAPI::KEY_TYPE_PAID_CURRENT);
-	    wfConfig::set('premiumPaymentExpiring',false);
-	    wfConfig::set('hasKeyConflict',false);
-	    wfConfig::set('showWfCentralUI', false);
-	    wfConfig::set('apiKey', '65b569e9a3a6c8e62d68599c61794d9399a3b107ad1854100fb86c31541d0860e7a1ebb1a0464f59db132328fdcf0ff42c1cae29eed4d3c21389bfec758a9552');
-	    wfConfig::set('premiumNextRenew','99999');
 	}
 	public static function loadAllOptions() {
 		global $wpdb;

@@ -433,13 +433,6 @@ if (!wfConfig::liveTrafficEnabled($overridden)):
 															<div data-bind="visible: (jQuery.inArray(parseInt(statusCode(), 10), [403, 503, 404]) !== -1 || action() == 'loginFailValidUsername' || action() == 'loginFailInvalidUsername')">
 																<strong>Human/Bot:</strong> <span data-bind="text: (jsRun() === '1' ? 'Human' : 'Bot')"></span>
 															</div>
-															<div data-bind="if: browser() && browser().browser != 'Default Browser'">
-																<strong>Browser:</strong>
-																<span data-bind="text: browser().browser +
-																(browser().version ? ' version ' + browser().version : '') +
-																(browser().platform  && browser().platform != 'unknown' ? ' running on ' + browser().platform : '')
-																"></span>
-															</div>
 															<div class="wf-split-word" data-bind="text: UA"></div> 
 															<div class="wf-live-traffic-actions">
 																<span data-bind="if: blocked()">

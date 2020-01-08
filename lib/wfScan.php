@@ -49,9 +49,16 @@ class wfScan {
 			self::status(4, 'info', "Cron test received and message printed");
 			exit();
 		}
-		/* ----------Starting cronkey check -------- */
+		
 		self::status(4, 'info', "Scan engine received request.");
 		
+		/* ----------Starting signature check -------- */
+		self::status(4, 'info', "Verifying start request signature.");
+		if (!isset($_GET['signature']) || !wfScanEngine::verifyStartSignature($_GET['signature'], isset($_GET['isFork']) ? wfUtils::truthyToBoolean($_GET['isFork']) : false, isset($_GET['scanMode']) ? $_GET['scanMode'] : '', isset($_GET['cronKey']) ? $_GET['cronKey'] : '', isset($_GET['remote']) ? wfUtils::truthyToBoolean($_GET['remote']) : false)) {
+			self::errorExit(__('The signature on the request to start a scan is invalid. Please try again.', 'wordfence'));
+		}
+		
+		/* ----------Starting cronkey check -------- */
 		self::status(4, 'info', "Fetching stored cronkey for comparison.");
 		$expired = false;
 		$storedCronKey = self::storedCronKey($expired);

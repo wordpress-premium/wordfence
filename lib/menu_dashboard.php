@@ -79,10 +79,109 @@ else if (wfConfig::get('touppPromptNeeded')) {
 										?>
 									</li>
 									<li>
+										<?php if (wfConfig::get('hasKeyConflict')): ?>
+											<?php
+											echo wfView::create('common/status-critical', array(
+												'id' => 'wf-premium-alert',
+												'title' => __('Premium License Conflict', 'wordfence'),
+												'subtitle' => __('License already in use', 'wordfence'),
+												'link' => 'https://www.wordfence.com/gnl1manageConflict/manage-wordfence-api-keys/',
+												'linkLabel' => __('Reset License', 'wordfence'),
+												'linkNewWindow' => true,
+											))->render();
+											?>
+										<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_PAID_EXPIRED): ?>
+											<?php
+											echo wfView::create('common/status-critical', array(
+												'id' => 'wf-premium-alert',
+												'title' => __('Premium Protection Disabled', 'wordfence'),
+												'subtitle' => __('License is expired', 'wordfence'),
+												'link' => 'https://www.wordfence.com/gnl1renewExpired/manage-wordfence-api-keys/',
+												'linkLabel' => __('Renew License', 'wordfence'),
+												'linkNewWindow' => true,
+											))->render();
+											?>
+										<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_FREE || wfConfig::get('keyType') === false): ?>
+											<div>
+												<p><h3><?php _e('Premium Protection Disabled', 'wordfence'); ?></h3></p>
+												<p><?php printf(__('As a free Wordfence user, you are currently using the Community version of the Threat Defense Feed. Premium users are protected by an additional %d firewall rules and malware signatures. Upgrade to Premium today to improve your protection.', 'wordfence'), ($d->tdfPremium - $d->tdfCommunity)); ?></p>
+												<p><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1dashboardUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1dashboardLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence'); ?></a></p>
+											</div>
+										<?php elseif (wfConfig::get('keyExpDays') < 30 && (wfConfig::get('premiumAutoRenew', null) === '0' || wfConfig::get('premiumAutoRenew', null) === 0)): ?>
+											<?php
+											echo wfView::create('common/status-critical', array(
+												'id' => 'wf-premium-alert',
+												'title' => __('Premium License Expiring', 'wordfence'),
+												'subtitle' => __('Auto-renew is disabled', 'wordfence'),
+												'link' => 'https://www.wordfence.com/gnl1renewExpiring/manage-wordfence-api-keys/',
+												'linkLabel' => __('Renew License', 'wordfence'),
+												'linkNewWindow' => true,
+											))->render();
+											?>
+										<?php elseif (wfConfig::get('keyExpDays') < 30): ?>
+											<?php
+											if (wfConfig::get('premiumPaymentExpiring')) {
+												$title = __('Payment Method Expiring', 'wordfence');
+											}
+											else if (wfConfig::get('premiumPaymentExpired')) {
+												$title = __('Payment Method Expired', 'wordfence');
+											}
+											else if (wfConfig::get('premiumPaymentMissing')) {
+												$title = __('Payment Method Missing', 'wordfence');
+											}
+											else if (wfConfig::get('premiumPaymentHold')) {
+												$title = __('Payment Method Invalid', 'wordfence');
+											}
+											
+											if (isset($title)) {
+												$days = floor(((int) wfConfig::get('premiumNextRenew') - time()) / 86400);
+												if ($days <= 0) {
+													$days = __('today', 'wordfence');
+												}
+												else if ($days == 1) {
+													$days = __('tomorrow', 'wordfence');
+												}
+												else {
+													$days = sprintf(__('in %d days', 'wordfence'), $days);
+												}
+												
+												echo wfView::create('dashboard/status-payment-expiring', array(
+													'id' => 'wf-premium-alert',
+													'title' => $title,
+													'subtitle' => sprintf(__('License renews %s', 'wordfence'), $days),
+													'link' => 'https://www.wordfence.com/gnl1renewExpiring/manage-wordfence-api-keys/',
+													'linkLabel' => __('Update Payment Method', 'wordfence'),
+													'linkNewWindow' => true,
+												))->render();
+											}
+											else {
+												$days = floor(((int) wfConfig::get('premiumNextRenew') - time()) / 86400);
+												if ($days == 0) {
+													$days = __('today', 'wordfence');
+												}
+												else if ($days == 1) {
+													$days = __('in 1 day', 'wordfence');
+												}
+												else {
+													$days = sprintf(__('in %d days', 'wordfence'), $days);
+												}
+												
+												echo wfView::create('dashboard/status-renewing', array(
+													'id' => 'wf-premium-alert',
+													'title' => __('Premium License Expiring', 'wordfence'), 
+													'subtitle' => sprintf(__('License renews %s', 'wordfence'), $days),
+													'link' => 'https://www.wordfence.com/gnl1reviewExpiring/manage-wordfence-api-keys/',
+													'linkLabel' => __('Review Payment Method', 'wordfence'),
+													'linkNewWindow' => true,
+												))->render();
+											}
+											?>
+										<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_PAID_CURRENT): ?>
 											<div class="wf-block-labeled-value wf-protection-status wf-protection-status-<?php echo esc_attr($firewall->ruleMode()); ?>">
 												<div class="wf-block-labeled-value-value"><i class="wf-fa wf-fa-check" aria-hidden="true"></i></div>
 												<div class="wf-block-labeled-value-label"><?php _e('Wordfence Premium Enabled', 'wordfence'); ?></div>
-											</div>
+											</div> 
+										<?php endif; ?>
 									</li>
 								</ul>
 							</li>

@@ -360,6 +360,8 @@ class wordfenceHash {
 			$indexedFiles = array();
 		}
 		
+		$payload = array_filter($payload); //Strip empty strings -- these are symlinks to files outside of the site root (ABSPATH)
+		
 		if (count($payload) > 0) {
 			global $wpdb;
 			$table_wfKnownFileList = wfDB::networkTable('wfKnownFileList');

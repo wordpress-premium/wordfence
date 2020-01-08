@@ -1940,8 +1940,7 @@ class wfScanEngine {
 		wfConfig::set('currentCronKey', time() . ',' . $cronKey);
 		if ((!wfConfig::get('startScansRemotely', false)) && (!is_wp_error($testResult)) && (is_array($testResult) || $testResult instanceof ArrayAccess) && strstr($testResult['body'], 'WFSCANTESTOK') !== false) {
 			//ajax requests can be sent by the server to itself
-			$cronURL = 'admin-ajax.php?action=wordfence_doScan&isFork=' . ($isFork ? '1' : '0') . '&scanMode=' . $scanMode . '&cronKey=' . $cronKey;
-			$cronURL = admin_url($cronURL);
+			$cronURL = self::_localStartURL($isFork, $scanMode, $cronKey);
 			$headers = array('Referer' => false/*, 'Cookie' => 'XDEBUG_SESSION=1'*/);
 			wordfence::status(4, 'info', "Starting cron with normal ajax at URL $cronURL");
 			
@@ -1972,9 +1971,7 @@ class wfScanEngine {
 			wordfence::status(4, 'info', "Scan process ended after forking.");
 		}
 		else {
-			$cronURL = admin_url('admin-ajax.php');
-			$cronURL = preg_replace('/^(https?:\/\/)/i', '$1noc1.wordfence.com/scanp/', $cronURL);
-			$cronURL .= '?action=wordfence_doScan&isFork=' . ($isFork ? '1' : '0') . '&scanMode=' . $scanMode . '&cronKey=' . $cronKey;
+			$cronURL = self::_remoteStartURL($isFork, $scanMode, $cronKey);
 			$headers = array();
 			wordfence::status(4, 'info', "Starting cron via proxy at URL $cronURL");
 			
@@ -2006,6 +2003,41 @@ class wfScanEngine {
 		}
 		return false; //No error
 	}
+	
+	public static function verifyStartSignature($signature, $isFork, $scanMode, $cronKey, $remote) {
+		$url = self::_baseStartURL($isFork, $scanMode, $cronKey);
+		if ($remote) {
+			$url = self::_remoteStartURL($isFork, $scanMode, $cronKey);
+			$url = remove_query_arg('signature', $url);
+		}
+		$test = self::_signStartURL($url);
+		return hash_equals($signature, $test);
+	}
+	
+	protected static function _baseStartURL($isFork, $scanMode, $cronKey) {
+		$url = admin_url('admin-ajax.php');
+		$url .= '?action=wordfence_doScan&isFork=' . ($isFork ? '1' : '0') . '&scanMode=' . urlencode($scanMode) . '&cronKey=' . urlencode($cronKey);
+		return $url;
+	}
+	
+	protected static function _localStartURL($isFork, $scanMode, $cronKey) {
+		$url = self::_baseStartURL($isFork, $scanMode, $cronKey);
+		return add_query_arg('signature', self::_signStartURL($url), $url);
+	}
+	
+	protected static function _remoteStartURL($isFork, $scanMode, $cronKey) {
+		$url = self::_baseStartURL($isFork, $scanMode, $cronKey);
+		$url = preg_replace('/^https?:\/\//i', (wfAPI::SSLEnabled() ? WORDFENCE_API_URL_SEC : WORDFENCE_API_URL_NONSEC) . 'scanp/', $url);
+		$url = add_query_arg('k', wfConfig::get('apiKey'), $url);
+		$url = add_query_arg('ssl', wfUtils::isFullSSL() ? '1' : '0', $url);
+		return add_query_arg('signature', self::_signStartURL($url), $url);
+	}
+	
+	protected static function _signStartURL($url) {
+		$payload = preg_replace('~^https?://[^/]+~i', '', $url);
+		return wfCrypt::local_sign($payload);
+	}
+	
 	public function processResponse($result){
 		return false;
 	}

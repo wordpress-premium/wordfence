@@ -73,4 +73,14 @@ ENDKEY;
 		}
 		return array();
 	}
+	
+	/**
+	 * Returns a SHA256 HMAC for $payload using the local long key.
+	 * 
+	 * @param $payload
+	 * @return false|string
+	 */
+	public static function local_sign($payload) {
+		return hash_hmac('sha256', $payload, wfConfig::get('longEncKey'));
+	}
 }

@@ -163,6 +163,11 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 
 <h2><?php _e('Updates Needed', 'wordfence'); ?></h2>
 
+<?php
+if (!is_array($updates_needed)) {
+	$updates_needed = array('core' => array(), 'plugins' => array(), 'themes' => array());
+}
+?>
 <?php if ($updates_needed['core']): ?>
 	<h4><?php _e('Core', 'wordfence'); ?></h4>
 	<ul>

@@ -355,7 +355,12 @@ h6 a:visited { color: purple !important; }
 				<?php wfHelperString::cycle(); ?>
 
 				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Updates Needed', 'wordfence'); ?></h2>
-
+				
+				<?php
+				if (!is_array($updates_needed)) {
+					$updates_needed = array('core' => array(), 'plugins' => array(), 'themes' => array());
+				}
+				?>
 				<?php if ($updates_needed['core']): ?>
 					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Core', 'wordfence'); ?></h4>
 					<ul style="font-size: 100%; vertical-align: baseline; list-style-type: none; margin: 0; padding: 0; border: 0;">

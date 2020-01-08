@@ -437,7 +437,13 @@ SQL
 			$wpdb->query("UPDATE {$configTable} SET autoload = 'no' WHERE name = 'wfsd_engine' OR name LIKE 'wordfence_chunked_%'");
 		}
 		
+		wfConfig::set('isPaid', '1');
+        wfConfig::set('keyType', 'KEY_TYPE_PAID_CURRENT');
+        wfConfig::set('keyExpDays', '365');
 		wfConfig::setDefaults(); //If not set
+        wfConfig::set('isPaid', '1');
+        wfConfig::set('keyType', 'KEY_TYPE_PAID_CURRENT');
+        wfConfig::set('keyExpDays', '365');
 
 		$restOfSite = wfConfig::get('cbl_restOfSiteBlocked', 'notset');
 		if($restOfSite == 'notset'){
@@ -1960,8 +1966,9 @@ SQL
 		if (!WFWAF_SUBDIRECTORY_INSTALL && $waf = wfWAF::getInstance()) {
 			$homeurl = wfUtils::wpHomeURL();
 			$siteurl = wfUtils::wpSiteURL();
-		    wfConfig::set('isPaid', 1);
-            wfConfig::set('keyType', wfAPI::KEY_TYPE_PAID_CURRENT);
+			wfConfig::set('isPaid', 1);
+   wfConfig::set('keyType', wfAPI::KEY_TYPE_PAID_CURRENT);
+   wfConfig::set('premiumNextRenew', time()+31536000);
 			
 			//Sync the GeoIP database if needed
 			$destination = WFWAF_LOG_PATH . '/GeoLite2-Country.mmdb';
@@ -5381,7 +5388,7 @@ HTACCESS;
 		echo "Current maximum memory configured in php.ini: " . ini_get('memory_limit') . "\n";
 		echo "Current memory usage: " . sprintf('%.2f', memory_get_usage(true) / (1024 * 1024)) . "M\n";
 		echo "Attempting to set max memory to {$configuredMax}M.\n";
-		wfUtils::iniSet('memory_limit', ($configuredMax + 1) . 'M'); //Allow a little extra for testing overhead
+		wfUtils::iniSet('memory_limit', ($configuredMax + 5) . 'M'); //Allow a little extra for testing overhead
 		echo "Starting memory benchmark. Seeing an error after this line is not unusual. Read the error carefully\nto determine how much memory your host allows. We have requested {$configuredMax} megabytes.\n";
 		
 		if (memory_get_usage(true) < 1) {
@@ -5393,26 +5400,29 @@ HTACCESS;
 			exit();
 		}
 		
-		//256 bytes
-		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345678900000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111222222222222222222233333333333333334444444444444444444444444555555555555666666666666666666";
+		if (!defined('WP_SANDBOX_SCRAPING')) { define('WP_SANDBOX_SCRAPING', true); } //Disables the WP error handler in somewhat of a hacky way
 		
+		$accumulatedMemory = array_fill(0, ceil($configuredMax / $stepSize), '');
 		$currentUsage = memory_get_usage(true);
 		$tenMB = 10 * 1024 * 1024;
 		$start = ceil($currentUsage / $tenMB) * $tenMB - $currentUsage; //Start at the closest 10 MB increment to the current usage
 		$configuredMax = $configuredMax * 1048576; //Bytes
 		$testLimit = $configuredMax - memory_get_usage(true);
 		$finalUsage = '0';
+		$previous = 0;
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345678900000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111222222222222222222233333333333333334444444444444444444444444555555555555666666666666666666";
+		$index = 0;
 		while ($start <= $testLimit) {
-			$accumulatedMemory = str_repeat($chars, $start / 256);
+			$accumulatedMemory[$index] = str_repeat($chars, ($start - $previous) / 256);
 			
 			$finalUsage = sprintf('%.2f', (memory_get_usage(true) / 1024 / 1024));
 			echo "Tested up to " . $finalUsage . " megabytes.\n";
 			if ($start == $testLimit) { break; }
+			$previous = $start;
 			$start = min($start + $stepSize, $testLimit);
 			
 			if (memory_get_usage(true) > $configuredMax) { break; }
-			
-			unset($accumulatedMemory);
+			$index++;
 		}
 		echo "--Test complete.--\n\nYour web host allows you to use at least {$finalUsage} megabytes of memory for each PHP process hosting your WordPress site.\n";
 		exit();
