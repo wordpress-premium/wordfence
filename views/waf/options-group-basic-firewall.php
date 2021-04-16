@@ -23,7 +23,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Basic Firewall Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Basic Firewall Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -33,19 +33,19 @@ if (!isset($collapseable)) {
 					<li id="wf-option-wafStatus" class="wf-flex-vertical wf-flex-align-left wf-flex-full-width">
 						<h3><?php esc_html_e('Web Application Firewall Status', 'wordfence'); ?></h3>
 						<?php if ($firewall->isSubDirectoryInstallation()): ?>
-							<p class="wf-no-top"><?php printf(__('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))); ?></p>
+							<p class="wf-no-top"><?php echo wp_kses(sprintf(/* translators: WordPress admin URL. */ __('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))), array('a'=>array('href'=>array()))); ?></p>
 						<?php else: ?>
 							<p class="wf-no-top">
 								<?php $wafStatus = $firewall->firewallMode(); ?>
-								<span id="wafStatus-enabled-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_ENABLED) { echo ' style="display: none;"'; } ?>><strong><?php _e('Enabled and Protecting:', 'wordfence'); ?></strong> <?php _e('In this mode, the Wordfence Web Application Firewall is actively blocking requests matching known attack patterns and is actively protecting your site from attackers.', 'wordfence'); ?></span>
-								<span id="wafStatus-learning-mode-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_LEARNING) { echo ' style="display: none;"'; } ?>><strong><?php _e('Learning Mode:', 'wordfence'); ?></strong> <?php printf(__('When you first install the Wordfence Web Application Firewall, it will be in learning mode. This allows Wordfence to learn about your site so that we can understand how to protect it and how to allow normal visitors through the firewall. We recommend you let Wordfence learn for a week before you enable the firewall. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'wordfence'), wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_LEARNING_MODE)); ?></span>
-								<span id="wafStatus-disabled-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_DISABLED) { echo ' style="display: none;"'; } ?>><strong><?php _e('Disabled:', 'wordfence'); ?></strong> <?php _e('In this mode, the Wordfence Web Application Firewall is functionally turned off and does not run any of its rules or analyze the request in any way.', 'wordfence'); ?></span>
+								<span id="wafStatus-enabled-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_ENABLED) { echo ' style="display: none;"'; } ?>><strong><?php esc_html_e('Enabled and Protecting:', 'wordfence'); ?></strong> <?php esc_html_e('In this mode, the Wordfence Web Application Firewall is actively blocking requests matching known attack patterns and is actively protecting your site from attackers.', 'wordfence'); ?></span>
+								<span id="wafStatus-learning-mode-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_LEARNING) { echo ' style="display: none;"'; } ?>><strong><?php esc_html_e('Learning Mode:', 'wordfence'); ?></strong> <?php echo wp_kses(sprintf(/* translators: Support URL. */ __('When you first install the Wordfence Web Application Firewall, it will be in learning mode. This allows Wordfence to learn about your site so that we can understand how to protect it and how to allow normal visitors through the firewall. We recommend you let Wordfence learn for a week before you enable the firewall. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'wordfence'), wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_LEARNING_MODE)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></span>
+								<span id="wafStatus-disabled-description" class="wafStatus-description"<?php if ($wafStatus != wfFirewall::FIREWALL_MODE_DISABLED) { echo ' style="display: none;"'; } ?>><strong><?php esc_html_e('Disabled:', 'wordfence'); ?></strong> <?php esc_html_e('In this mode, the Wordfence Web Application Firewall is functionally turned off and does not run any of its rules or analyze the request in any way.', 'wordfence'); ?></span>
 							</p>
 							<p class="wf-no-top wf-add-bottom">
 								<select id="input-wafStatus" data-original-value="<?php echo esc_attr($wafStatus); ?>" name="wafStatus" class="wf-form-control"<?php echo !WFWAF_ENABLED ? ' disabled' : '' ?>>
-									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_ENABLED ? ' selected' : '' ?> class="wafStatus-enabled" value="enabled"><?php _e('Enabled and Protecting', 'wordfence'); ?></option>
-									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_LEARNING ? ' selected' : '' ?> class="wafStatus-learning-mode" value="learning-mode"><?php _e('Learning Mode', 'wordfence'); ?></option>
-									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_DISABLED ? ' selected' : '' ?> class="wafStatus-disabled" value="disabled"><?php _e('Disabled', 'wordfence'); ?></option>
+									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_ENABLED ? ' selected' : '' ?> class="wafStatus-enabled" value="enabled"><?php esc_html_e('Enabled and Protecting', 'wordfence'); ?></option>
+									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_LEARNING ? ' selected' : '' ?> class="wafStatus-learning-mode" value="learning-mode"><?php esc_html_e('Learning Mode', 'wordfence'); ?></option>
+									<option<?php echo $wafStatus == wfFirewall::FIREWALL_MODE_DISABLED ? ' selected' : '' ?> class="wafStatus-disabled" value="disabled"><?php esc_html_e('Disabled', 'wordfence'); ?></option>
 								</select>
 								<script type="application/javascript">
 									(function($) {
@@ -158,21 +158,21 @@ if (!isset($collapseable)) {
 									})(jQuery);
 								</script>
 							</p>
-							<div id="waf-learning-mode-grace-period" class="wf-add-bottom" style="display: none;"><div class="waf-learning-mode wf-option-checkbox<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? ' wf-checked' : ''; } catch (Exception $e) { /* Do nothing */ } ?>" data-original-value="<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? 1 : 0; } catch (Exception $e) { echo 0; } ?>"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span> <?php _e('Automatically enable on', 'wordfence'); ?> </span><input type="text" name="learningModeGracePeriod" id="input-learningModeGracePeriod" class="wf-datetime wf-form-control" placeholder="Enabled until..." data-value="<?php try { echo esc_attr($config->getConfig('learningModeGracePeriod') ? (int) $config->getConfig('learningModeGracePeriod') : ''); } catch (Exception $e) { /* Do nothing */ } ?>" data-original-value="<?php try { echo esc_attr($config->getConfig('learningModeGracePeriod') ? (int) $config->getConfig('learningModeGracePeriod') : ''); } catch (Exception $e) { /* Do nothing */ } ?>"<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? '' : ' disabled'; } catch (Exception $e) { echo ' disabled'; } ?>></div>
+							<div id="waf-learning-mode-grace-period" class="wf-add-bottom" style="display: none;"><div class="waf-learning-mode wf-option-checkbox<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? ' wf-checked' : ''; } catch (Exception $e) { /* Do nothing */ } ?>" data-original-value="<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? 1 : 0; } catch (Exception $e) { echo 0; } ?>"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span> <?php esc_html_e('Automatically enable on', 'wordfence'); ?> </span><input type="text" name="learningModeGracePeriod" id="input-learningModeGracePeriod" class="wf-datetime wf-form-control" placeholder="Enabled until..." data-value="<?php try { echo esc_attr($config->getConfig('learningModeGracePeriod') ? (int) $config->getConfig('learningModeGracePeriod') : ''); } catch (Exception $e) { /* Do nothing */ } ?>" data-original-value="<?php try { echo esc_attr($config->getConfig('learningModeGracePeriod') ? (int) $config->getConfig('learningModeGracePeriod') : ''); } catch (Exception $e) { /* Do nothing */ } ?>"<?php try { echo $config->getConfig('learningModeGracePeriodEnabled') ? '' : ' disabled'; } catch (Exception $e) { echo ' disabled'; } ?>></div>
 						<?php endif; ?>
 					</li>
 					<li id="wf-option-protectionMode" class="wf-flex-vertical wf-flex-align-left">
 						<h3><?php esc_html_e('Protection Level', 'wordfence'); ?></h3>
 						<?php if ($firewall->protectionMode() == wfFirewall::PROTECTION_MODE_EXTENDED && !$firewall->isSubDirectoryInstallation()): ?>
-							<p class="wf-no-top"><strong><?php _e('Extended Protection:', 'wordfence'); ?></strong> <?php _e('All PHP requests will be processed by the firewall prior to running.', 'wordfence'); ?></p>
-							<p><?php printf(__('If you\'re moving to a new host or a new installation location, you may need to temporarily disable extended protection to avoid any file not found errors. Use this action to remove the configuration changes that enable extended protection mode or you can <a href="%s" target="_blank" rel="noopener noreferrer">remove them manually</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)); ?></p>
-							<p class="wf-no-top"><a class="wf-btn wf-btn-default" href="#" id="wf-waf-uninstall"><?php _e('Remove Extended Protection', 'wordfence'); ?></a></p>
+							<p class="wf-no-top"><strong><?php esc_html_e('Extended Protection:', 'wordfence'); ?></strong> <?php esc_html_e('All PHP requests will be processed by the firewall prior to running.', 'wordfence'); ?></p>
+							<p><?php echo wp_kses(sprintf(/* translators: Support URL. */ __('If you\'re moving to a new host or a new installation location, you may need to temporarily disable extended protection to avoid any file not found errors. Use this action to remove the configuration changes that enable extended protection mode or you can <a href="%s" target="_blank" rel="noopener noreferrer">remove them manually</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
+							<p class="wf-no-top"><a class="wf-btn wf-btn-default" href="#" id="wf-waf-uninstall"><?php esc_html_e('Remove Extended Protection', 'wordfence'); ?></a></p>
 						<?php elseif ($firewall->isSubDirectoryInstallation()): ?>
-							<p class="wf-no-top"><strong><?php _e('Existing WAF Installation Detected:', 'wordfence'); ?></strong> <?php _e('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please configure the firewall to run correctly on this site.', 'wordfence'); ?></p>
-							<p><a class="wf-btn wf-btn-primary" href="#" id="wf-waf-install"><?php _e('Optimize the Wordfence Firewall', 'wordfence'); ?></a></p>
+							<p class="wf-no-top"><strong><?php esc_html_e('Existing WAF Installation Detected:', 'wordfence'); ?></strong> <?php esc_html_e('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please configure the firewall to run correctly on this site.', 'wordfence'); ?></p>
+							<p><a class="wf-btn wf-btn-primary" href="#" id="wf-waf-install"><?php esc_html_e('Optimize the Wordfence Firewall', 'wordfence'); ?></a></p>
 						<?php else: ?>
-							<p class="wf-no-top"><strong><?php _e('Basic WordPress Protection:', 'wordfence'); ?></strong> <?php _e('The plugin will load as a regular plugin after WordPress has been loaded, and while it can block many malicious requests, some vulnerable plugins or WordPress itself may run vulnerable code before all plugins are loaded.', 'wordfence'); ?></p>
-							<p><a class="wf-btn wf-btn-primary" href="#" id="wf-waf-install"><?php _e('Optimize the Wordfence Firewall', 'wordfence'); ?></a></p>
+							<p class="wf-no-top"><strong><?php esc_html_e('Basic WordPress Protection:', 'wordfence'); ?></strong> <?php esc_html_e('The plugin will load as a regular plugin after WordPress has been loaded, and while it can block many malicious requests, some vulnerable plugins or WordPress itself may run vulnerable code before all plugins are loaded.', 'wordfence'); ?></p>
+							<p><a class="wf-btn wf-btn-primary" href="#" id="wf-waf-install"><?php esc_html_e('Optimize the Wordfence Firewall', 'wordfence'); ?></a></p>
 						<?php endif; ?>
 						<script type="application/javascript">
 
@@ -289,7 +289,7 @@ if (!isset($collapseable)) {
 											$.wfcolorbox.resize();
 										}
 										else {
-											WFAD.colorboxModal((WFAD.isSmallScreen ? '300px' : '400px'), 'Error During Setup', res.errorMsg);
+											WFAD.colorboxModal((WFAD.isSmallScreen ? '300px' : '400px'), <?php echo json_encode(__('Error During Setup', 'wordfence')) ?> , res.errorMsg);
 										}
 									};
 
@@ -461,14 +461,14 @@ if (!isset($collapseable)) {
 						</script>
 					</li>
 					<li id="wf-option-disableWAFBlacklistBlocking" class="wf-flex-vertical wf-flex-align-left">
-						<h3><?php esc_html_e('Real-Time IP Blacklist', 'wordfence'); ?></h3>
+						<h3><?php esc_html_e('Real-Time IP Blocklist', 'wordfence'); ?></h3>
 						<?php if ($firewall->ruleMode() == wfFirewall::RULE_MODE_COMMUNITY): ?>
-							<p class="wf-no-top"><strong><?php _e('Premium Feature:', 'wordfence'); ?></strong> <?php _e('This feature blocks all traffic from IPs with a high volume of recent malicious activity using Wordfence\'s real-time blacklist.', 'wordfence'); ?></p>
-							<p><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1blacklistUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1blacklistLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence'); ?></a></p>
+							<p class="wf-no-top"><strong><?php esc_html_e('Premium Feature:', 'wordfence'); ?></strong> <?php esc_html_e('This feature blocks all traffic from IPs with a high volume of recent malicious activity using Wordfence\'s real-time blocklist.', 'wordfence'); ?></p>
+							<p><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1blacklistUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1blacklistLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence'); ?></a></p>
 						<?php elseif ($firewall->isSubDirectoryInstallation()): ?>
-							<p class="wf-no-top"><?php printf(__('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))); ?></p>
+							<p class="wf-no-top"><?php echo wp_kses(sprintf(__('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))), array('a'=>array('href'=>array()))); ?></p>
 						<?php else: ?>
-							<p class="wf-no-top"><?php _e('This feature blocks all traffic from IPs with a high volume of recent malicious activity using Wordfence\'s real-time blacklist.', 'wordfence'); ?></p>
+							<p class="wf-no-top"><?php esc_html_e('This feature blocks all traffic from IPs with a high volume of recent malicious activity using Wordfence\'s real-time blocklist.', 'wordfence'); ?></p>
 							<div class="wf-option wf-option-switch wf-padding-add-bottom" data-option-name="disableWAFBlacklistBlocking" data-original-value="<?php try { echo $config->getConfig('disableWAFBlacklistBlocking') ? '1': '0'; } catch (Exception $e) { echo 0; } ?>">
 								<ul class="wf-switch" role="radiogroup">
 									<?php

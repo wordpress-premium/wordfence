@@ -58,6 +58,15 @@ class Controller_CAPTCHA {
 	public function threshold() {
 		return Controller_Settings::shared()->get_float(Controller_Settings::OPTION_RECAPTCHA_THRESHOLD, 0.5);
 	}
+
+	/**
+	 * Determine whether or not test mode for reCAPTCHA is enabled
+	 *
+	 * @return bool
+	 */
+	public function test_mode() {
+		return Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_CAPTCHA_TEST_MODE);
+	}
 	
 	/**
 	 * Queries the reCAPTCHA endpoint with the given token, verifies the action matches, and returns the corresponding 
@@ -111,7 +120,7 @@ class Controller_CAPTCHA {
 	 * @return bool
 	 */
 	public function is_human($score) {
-		if (Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_CAPTCHA_TEST_MODE)) {
+		if ($this->test_mode()) {
 			return true;
 		}
 		

@@ -118,7 +118,7 @@ class Controller_Notices {
 		$notices = array_merge($notices, $userNotices);
 		
 		foreach ($notices as $nid => $n) {
-			$notice = new Model_Notice($nid, $n['severity'], $n['messageHTML']);
+			$notice = new Model_Notice($nid, $n['severity'], $n['messageHTML'], $n['category']);
 			if (is_multisite()) {
 				add_action('network_admin_notices', array($notice, 'display_notice'));
 			}

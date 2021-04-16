@@ -107,7 +107,7 @@ class wfDiagnostic
 			'PHP Environment' => array(
 				'description' => __('PHP version, important PHP extensions.', 'wordfence'),
 				'tests' => array(
-					'phpVersion' => array('raw' => true, 'value' => sprintf(__('PHP version >= PHP 5.6.20<br><em> (<a href="https://wordpress.org/about/requirements/" target="_blank" rel="noopener noreferrer">Minimum version required by WordPress</a>)</em> <a href="%s" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_VERSION_PHP))),
+					'phpVersion' => array('raw' => true, 'value' => sprintf(/* translators: Support URL. */ __('PHP version >= PHP 5.6.20<br><em> (<a href="https://wordpress.org/about/requirements/" target="_blank" rel="noopener noreferrer">Minimum version required by WordPress</a>)</em> <a href="%s" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_VERSION_PHP))),
 					'processOwner' => __('Process Owner', 'wordfence'),
 					'hasOpenSSL' => __('Checking for OpenSSL support', 'wordfence'),
 					'openSSLVersion' => __('Checking OpenSSL version', 'wordfence'),
@@ -194,7 +194,7 @@ class wfDiagnostic
 			}
 		}
 		
-		return array('test' => true, 'infoOnly' => true, 'message' => $overdue ? ($overdue == 1 ? __('1 Job Overdue', 'wordfence') : sprintf(__('%d Jobs Overdue', 'wordfence'), $overdue)) : __('Normal', 'wordfence'));
+		return array('test' => true, 'infoOnly' => true, 'message' => $overdue ? sprintf(/* translators: Number of jobs. */ _n('%d Job Overdue', '%d Jobs Overdue', $overdue, 'wordfence'), $overdue) : __('Normal', 'wordfence'));
 	}
 	
 	public function geoIPError() {
@@ -231,7 +231,7 @@ class wfDiagnostic
 				$unreadable[] = sprintf(__('File "%s" does not exist', 'wordfence'), basename($f));
 			}
 			else if (!is_readable($f)) {
-				$unreadable[] = sprintf(__('File "%s" is unreadable', 'wordfence'), basename($f));
+				$unreadable[] = sprintf(/* translators: File path. */ __('File "%s" is unreadable', 'wordfence'), basename($f));
 			}
 		}
 		
@@ -264,10 +264,10 @@ class wfDiagnostic
 		$unwritable = array();
 		foreach ($files as $f) {
 			if (!file_exists($f)) {
-				$unwritable[] = sprintf(__('File "%s" does not exist', 'wordfence'), basename($f));
+				$unwritable[] = sprintf(/* translators: File name. */__('File "%s" does not exist', 'wordfence'), basename($f));
 			}
 			else if (!is_writable($f)) {
-				$unwritable[] = sprintf(__('File "%s" is unwritable', 'wordfence'), basename($f));
+				$unwritable[] = sprintf(/* translators: File name. */__('File "%s" is unwritable', 'wordfence'), basename($f));
 			}
 		}
 		
@@ -385,7 +385,7 @@ class wfDiagnostic
 	
 	public function wafFilePermissions() {
 		if (defined('WFWAF_LOG_FILE_MODE')) {
-			return array('test' => true, 'infoOnly' => true, 'message' => sprintf(__('%s - using constant', 'wordfence'), str_pad(decoct(WFWAF_LOG_FILE_MODE), 4, '0', STR_PAD_LEFT)));
+			return array('test' => true, 'infoOnly' => true, 'message' => sprintf(/* translators: Unix file permissions in octal (example 0777). */ __('%s - using constant', 'wordfence'), str_pad(decoct(WFWAF_LOG_FILE_MODE), 4, '0', STR_PAD_LEFT)));
 		}
 		
 		if (defined('WFWAF_LOG_PATH')) {
@@ -398,7 +398,7 @@ class wfDiagnostic
 					if (($mode & 0020) == 0020) {
 						$updatedMode = $updatedMode | 0060;
 					}
-					return array('test' => true, 'infoOnly' => true, 'message' => sprintf(__('%s - using template', 'wordfence'), str_pad(decoct($updatedMode), 4, '0', STR_PAD_LEFT)));
+					return array('test' => true, 'infoOnly' => true, 'message' => sprintf(/* translators: Unix file permissions in octal (example 0777). */ __('%s - using template', 'wordfence'), str_pad(decoct($updatedMode), 4, '0', STR_PAD_LEFT)));
 				}
 			}
 		}
@@ -634,7 +634,7 @@ class wfDiagnostic
 			if ($host !== null) {
 				$ips = wfUtils::resolveDomainName($host);
 				$ips = implode(', ', $ips);
-				return array('test' => true, 'message' => sprintf(__('OK - %s', 'wordfence'), $ips));
+				return array('test' => true, 'message' => sprintf('OK - %s', $ips));
 			}
 			return true;
 		}
@@ -674,7 +674,7 @@ class wfDiagnostic
 			if (empty($_SERVER[$howGet])) {
 				return array(
 					'test' => false,
-					'message' => sprintf(__('We cannot read $_SERVER[%s]', 'wordfence'), $howGet),
+					'message' => sprintf(/* translators: PHP super global key. */ __('We cannot read $_SERVER[%s]', 'wordfence'), $howGet),
 				);
 			}
 			return array(

@@ -1,15 +1,19 @@
 <?php if (!defined('WORDFENCE_VERSION')) { exit; } ?>
-<?php printf(__('This email was sent from your website "%s" by the Wordfence plugin at %s', 'wordfence'), $blogName, $date); ?>
+<?php printf(
+/* translators: 1. Blog name/title. 2. Date. */
+		__('This email was sent from your website "%1$s" by the Wordfence plugin at %2$s', 'wordfence'), $blogName, $date); ?>
 
-<?php printf(__('The Wordfence administrative URL for this site is: %s', 'wordfence'), wfUtils::wpAdminURL('admin.php?page=Wordfence')); ?>
+<?php printf(
+/* translators: URL to the WordPress admin panel. */
+		__('The Wordfence administrative URL for this site is: %s', 'wordfence'), wfUtils::wpAdminURL('admin.php?page=Wordfence')); ?>
 
 <?php echo $alertMsg; ?>
 <?php if($IPMsg){ echo "\n$IPMsg\n"; } ?>
 
 <?php if(! $isPaid){ ?>
-	<?php _e('NOTE: You are using the free version of Wordfence. Upgrade today:
+	<?php esc_html_e('NOTE: You are using the free version of Wordfence. Upgrade today:
  - Receive real-time Firewall and Scan engine rule updates for protection as threats emerge
- - Real-time IP Blacklist blocks the most malicious IPs from accessing your site
+ - Real-time IP Blocklist blocks the most malicious IPs from accessing your site
  - Country blocking
  - IP reputation monitoring
  - Schedule scans to run more frequently and at optimal times
@@ -21,9 +25,12 @@ https://www.wordfence.com/zz1/wordfence-signup/', 'wordfence'); ?>
 <?php } ?>
 
 --
-<?php printf(__("To change your alert options for Wordfence, visit:\n%s", 'wordfence'), $myOptionsURL); ?>
+<?php printf(
+/* translators: URL to the WordPress admin panel. */
+		__("To change your alert options for Wordfence, visit:\n%s", 'wordfence'), $myOptionsURL); ?>
 
-<?php printf(__("To see current Wordfence alerts, visit:\n%s", 'wordfence'), $myHomeURL); ?>
-
+<?php printf(
+/* translators: URL to the WordPress admin panel. */
+		__("To see current Wordfence alerts, visit:\n%s", 'wordfence'), $myHomeURL); ?>
 
 

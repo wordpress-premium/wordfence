@@ -22,7 +22,7 @@ class wfUtils {
 	}
 	public static function makeTimeAgo($secs, $noSeconds = false) {
 		if($secs < 1){
-			return "a moment";
+			return __("a moment", 'wordfence');
 		}
 		
 		if (function_exists('date_diff')) {
@@ -57,25 +57,29 @@ class wfUtils {
 		}
 		
 		if ($years) {
-			return self::pluralize($years, 'year', $months, 'month');
+			return $years . ' ' . _n('year', 'years', $years, 'wordfence') .
+				(is_numeric($months) ? ' ' . $months . ' ' . _n('month', 'months', $months, 'wordfence') : '');
 		}
 		else if ($months) {
-			return self::pluralize($months, 'month', $days, 'day');
+			return $months . ' ' . _n('month', 'months', $months, 'wordfence') .
+				(is_numeric($days) ? ' ' . $days . ' ' . _n('day', 'days', $days, 'wordfence') : '');
 		}
 		else if ($days) {
-			return self::pluralize($days, 'day', $hours, 'hour');
+			return $days . ' ' . _n('day', 'days', $days, 'wordfence') .
+				(is_numeric($hours) ? ' ' . $hours . ' ' . _n('hour', 'hours', $hours, 'wordfence') : '');
 		}
 		else if ($hours) {
-			return self::pluralize($hours, 'hour', $minutes, 'min');
+			return $hours . ' ' . _n('hour', 'hours', $hours, 'wordfence') .
+				(is_numeric($minutes) ? ' ' . $minutes . ' ' . _n('minute', 'minutes', $minutes, 'wordfence') : '');
 		}
 		else if ($minutes) {
-			return self::pluralize($minutes, 'min');
+			return $minutes . ' ' . _n('minute', 'minutes', $minutes, 'wordfence');
 		}
 		else {
 			if($noSeconds){
-				return "less than a minute";
+				return __("less than a minute", 'wordfence');
 			} else {
-				return floor($secs) . " secs";
+				return sprintf(/* translators: Number of seconds. */ __("%d seconds", 'wordfence'), floor($secs));
 			}
 		}
 	}
@@ -88,47 +92,43 @@ class wfUtils {
 		$minutes = floor($secs / 60); $secs -= $minutes * 60;
 		
 		if ($months) {
-			$components[] = self::pluralize($months, 'month');
+			$components[] = $months . ' ' . _n('month', 'months', $months, 'wordfence');
 			if (!$createExact) {
 				$hours = $minutes = $secs = 0;
 			}
 		}
 		if ($days) {
-			$components[] = self::pluralize($days, 'day');
+			$components[] = $days . ' ' . _n('day', 'days', $days, 'wordfence');
 			if (!$createExact) {
 				$minutes = $secs = 0;
 			}
 		}
 		if ($hours) {
-			$components[] = self::pluralize($hours, 'hour');
+			$components[] = $hours . ' ' . _n('hour', 'hours', $hours, 'wordfence');
 			if (!$createExact) {
 				$secs = 0;
 			}
 		}
 		if ($minutes) {
-			$components[] = self::pluralize($minutes, 'minute');
+			$components[] = $minutes . ' ' . _n('minute', 'minutes', $minutes, 'wordfence');
 		}
 		if ($secs && $secs >= 1) {
-			$components[] = self::pluralize($secs, 'second');
+			$components[] = $secs . ' ' . _n('second', 'seconds', $secs, 'wordfence');
 		}
 		
 		if (empty($components)) {
-			$components[] = 'less than 1 second';
+			$components[] = __('less than 1 second', 'wordfence');
 		}
 		
 		return implode(' ', $components);
 	}
-	public static function pluralize($m1, $t1, $m2 = false, $t2 = false) {
-		if($m1 != 1) {
-			$t1 = $t1 . 's';
-		}
-		if($m2 != 1) {
-			$t2 = $t2 . 's';
-		}
-		if($m1 && $m2){
-			return "$m1 $t1 $m2 $t2";
+	public static function pluralize($m1, $m1Singular, $m1Plural, $m2 = false, $m2Singular = false, $m2Plural = false) {
+		$m1Text = _n($m1Singular, $m1Plural, $m1, 'wordfence');
+		if (is_numeric($m2)) {
+			$m2Text = _n($m2Singular, $m2Plural, $m2, 'wordfence');
+			return "$m1 $m1Text $m2 $m2Text";
 		} else {
-			return "$m1 $t1";
+			return "$m1 $m1Text";
 		}
 	}
 	public static function formatBytes($bytes, $precision = 2) {
@@ -1200,7 +1200,7 @@ class wfUtils {
 	public static function encrypt($str){
 		$key = wfConfig::get('encKey');
 		if(! $key){
-			wordfence::status(1, 'error', "Wordfence error: No encryption key found!");
+			wordfence::status(1, 'error', __("Wordfence error: No encryption key found!", 'wordfence'));
 			return false;
 		}
 		$db = new wfDB();
@@ -1209,7 +1209,7 @@ class wfUtils {
 	public static function decrypt($str){
 		$key = wfConfig::get('encKey');
 		if(! $key){
-			wordfence::status(1, 'error', "Wordfence error: No encryption key found!");
+			wordfence::status(1, 'error', __("Wordfence error: No encryption key found!", 'wordfence'));
 			return false;
 		}
 		$db = new wfDB();
@@ -1433,6 +1433,7 @@ class wfUtils {
 						$IPLocs[$ip_printable] = false;
 					} else {
 						$row['IP'] = self::inet_ntop($row['IP']);
+						$row['region'] = wfUtils::shouldDisplayRegion($row['countryName']) ? $row['region'] : '';
 						$IPLocs[$ip_printable] = $row;
 					}
 				}
@@ -1470,7 +1471,7 @@ class wfUtils {
 							$IPLocs[$IP] = array(
 								'IP' => $IP,
 								'city' => $value[3],
-								'region' => $value[2],
+								'region' => wfUtils::shouldDisplayRegion($value[1]) ? $value[2] : '',
 								'countryName' => $value[1],
 								'countryCode' => $value[0],
 								'lat' => $value[4],
@@ -1480,7 +1481,7 @@ class wfUtils {
 					}
 				}
 			} catch(Exception $e){
-				wordfence::status(2, 'error', "Call to Wordfence API to resolve IPs failed: " . $e->getMessage());
+				wordfence::status(2, 'error', sprintf(/* translators: Error message. */ __("Call to Wordfence API to resolve IPs failed: %s", 'wordfence'), $e->getMessage()));
 				return array();
 			}
 		}
@@ -1545,6 +1546,7 @@ class wfUtils {
 	}
 	//Note this function may report files that are too big which actually are not too big but are unseekable and throw an error on fseek(). But that's intentional
 	public static function fileTooBig($file){ //Deals with files > 2 gigs on 32 bit systems which are reported with the wrong size due to integer overflow
+		if (!@is_file($file) || !@is_readable($file)) { return false; } //Only apply to readable files
 		wfUtils::errorsOff();
 		$fh = @fopen($file, 'r');
 		wfUtils::errorsOn();
@@ -1582,6 +1584,10 @@ class wfUtils {
 		} else {
 			return '';
 		}
+	}
+	public static function shouldDisplayRegion($country) {
+		$countries_to_show_for = array('united states', 'canada', 'australia');
+		return in_array(strtolower($country), $countries_to_show_for);
 	}
 	public static function extractBareURI($URL){
 		$URL = preg_replace('/^https?:\/\/[^\/]+/i', '', $URL); //strip of method and host
@@ -1787,6 +1793,18 @@ class wfUtils {
 			$IPIncBin = sprintf('%032b', bindec($IPNetBin) + 1);
 		}
 		return $CIDRs;
+	}
+	
+	/**
+	 * This is a convenience function for sending a JSON response and ensuring that execution stops after sending
+	 * since wp_die() can be interrupted.
+	 * 
+	 * @param $response
+	 * @param int|null $status_code
+	 */
+	public static function send_json($response, $status_code = null) {
+		wp_send_json($response, $status_code);
+		die();
 	}
 
 	public static function setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly){
@@ -2138,6 +2156,7 @@ class wfUtils {
 					's'      => $siteurl,
 					'h'		 => $homeurl,
 					't'		 => microtime(true),
+					'lang'   => get_site_option('WPLANG'),
 				), null, '&'),
 				array(
 					'body'    => json_encode($payload),

@@ -2,35 +2,38 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php _e('Your access to this site has been limited', 'wordfence'); ?></title>
+		<title><?php esc_html_e('Your access to this site has been limited', 'wordfence'); ?></title>
 		<style>
 			html {
 				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-				font-size: 14px;
+				font-size: 0.875rem;
 				line-height: 1.42857143;
 				color: #333;
 				background-color: #fff;
+				padding: 0;
+				margin: 0;
 			}
-			
+
 			body {
-				padding: 2rem;
+				padding: 0;
+				margin: 0;
 			}
 
 			a {
 				color:#00709e;
 			}
 
-			h1, h2, h3, h4, h45, h6 {
-				font-weight: 500;
+			h1, h2, h3, h4, h5, h6 {
+				font-weight: 200;
 				line-height: 1.1;
 			}
 
-			h1 { font-size: 36px; }
-			h2 { font-size: 30px; }
-			h3 { font-size: 24px; }
-			h4 { font-size: 18px; }
-			h5 { font-size: 14px; }
-			h6 { font-size: 12px; }
+			h1, .h1 { font-size: 3rem; }
+			h2, .h2 { font-size: 2.5rem; }
+			h3, .h3 { font-size: 1.5rem; }
+			h4, .h4 { font-size: 1rem; }
+			h5, .h5 { font-size: 0.875rem; }
+			h6, .h6 { font-size: 0.75rem; }
 
 			h1, h2, h3 {
 				margin-top: 20px;
@@ -187,54 +190,175 @@
 			input[type="text"], input.wf-input-text {
 				text-align: left;
 				max-width: 200px;
-				height: 34px;
+				height: 30px;
 				border-radius: 0;
 				border: 0;
 				background-color: #ffffff;
-				box-shadow: 1px 1px 1px 2px rgba(215,215,215,0.65);
+				box-shadow: 0px 0px 0px 1px rgba(215,215,215,0.65);
 				padding: 0.25rem;
 			}
 
 			hr {
-				margin-top: 20px;
-				margin-bottom: 20px;
+				margin-top: 1rem;
+				margin-bottom: 1rem;
 				border: 0;
-				border-top: 1px solid #eee
-			}
-			
-			.wf-header-logo {
-				max-width: 450px;
-				max-height: 81px;
-				margin-bottom: 2rem;
+				border-top: 4px solid #eee
 			}
 
-			@media (max-width: 600px) {
-				.wf-header-logo {
-					max-width: 300px;
-					max-height: 54px;
-				}
+			p {
+				font-size: 1.4rem;
+				font-weight: 300;
+			}
+
+			p.medium, div.medium p {
+				font-size: 1.1rem;
+			}
+
+			p.small, div.small p {
+				font-size: 1rem;
+			}
+
+			.container {
+				max-width: 900px;
+				padding: 0 1rem;
+				margin: 0 auto;
+			}
+
+			.top-accent {
+				height: 25px;
+				background-color: #00709e;
+			}
+
+			.block-data {
+				width: 100%;
+				border-top: 6px solid #00709e;
+			}
+
+			.block-data tr:nth-child(odd) th, .block-data tr:nth-child(odd) td {
+				background-color: #eeeeee;
+			}
+
+			.block-data th, .block-data td {
+				text-align: left;
+				padding: 1rem;
+				font-size: 1.1rem;
+			}
+
+			.block-data th.reason, .block-data td.reason {
+				color: #930000;
+			}
+
+			.block-data th {
+				font-weight: 300;
+			}
+
+			.block-data td {
+				font-weight: 500;
+			}
+
+			.about {
+				margin-top: 2rem;
+				display: flex;
+				flex-direction: row;
+				align-items: stretch;
+			}
+
+			.about .badge {
+				flex-basis: 116px;
+				flex-grow: 0;
+				flex-shrink: 0;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+			}
+
+			.about svg {
+				width: 100px;
+				height: 100px;
+
+			}
+
+			.about-text {
+				background-color: #00709e;
+				color: #ffffff;
+				padding: 1rem;
+			}
+
+			.about-text .h4 {
+				font-weight: 500;
+				margin-top: 0;
+				margin-bottom: 0.25rem;
+				font-size: 0.875rem;
+			}
+
+			.about-text p {
+				font-size: 0.875rem;
+				font-weight: 200;
+				margin-top: 0.3rem;
+				margin-bottom: 0.3rem;
+			}
+
+			.about-text p:first-of-type {
+				margin-top: 0;
+			}
+
+			.about-text p:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.st0{fill:#00709e;}
+			.st1{fill:#FFFFFF;}
+
+			.generated {
+				color: #999999;
+				margin-top: 2rem;
 			}
 		</style>
 	</head>
 	<body>
-		<?php
-		$contents = file_get_contents(WORDFENCE_PATH . '/images/wf-horizontal.svg');
-		$contents = preg_replace('/^<\?xml.+?\?>\s*/i', '', $contents);
-		$contents = preg_replace('/^<!DOCTYPE.+?>\s*/i', '', $contents);
-		$contents = preg_replace('/<svg\s+xmlns="[^"]*"/i', '<svg', $contents);
-		$contents = preg_replace('/(<svg[^>]+)/i', '${1} class="wf-header-logo"', $contents);
-		echo $contents;
-		?>
-		<h4><?php _e('Your access to this site has been limited', 'wordfence'); ?></h4>
-		<p><?php _e('Your access to this service has been temporarily limited. Please try again in a few minutes. (HTTP response code 503)', 'wordfence'); ?></p>
-		<p><?php _e('Reason:', 'wordfence'); ?> <span style="color: #c10000;"><?php echo $reason; ?></span></p>
+	<div class="top-accent"></div>
+	<div class="container">
+		<h1><?php esc_html_e('Your access to this site has been limited by the site owner', 'wordfence'); ?></h1>
+		<p><?php esc_html_e('Your access to this service has been limited. (HTTP response code 503)', 'wordfence'); ?></p>
+		<p><?php esc_html_e('If you think you have been blocked in error, contact the owner of this site for assistance.', 'wordfence'); ?></p>
 		<?php if (!empty($customText)): ?>
-		<hr>
-		<div><?php echo $customText; ?></div>
+			<hr>
+			<div class="medium"><?php echo $customText; ?></div>
 		<?php endif; ?>
 		<hr>
 		<?php require(dirname(__FILE__) . '/wfUnlockMsg.php'); ?>
-		<p><?php printf(__('Click here to learn more: <a href="%s" target="_blank" rel="noopener noreferrer">Documentation</a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_LOCKED_OUT)); ?></p>
-		<p style="color: #999999;margin-top: 2rem;"><em><?php printf(__('Generated by Wordfence at %s', 'wordfence'), gmdate('D, j M Y G:i:s T', wfWAFUtils::normalizedTime())); ?>.<br><?php _e('Your computer\'s time:', 'wordfence'); ?> <script type="application/javascript">document.write(new Date().toUTCString());</script>.</em></p>
+
+		<h2 class="h3"><?php esc_html_e('Block Technical Data', 'wordfence') ?></h2>
+		<table border="0" cellspacing="0" cellpadding="0" class="block-data">
+			<tr>
+				<th class="reason"><?php esc_html_e('Block Reason', 'wordfence'); ?>:</th>
+				<td class="reason"><?php echo htmlspecialchars($reason); ?></td>
+			</tr>
+			<tr>
+				<th class="time"><?php esc_html_e('Time', 'wordfence'); ?>:</th>
+				<td class="time"><?php echo htmlspecialchars(gmdate('D, j M Y G:i:s T', wfWAFUtils::normalizedTime())); ?></td>
+			</tr>
+		</table>
+
+		<div class="about">
+			<div class="badge">
+				<?php
+				$contents = file_get_contents(WORDFENCE_PATH . '/images/wf-error-badge.svg');
+				$contents = preg_replace('/^<\?xml.+?\?>\s*/i', '', $contents);
+				$contents = preg_replace('/^<!DOCTYPE.+?>\s*/i', '', $contents);
+				$contents = preg_replace('/<svg\s+xmlns="[^"]*"/i', '<svg', $contents);
+				echo $contents;
+				?>
+			</div>
+			<div class="about-text">
+				<h3 class="h4"><?php esc_html_e('About Wordfence', 'wordfence'); ?></h3>
+				<p><?php esc_html_e('Wordfence is a security plugin installed on over 3 million WordPress sites. The owner of this site is using Wordfence to manage access to their site.', 'wordfence'); ?></p>
+				<p><?php esc_html_e('You can also read the documentation to learn about Wordfence\'s blocking tools, or visit wordfence.com to learn more about Wordfence.', 'wordfence'); ?></p>
+			</div>
+		</div>
+
+		<p class="documentation small"><?php echo wp_kses(sprintf(/* translators: Support URL. */ __('Click here to learn more: <a href="%s" target="_blank" rel="noopener noreferrer">Documentation</a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_LOCKED_OUT)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
+		<p class="generated small"><em><?php echo wp_kses(sprintf(/* translators: Localized date. */ __('Generated by Wordfence at %s', 'wordfence'), gmdate('D, j M Y G:i:s T', wfWAFUtils::normalizedTime())), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?>.<br><?php esc_html_e('Your computer\'s time:', 'wordfence'); ?> <script type="application/javascript">document.write(new Date().toUTCString());</script>.</em></p>
+	</div>
 	</body>
 </html>

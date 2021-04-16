@@ -20,7 +20,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Basic Scan Type Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Basic Scan Type Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>

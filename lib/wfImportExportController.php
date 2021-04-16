@@ -104,14 +104,14 @@ class wfImportExportController {
 				);
 			}
 			else if ($res['err']) {
-				return array('err' => "An error occurred: " . $res['err']);
+				return array('err' => sprintf(/* translators: Error message. */ __("An error occurred: %s", 'wordfence'), $res['err']));
 			}
 			else {
-				throw new Exception("Invalid response: " . var_export($res, true));
+				throw new Exception(sprintf(/* translators: Error message. */ __("Invalid response: %s", 'wordfence'), var_export($res, true)));
 			}
 		}
 		catch (Exception $e) {
-			return array('err' => "An error occurred: " . $e->getMessage());
+			return array('err' => sprintf(/* translators: Error message. */ __("An error occurred: %s", 'wordfence'), $e->getMessage()));
 		}
 	}
 }

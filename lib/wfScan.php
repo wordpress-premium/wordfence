@@ -39,50 +39,60 @@ class wfScan {
 		self::$peakMemAtStart = memory_get_peak_usage(true);
 		$db = new wfDB();
 		if($db->errorMsg){
-			self::errorExit("Could not connect to database to start scan: " . $db->errorMsg);
+			self::errorExit(sprintf(/* translators: Error message. */ __("Could not connect to database to start scan: %s", 'wordfence'), $db->errorMsg));
 		}
 		if(! wordfence::wfSchemaExists()){
-			self::errorExit("Looks like the Wordfence database tables have been deleted. You can fix this by de-activating and re-activating the Wordfence plugin from your Plugins menu.");
+			self::errorExit(__("Looks like the Wordfence database tables have been deleted. You can fix this by de-activating and re-activating the Wordfence plugin from your Plugins menu.", 'wordfence'));
 		}
 		if( isset( $_GET['test'] ) && $_GET['test'] == '1'){
 			echo "WFCRONTESTOK:" . wfConfig::get('cronTestID');
-			self::status(4, 'info', "Cron test received and message printed");
+			self::status(4, 'info', __("Cron test received and message printed", 'wordfence'));
 			exit();
 		}
 		
-		self::status(4, 'info', "Scan engine received request.");
+		self::status(4, 'info', __("Scan engine received request.", 'wordfence'));
 		
 		/* ----------Starting signature check -------- */
-		self::status(4, 'info', "Verifying start request signature.");
+		self::status(4, 'info', __("Verifying start request signature.", 'wordfence'));
 		if (!isset($_GET['signature']) || !wfScanEngine::verifyStartSignature($_GET['signature'], isset($_GET['isFork']) ? wfUtils::truthyToBoolean($_GET['isFork']) : false, isset($_GET['scanMode']) ? $_GET['scanMode'] : '', isset($_GET['cronKey']) ? $_GET['cronKey'] : '', isset($_GET['remote']) ? wfUtils::truthyToBoolean($_GET['remote']) : false)) {
 			self::errorExit(__('The signature on the request to start a scan is invalid. Please try again.', 'wordfence'));
 		}
 		
 		/* ----------Starting cronkey check -------- */
-		self::status(4, 'info', "Fetching stored cronkey for comparison.");
+		self::status(4, 'info', __("Fetching stored cronkey for comparison.", 'wordfence'));
 		$expired = false;
 		$storedCronKey = self::storedCronKey($expired);
 		$displayCronKey_received = (isset($_GET['cronKey']) ? (preg_match('/^[a-f0-9]+$/i', $_GET['cronKey']) && strlen($_GET['cronKey']) == 32 ? $_GET['cronKey'] : __('[invalid]', 'wordfence')) : __('[none]', 'wordfence'));
 		$displayCronKey_stored = (!empty($storedCronKey) && !$expired ? $storedCronKey : __('[none]', 'wordfence'));
-		self::status(4, 'info', sprintf(__('Checking cronkey: %s (expecting %s)', 'wordfence'), $displayCronKey_received, $displayCronKey_stored));
+		self::status(4, 'info', sprintf(/* translators: 1. WordPress nonce. 2. WordPress nonce. */ __('Checking cronkey: %1$s (expecting %2$s)', 'wordfence'), $displayCronKey_received, $displayCronKey_stored));
 		if (empty($_GET['cronKey'])) { 
-			self::status(4, 'error', "Wordfence scan script accessed directly, or WF did not receive a cronkey.");
+			self::status(4, 'error', __("Wordfence scan script accessed directly, or WF did not receive a cronkey.", 'wordfence'));
 			echo "If you see this message it means Wordfence is working correctly. You should not access this URL directly. It is part of the Wordfence security plugin and is designed for internal use only.";
 			exit();
 		}
 		
 		if ($expired) {
-			self::errorExit("The key used to start a scan expired. The value is: " . $expired . " and split is: " . $storedCronKey . " and time is: " . time());
+			self::errorExit(sprintf(
+			/* translators: 1. Unix timestamp. 2. WordPress nonce. 3. Unix timestamp. */
+				__('The key used to start a scan expired. The value is: %1$s and split is: %2$s and time is: %3$d'), $expired, $storedCronKey, time()));
 		} //keys only last 60 seconds and are used within milliseconds of creation
 		
 		if (!$storedCronKey) {
-			wordfence::status(4, 'error', "Wordfence could not find a saved cron key to start the scan so assuming it started and exiting.");
+			wordfence::status(4, 'error', __("Wordfence could not find a saved cron key to start the scan so assuming it started and exiting.", 'wordfence'));
 			exit();
 		} 
 		
-		self::status(4, 'info', "Checking saved cronkey against cronkey param");
+		self::status(4, 'info', __("Checking saved cronkey against cronkey param", 'wordfence'));
 		if (!hash_equals($storedCronKey, $_GET['cronKey'])) { 
-			self::errorExit("Wordfence could not start a scan because the cron key does not match the saved key. Saved: " . $storedCronKey . " Sent: " . $_GET['cronKey'] . " Current unexploded: " . wfConfig::get('currentCronKey', false));
+			self::errorExit(
+				sprintf(
+				/* translators: 1. WordPress nonce (used for debugging). 2. WordPress nonce (used for debugging). 3. WordPress nonce (used for debugging). */
+					__('Wordfence could not start a scan because the cron key does not match the saved key. Saved: %1$s Sent: %2$s Current unexploded: %3$s', 'wordfence'),
+					$storedCronKey,
+					$_GET['cronKey'],
+					wfConfig::get('currentCronKey', false)
+				)
+			);
 		}
 		wfConfig::set('currentCronKey', '');
 		/* --------- end cronkey check ---------- */
@@ -97,9 +107,9 @@ class wfScan {
 		$isFork = ($_GET['isFork'] == '1' ? true : false);
 
 		if(! $isFork){
-			self::status(4, 'info', "Checking if scan is already running");
+			self::status(4, 'info', __("Checking if scan is already running", 'wordfence'));
 			if(! wfUtils::getScanLock()){
-				self::errorExit("There is already a scan running.");
+				self::errorExit(__("There is already a scan running.", 'wordfence'));
 			}
 			
 			wfIssues::updateScanStillRunning();
@@ -108,12 +118,12 @@ class wfScan {
 			wfConfig::set('lowResourceScanWaitStep', false);
 			
 			if ($scanController->useLowResourceScanning()) {
-				self::status(1, 'info', "Using low resource scanning");
+				self::status(1, 'info', __("Using low resource scanning", 'wordfence'));
 			}
 		}
-		self::status(4, 'info', "Requesting max memory");
+		self::status(4, 'info', __("Requesting max memory", 'wordfence'));
 		wfUtils::requestMaxMemory();
-		self::status(4, 'info', "Setting up error handling environment");
+		self::status(4, 'info', __("Setting up error handling environment", 'wordfence'));
 		set_error_handler('wfScan::error_handler', E_ALL);
 		register_shutdown_function('wfScan::shutdown');
 		if(! self::$debugMode){
@@ -121,22 +131,22 @@ class wfScan {
 		}
 		@error_reporting(E_ALL);
 		wfUtils::iniSet('display_errors','On');
-		self::status(4, 'info', "Setting up scanRunning and starting scan");
+		self::status(4, 'info', __("Setting up scanRunning and starting scan", 'wordfence'));
 		try {
 			if ($isFork) {
 				$scan = wfConfig::get_ser('wfsd_engine', false, false);
 				if ($scan) {
-					self::status(4, 'info', "Got a true deserialized value back from 'wfsd_engine' with type: " . gettype($scan));
+					self::status(4, 'info', sprintf(/* translators: Error message (used for debugging). */ __("Got a true deserialized value back from 'wfsd_engine' with type: %s", 'wordfence'), gettype($scan)));
 					wfConfig::set('wfsd_engine', '', wfConfig::DONT_AUTOLOAD);
 				}
 				else {
-					self::status(2, 'error', "Scan can't continue - stored data not found after a fork. Got type: " . gettype($scan));
+					self::status(2, 'error', sprintf(/* translators: Error message (used for debugging). */ __("Scan can't continue - stored data not found after a fork. Got type: %s", 'wordfence'), gettype($scan)));
 					wfConfig::set('wfsd_engine', '', wfConfig::DONT_AUTOLOAD);
 					wfConfig::set('lastScanCompleted', __('Scan can\'t continue - stored data not found after a fork.', 'wordfence'));
 					wfConfig::set('lastScanFailureType', wfIssues::SCAN_FAILED_FORK_FAILED);
 					wfUtils::clearScanLock();
 					self::status(2, 'error', "Scan terminated with error: " . __('Scan can\'t continue - stored data not found after a fork.', 'wordfence'));
-					self::status(10, 'info', "SUM_KILLED:Previous scan terminated with an error. See below.");
+					self::status(10, 'info', "SUM_KILLED:" . __('Previous scan terminated with an error. See below.', 'wordfence'));
 					exit();
 				}
 			}
@@ -159,7 +169,7 @@ class wfScan {
 				$scanController->resetSummaryItems();
 				
 				if ($scanMode != wfScanner::SCAN_TYPE_QUICK) {
-					wordfence::status(1, 'info', "Contacting Wordfence to initiate scan");
+					wordfence::status(1, 'info', __("Contacting Wordfence to initiate scan", 'wordfence'));
 					$wp_version = wfUtils::getWPVersion();
 					$apiKey = wfConfig::get('apiKey');
 					$api = new wfAPI($apiKey, $wp_version);
@@ -168,7 +178,7 @@ class wfScan {
 					if ($scanController->schedulingMode() == wfScanner::SCAN_SCHEDULING_MODE_AUTOMATIC && $isScheduled) {
 						if (isset($response['defer'])) {
 							$defer = (int) $response['defer'];
-							wordfence::status(2, 'info', "Deferring scheduled scan by " . wfUtils::makeDuration($defer));
+							wordfence::status(2, 'info', sprintf(/* translators: Time until. */ __("Deferring scheduled scan by %s"), wfUtils::makeDuration($defer)));
 							wfConfig::set('lastScheduledScanStart', 0);
 							wfConfig::set('lastScanCompleted', 'ok');
 							wfConfig::set('lastScanFailureType', false);
@@ -189,7 +199,7 @@ class wfScan {
 					$scan->deleteNewIssues();
 				}
 				else {
-					wordfence::status(1, 'info', "Initiating quick scan");
+					wordfence::status(1, 'info', __("Initiating quick scan", 'wordfence'));
 					$scan = new wfScanEngine('', '', $scanMode);
 				}
 			}
@@ -199,15 +209,24 @@ class wfScan {
 		catch (wfScanEngineDurationLimitException $e) { //User error set in wfScanEngine
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(__("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			exit();
 		}
 		catch (wfScanEngineCoreVersionChangeException $e) { //User error set in wfScanEngine
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with message: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				/* translators: 1. Bytes of memory. 2. Bytes of memory. */
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			
 			$nextScheduledScan = wordfence::getNextScanStartTimestamp();
 			if ($nextScheduledScan !== false && $nextScheduledScan - time() > 21600 /* 6 hours */) {
@@ -224,8 +243,13 @@ class wfScan {
 			
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				/* translators: 1. Bytes of memory. 2. Bytes of memory. */
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(/* translators: Error message. */__("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			exit();
 		}
 		catch (wfAPICallFailedException $e) {
@@ -234,8 +258,13 @@ class wfScan {
 			
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				/* translators: 1. Bytes of memory. 2. Bytes of memory. */
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			exit();
 		}
 		catch (wfAPICallInvalidResponseException $e) {
@@ -244,8 +273,13 @@ class wfScan {
 			
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				/* translators: 1. Bytes of memory. 2. Bytes of memory. */
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			exit();
 		}
 		catch (wfAPICallErrorResponseException $e) {
@@ -254,14 +288,31 @@ class wfScan {
 			
 			wfUtils::clearScanLock();
 			$peakMemory = self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			self::status(2, 'info', sprintf(
+				/* translators: 1. Bytes of memory. 2. Bytes of memory. */
+				__('Wordfence used %1$s of memory for scan. Server peak memory usage was: %2$s', 'wordfence'),
+				wfUtils::formatBytes($peakMemory - self::$peakMemAtStart),
+				wfUtils::formatBytes($peakMemory)
+			));
+			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
+
+			if (preg_match('/The Wordfence API key you\'re using is already being used by: (\S*?) /', $e->getMessage(), $matches)) {
+				wordfence::alert(__('Wordfence scan failed because of license site URL conflict', 'wordfence'), sprintf(
+				/* translators: Site URL. */
+					__(<<<MSG
+The Wordfence scan has failed because the Wordfence API key you're using is already being used by: %s
+
+If you have changed your blog URL, please sign-in to Wordfence, purchase a new key or reset an existing key, and then enter that key on this site's Wordfence Options page.
+MSG
+					, 'wordfence'), $matches[1]), false);
+			}
+
 			exit();
 		}
 		catch (Exception $e) {
 			wfUtils::clearScanLock();
-			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
-			self::status(10, 'info', "SUM_KILLED:Previous scan terminated with an error. See below.");
+			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
+			self::status(10, 'info', "SUM_KILLED:" . __('Previous scan terminated with an error. See below.', 'wordfence'));
 			exit();
 		}
 		wfUtils::clearScanLock();
@@ -298,7 +349,7 @@ class wfScan {
 		self::logPeakMemory();
 	}
 	private static function errorExit($msg){
-		wordfence::status(1, 'error', "Scan Engine Error: $msg");
+		wordfence::status(1, 'error', sprintf(/* translators: Error message. */ __('Scan Engine Error: %s', 'wordfence'), $msg));
 		exit();	
 	}
 	private static function status($level, $type, $msg){

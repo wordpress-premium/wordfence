@@ -13,12 +13,14 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 
 <div id="wf-tools-whois">
 	<div class="wf-section-title">
-		<h2><?php _e('Whois Lookup', 'wordfence') ?></h2>
-		<span><?php printf(__('<a href="%s" target="_blank" rel="noopener noreferrer" class="wf-help-link">Learn more<span class="wf-hidden-xs"> about Whois Lookup</span></a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_TOOLS_WHOIS_LOOKUP)); ?>
+		<h2><?php esc_html_e('Whois Lookup', 'wordfence') ?></h2>
+		<span><?php echo wp_kses(sprintf(
+				/* translators: URL to support page. */
+				__('<a href="%s" target="_blank" rel="noopener noreferrer" class="wf-help-link">Learn more<span class="wf-hidden-xs"> about Whois Lookup</span></a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_TOOLS_WHOIS_LOOKUP)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array(), 'class'=>array()), 'span'=>array('class'=>array()))); ?>
 			<i class="wf-fa wf-fa-external-link" aria-hidden="true"></i></span>
 	</div>
 
-	<p><?php _e("The whois service gives you a way to look up who owns an IP address or domain name that is visiting your website or is engaging in malicious activity on your website.", 'wordfence') ?></p>
+	<p><?php esc_html_e("The whois service gives you a way to look up who owns an IP address or domain name that is visiting your website or is engaging in malicious activity on your website.", 'wordfence') ?></p>
 
 	<div>
 
@@ -31,9 +33,11 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 			</div>
 		</div>
 		<?php if (isset($_GET['wfnetworkblock']) && $_GET['wfnetworkblock']) { ?>
-			<h2><?php _e('How to block a network', 'wordfence') ?></h2>
+			<h2><?php esc_html_e('How to block a network', 'wordfence') ?></h2>
 			<p style="width: 600px;">
-				<?php printf(__("You've chosen to block the network that <span style=\"color: #F00;\">%s</span> is part of. We've marked the networks we found that this IP address belongs to in red below. Make sure you read all the WHOIS information so that you see all networks this IP belongs to. We recommend blocking the network with the lowest number of addresses. You may find this is listed at the end as part of the 'rWHOIS' query which contacts the local WHOIS server that is run by the network administrator."), esc_html($_GET['whoisval'])) ?>
+				<?php echo wp_kses(sprintf(
+				/* translators: Hostname or IP address. */
+						__("You've chosen to block the network that <span style=\"color: #F00;\">%s</span> is part of. We've marked the networks we found that this IP address belongs to in red below. Make sure you read all the WHOIS information so that you see all networks this IP belongs to. We recommend blocking the network with the lowest number of addresses. You may find this is listed at the end as part of the 'rWHOIS' query which contacts the local WHOIS server that is run by the network administrator."), esc_html($_GET['whoisval'])), array('span'=>array('style'=>array()))); ?>
 			</p>
 		<?php } ?>
 		<div id="wfrawhtml" class="wf-padding-add-top"></div>
@@ -68,7 +72,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Whois Lookup', 'wordfence') ?> <a>${ip}</a></strong>
+						<strong><?php esc_html_e('Whois Lookup', 'wordfence') ?> <a>${ip}</a></strong>
 					</div>
 				</div>
 			</div>
@@ -88,16 +92,16 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 	function whois(ip) {
 		var val = ip.replace(' ', '');
 		if (!/\w+/.test(val)) {
-			WFAD.colorboxModal('300px', "Enter a valid IP or domain", "Please enter a valid IP address or domain name for your whois lookup.");
+			WFAD.colorboxModal('300px', <?php echo json_encode(__("Enter a valid IP or domain", 'wordfence')) ?>, <?php echo json_encode(__("Please enter a valid IP address or domain name for your whois lookup.", 'wordfence')) ?>);
 			return;
 		}
 		var whoisButton = jQuery('#whoisbutton').attr('disabled', 'disabled')
-			.attr('value', 'Loading...');
+			.attr('value', <?php echo json_encode(__('Loading...', 'wordfence')) ?>);
 		WFAD.ajax('wordfence_whois', {
 			val: val
 		}, function(res) {
 			whoisButton.removeAttr('disabled')
-				.attr('value', 'Look up IP or Domain');
+				.attr('value', <?php echo json_encode(__('Look up IP or Domain', 'wordfence')) ?>);
 			if (res.ok) {
 				var whoisHTML = WFAD.completeWhois(res, true);
 				console.log(whoisHTML);

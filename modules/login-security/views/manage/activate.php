@@ -11,13 +11,13 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 	<div class="wfls-block-header wfls-block-header-border-bottom">
 		<div class="wfls-block-header-content">
 			<div class="wfls-block-title">
-				<strong><?php _e('2. Enter Code from Authenticator App', 'wordfence-2fa'); ?></strong>
+				<strong><?php esc_html_e('2. Enter Code from Authenticator App', 'wordfence-2fa'); ?></strong>
 			</div>
 		</div>
 	</div>
 	<div class="wfls-block-content wfls-padding-add-bottom">
-		<p><?php _e('Download Recovery Codes', 'wordfence-2fa'); ?> <em class="wfls-text-small"><?php _e('Optional', 'wordfence-2fa'); ?></em></p>
-		<p><?php printf(__('Use one of these %d codes to log in if you lose access to your authenticator device. Codes are %d characters long plus optional spaces. Each one may be used only once.', 'wordfence-2fa'), count($recovery), \WordfenceLS\Model_Crypto::strlen($recovery[0]) * 2); ?></p>
+		<p><?php esc_html_e('Download Recovery Codes', 'wordfence-2fa'); ?> <em class="wfls-text-small"><?php esc_html_e('Optional', 'wordfence-2fa'); ?></em></p>
+		<p><?php echo esc_html(sprintf(__('Use one of these %d codes to log in if you lose access to your authenticator device. Codes are %d characters long plus optional spaces. Each one may be used only once.', 'wordfence-2fa'), count($recovery), \WordfenceLS\Model_Crypto::strlen($recovery[0]) * 2)); ?></p>
 		<ul class="wfls-recovery-codes">
 			<?php
 			$recoveryCodeFileContents = sprintf(__('Two-Factor Authentication Recovery Codes - %s (%s)', 'wordfence-2fa'), home_url(), $user->user_login) . "\r\n";
@@ -30,19 +30,19 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 			}
 			?>
 		</ul>
-		<p class="wfls-center"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery-download" target="_blank" rel="noopener noreferrer"><i class="dashicons dashicons-download"></i> <?php _e('Download', 'wordfence-2fa'); ?></a></p>
+		<p class="wfls-center"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery-download" target="_blank" rel="noopener noreferrer"><i class="dashicons dashicons-download"></i> <?php esc_html_e('Download', 'wordfence-2fa'); ?></a></p>
 		
 		<hr class="wfls-half">
 		
-		<p><?php _e('Enter the code from your authenticator app below to verify and activate two-factor authentication for this account.', 'wordfence-2fa'); ?></p>
+		<p><?php esc_html_e('Enter the code from your authenticator app below to verify and activate two-factor authentication for this account.', 'wordfence-2fa'); ?></p>
 		<p><input type="text" id="wfls-activate-field" value="" size="6" maxlength="6" placeholder="123456" autocomplete="off"></p>
 	</div>
 	<div class="wfls-block-footer">
 		<div class="wfls-block-footer-content">
 			<div class="wfls-block-title">
-				<a href="<?php echo \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php _e('For help on setting up an app, visit our help article.', 'wordfence-2fa'); ?></a>
+				<a href="<?php echo \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('For help on setting up an app, visit our help article.', 'wordfence-2fa'); ?></a>
 			</div>
-			<div class="wfls-block-footer-action"><a href="#" id="wfls-activate" class="wfls-btn wfls-btn-default wfls-disabled"><?php _e('Activate', 'wordfence-2fa'); ?></a></div>
+			<div class="wfls-block-footer-action"><a href="#" id="wfls-activate" class="wfls-btn wfls-btn-default wfls-disabled"><?php esc_html_e('Activate', 'wordfence-2fa'); ?></a></div>
 		</div>
 	</div>
 </div>
@@ -86,6 +86,8 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 							$('#wfls-activation-controls').crossfade($('#wfls-deactivation-controls'));
 							$('#wfls-recovery-code-count').text(response.text);
 							$('#wfls-activate-field').val('');
+
+							$('.wfls-notice[data-notice-type="wfls-will-be-required"]').find('.wfls-dismiss-link').trigger('click');
 							
 							if (!WFLS.savedRecoveryCodes) {
 								var prompt = $('#wfls-tmpl-recovery-skipped-prompt').tmpl({});

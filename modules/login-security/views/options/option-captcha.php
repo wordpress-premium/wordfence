@@ -11,13 +11,21 @@ $secretOptionName = \WordfenceLS\Controller_Settings::OPTION_RECAPTCHA_SECRET;
 $secretValue = \WordfenceLS\Controller_Settings::shared()->get($secretOptionName);
 ?>
 <ul id="wfls-option-enable-auth-captcha" data-option="<?php echo esc_attr($enableOptionName); ?>" data-enabled-value="1" data-disabled-value="0" data-original-value="<?php echo $currentEnableValue ? '1' : '0'; ?>">
+	<?php if (class_exists('WooCommerce')): ?>
+	<li class="wfls-padding-no-bottom">
+		<ul class="wfls-option wfls-padding-no-bottom">
+			<li class="wfls-option-spacer"></li>
+			<li class="wfls-option-subtitle"><div class="wfls-inline-notice"><i class="<?php echo (WORDFENCE_LS_FROM_CORE ? 'wf-fa wf-fa-exclamation-triangle' : 'wfls-fa wfls-fa-exclamation-triangle'); ?>" aria-hidden="true"></i><span><?php esc_html_e('We\'ve detected that you\'re using WooCommerce. reCAPTCHA support is currently incompatible with the WooCommerce login page and should not be enabled. Support may be added in a future version.', 'wordfence-ls'); ?></span></div></li>
+		</ul>
+	</li>
+	<?php endif; ?>
 	<li>
 		<ul class="wfls-option wfls-padding-add-bottom-small">
 			<li id="wfls-enable-auth-captcha" class="wfls-option-checkbox<?php echo ($currentEnableValue ? ' wfls-checked' : ''); ?>" role="checkbox" aria-checked="<?php echo ($currentEnableValue ? 'true' : 'false'); ?>" tabindex="0"><i class="wfls-ion-ios-checkmark-empty" aria-hidden="true" aria-labelledby="wfls-enable-auth-captcha-label"></i></li>
 			<li class="wfls-option-title">
 				<ul class="wfls-flex-vertical wfls-flex-align-left">
 					<li>
-						<strong id="wfls-enable-auth-captcha-label"><?php _e('Enable reCAPTCHA on the login and user registration pages', 'wordfence-ls'); ?></strong>
+						<strong id="wfls-enable-auth-captcha-label"><?php esc_html_e('Enable reCAPTCHA on the login and user registration pages', 'wordfence-ls'); ?></strong>
 					</li>
 					<li class="wfls-option-subtitle"><?php printf(__('reCAPTCHA v3 does not make users solve puzzles or click a checkbox like previous versions. The only visible part is the reCAPTCHA logo. If a visitor\'s browser fails the CAPTCHA, Wordfence will send an email to the user\'s address with a link they can click to verify that they are a user of your site. You can read further details <a href="%s" target="_blank" rel="noopener noreferrer">in our documentation</a>.', 'wordfence-ls'), \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_CAPTCHA)); ?></li>
 				</ul>
@@ -30,11 +38,11 @@ $secretValue = \WordfenceLS\Controller_Settings::shared()->get($secretOptionName
 			<li>
 				<table>
 					<tr class="wfls-option wfls-option-text" data-original-value="<?php echo esc_attr($siteKeyValue); ?>" data-text-option="<?php echo esc_attr($siteKeyOptionName); ?>">
-						<th id="wfls-enable-captcha-site-key-label" class="wfls-padding-add-bottom"><?php _e('reCAPTCHA v3 Site Key', 'wordfence-ls'); ?></th>
+						<th id="wfls-enable-captcha-site-key-label" class="wfls-padding-add-bottom"><?php esc_html_e('reCAPTCHA v3 Site Key', 'wordfence-ls'); ?></th>
 						<td class="wfls-option-text wfls-padding-add-bottom"><input type="text" name="recaptchaSiteKey" id="input-recaptchaSiteKey" class="wfls-form-control" value="<?php echo esc_attr($siteKeyValue); ?>"<?php if (!$currentEnableValue) { echo ' disabled'; } ?>></td>
 					</tr>
 					<tr class="wfls-option wfls-option-text" data-original-value="<?php echo esc_attr($secretValue); ?>" data-text-option="<?php echo esc_attr($secretOptionName); ?>">
-						<th id="wfls-enable-captcha-secret-label"><?php _e('reCAPTCHA v3 Secret', 'wordfence-ls'); ?></th>
+						<th id="wfls-enable-captcha-secret-label"><?php esc_html_e('reCAPTCHA v3 Secret', 'wordfence-ls'); ?></th>
 						<td class="wfls-option-text"><input type="text" name="recaptchaSecret" id="input-recaptchaSecret" class="wfls-form-control" value="<?php echo esc_attr($secretValue); ?>"<?php if (!$currentEnableValue) { echo ' disabled'; } ?>></td>
 					</tr>
 				</table>
@@ -44,7 +52,7 @@ $secretValue = \WordfenceLS\Controller_Settings::shared()->get($secretOptionName
 			<li class="wfls-option-spacer"></li>
 			<li class="wfls-option-title">
 				<ul class="wfls-flex-vertical wfls-flex-align-left">
-					<li class="wfls-option-subtitle"><?php _e('Note: This feature requires a free site key and secret for the <a href="https://www.google.com/recaptcha/intro/v3.html" target="_blank" rel="noopener noreferrer">Google reCAPTCHA v3 Service</a>.', 'wordfence-ls'); ?></li>
+					<li class="wfls-option-subtitle"><?php echo wp_kses(__('Note: This feature requires a free site key and secret for the <a href="https://www.google.com/recaptcha/intro/v3.html" target="_blank" rel="noopener noreferrer">Google reCAPTCHA v3 Service</a>.', 'wordfence-ls'), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></li>
 				</ul>
 			</li>
 		</ul>

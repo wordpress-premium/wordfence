@@ -11,7 +11,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 
 if ($active):
 ?>
-<p><?php _e('Nice work! The firewall is now optimized.', 'wordfence'); ?></p>
+<p><?php esc_html_e('Nice work! The firewall is now optimized.', 'wordfence'); ?></p>
 <?php else: ?>
-<p><?php _e('The changes have not yet taken effect. If you are using LiteSpeed or IIS as your web server or CGI/FastCGI interface, you may need to wait a few minutes for the changes to take effect since the configuration files are sometimes cached. You also may need to select a different server configuration in order to complete this step, but wait for a few minutes before trying. You can try refreshing this page.', 'wordfence'); ?></p>
+<p><?php esc_html_e('The changes have not yet taken effect. If you are using LiteSpeed or IIS as your web server or CGI/FastCGI interface, you may need to wait a few minutes for the changes to take effect since the configuration files are sometimes cached. You also may need to select a different server configuration in order to complete this step, but wait for a few minutes before trying. You can try refreshing this page.', 'wordfence'); ?></p>
 <?php endif; ?>

@@ -93,9 +93,9 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-alertOn-loginLockout' => __('Alert when someone is locked out from login', 'wordfence'),
 				'wf-option-alertOn-lostPasswdForm' => __('Alert when the "lost password" form is used for a valid user', 'wordfence'),
 				'wf-option-alertOn-adminLogin' => __('Alert me when someone with administrator access signs in', 'wordfence'),
-				'wf-option-alertOn-firstAdminLoginOnly' => __('Only alert me when that administrator signs in from a new device or location', 'wordfence'),
+				'wf-option-alertOn-firstAdminLoginOnly' => __('Only alert me when that administrator signs in from a new device', 'wordfence'),
 				'wf-option-alertOn-nonAdminLogin' => __('Alert me when a non-admin user signs in', 'wordfence'),
-				'wf-option-alertOn-firstNonAdminLoginOnly' => __('Only alert me when that user signs in from a new device or location', 'wordfence'),
+				'wf-option-alertOn-firstNonAdminLoginOnly' => __('Only alert me when that user signs in from a new device', 'wordfence'),
 				'wf-option-wafAlertOnAttacks' => __('Alert me when there\'s a large increase in attacks detected on my site', 'wordfence'),
 				'wf-option-alert-maxHourly' => __('Maximum email alerts to send per hour', 'wordfence'),
 				'wf-option-email-summary-enabled' => __('Enable email summary', 'wordfence'),
@@ -103,10 +103,10 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-email-summary-dashboard-widget-enabled' => __('Enable activity report widget on the WordPress dashboard', 'wordfence'),
 				'wf-option-wafStatus' => __('Web Application Firewall Status', 'wordfence'),
 				'wf-option-protectionMode' => __('Web Application Firewall Protection Level', 'wordfence'),
-				'wf-option-disableWAFBlacklistBlocking' => __('Real-Time IP Blacklist', 'wordfence'),
+				'wf-option-disableWAFBlacklistBlocking' => __('Real-Time IP Blocklist', 'wordfence'),
 				'wf-option-disableWAFIPBlocking' => __('Delay IP and Country blocking until after WordPress and plugins have loaded (only process firewall rules early)', 'wordfence'),
-				'wf-option-whitelisted' => __('Whitelisted IP addresses that bypass all rules', 'wordfence'),
-				'wf-option-whitelistedServices' => __('Whitelisted services', 'wordfence'),
+				'wf-option-whitelisted' => __('Allowlisted IP addresses that bypass all rules', 'wordfence'),
+				'wf-option-whitelistedServices' => __('Allowlisted services', 'wordfence'),
 				'wf-option-bannedURLs' => __('Immediately block IPs that access these URLs', 'wordfence'),
 				'wf-option-wafAlertWhitelist' => __('Ignored IP addresses for Wordfence Web Application Firewall alerting', 'wordfence'),
 				'wf-option-wafRules' => __('Web Application Firewall Rules', 'wordfence'),
@@ -121,13 +121,13 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-loginSec-breachPasswds-enabled' => __('Prevent the use of passwords leaked in data breaches', 'wordfence'),
 				'wf-option-loginSec-maskLoginErrors' => __('Don\'t let WordPress reveal valid users in login errors', 'wordfence'),
 				'wf-option-loginSec-blockAdminReg' => __('Prevent users registering "admin" username if it doesn\'t exist', 'wordfence'),
-				'wf-option-loginSec-disableAuthorScan' => __('Prevent discovery of usernames through "/?author=N" scans, the oEmbed API, and the WordPress REST API', 'wordfence'),
+				'wf-option-loginSec-disableAuthorScan' => __('Prevent discovery of usernames through "/?author=N" scans, the oEmbed API, the WordPress REST API, and WordPress XML Sitemaps', 'wordfence'),
+				'wf-option-loginSec-disableApplicationPasswords' => __('Disable WordPress application passwords', 'wordfence'),
 				'wf-option-other-blockBadPOST' => __('Block IPs who send POST requests with blank User-Agent and Referer', 'wordfence'),
 				'wf-option-blockCustomText' => __('Custom text shown on block pages', 'wordfence'),
 				'wf-option-other-pwStrengthOnUpdate' => __('Check password strength on profile update', 'wordfence'),
 				'wf-option-other-WFNet' => __('Participate in the Real-Time Wordfence Security Network', 'wordfence'),
 				'wf-option-firewallEnabled' => __('Enable Rate Limiting and Advanced Blocking', 'wordfence'),
-				'wf-option-blockFakeBots' => __('Immediately block fake Google crawlers', 'wordfence'),
 				'wf-option-neverBlockBG' => __('How should we treat Google\'s crawlers', 'wordfence'),
 				'wf-option-maxGlobalRequests' => __('If anyone\'s requests exceed', 'wordfence'),
 				'wf-option-maxRequestsCrawlers' => __('If a crawler\'s page views exceed', 'wordfence'),
@@ -135,8 +135,8 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-maxRequestsHumans' => __('If a human\'s page views exceed', 'wordfence'),
 				'wf-option-max404Humans' => __('If a human\'s pages not found (404s) exceed', 'wordfence'),
 				'wf-option-blockedTime' => __('How long is an IP address blocked when it breaks a rule', 'wordfence'),
-				'wf-option-allowed404s' => __('Whitelisted 404 URLs', 'wordfence'),
-				'wf-option-wafWhitelist' => __('Web Application Firewall Whitelisted URLs', 'wordfence'),
+				'wf-option-allowed404s' => __('Allowlisted 404 URLs', 'wordfence'),
+				'wf-option-wafWhitelist' => __('Web Application Firewall Allowlisted URLs', 'wordfence'),
 				'wf-option-ajaxWatcherDisabled-front' => __('Monitor background requests from an administrator\'s web browser for false positives (Front-end Website)', 'wordfence'),
 				'wf-option-ajaxWatcherDisabled-admin' => __('Monitor background requests from an administrator\'s web browser for false positives (Admin Panel)', 'wordfence'),
 				'wf-option-cbl-action' => __('What to do when we block someone visiting from a blocked country', 'wordfence'),
@@ -146,7 +146,7 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-cbl-bypassViewURL' => __('If user who is allowed to access the site views the relative URL ____ then set a cookie that will bypass country blocking in future in case that user hits the site from a blocked country', 'wordfence'),
 				'wf-option-scheduledScansEnabled' => __('Schedule Wordfence Scans', 'wordfence'),
 				'wf-option-scanType' => __('Scan Type', 'wordfence'),
-				'wf-option-scansEnabled-checkGSB' => __('Check if this website is on a domain blacklist', 'wordfence'),
+				'wf-option-scansEnabled-checkGSB' => __('Check if this website is on a domain blocklist', 'wordfence'),
 				'wf-option-spamvertizeCheck' => __('Check if this website is being &quot;Spamvertised&quot;', 'wordfence'),
 				'wf-option-checkSpamIP' => __('Check if this website IP is generating spam', 'wordfence'),
 				'wf-option-scansEnabled-checkHowGetIPs' => __('Scan for misconfigured How does Wordfence get IPs', 'wordfence'),
@@ -163,7 +163,7 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'wf-option-scansEnabled-comments' => __('Scan comments for known dangerous URLs and suspicious content', 'wordfence'),
 				'wf-option-scansEnabled-suspiciousOptions' => __('Scan WordPress core, plugin, and theme options for known dangerous URLs and suspicious content', 'wordfence'),
 				'wf-option-scansEnabled-oldVersions' => __('Scan for out of date, abandoned, and vulnerable plugins, themes, and WordPress versions', 'wordfence'),
-				'wf-option-scansEnabled-suspiciousAdminUsers' => __('Scan for admin users created outside of WordPress', 'wordfence'),
+				'wf-option-scansEnabled-suspiciousAdminUsers' => __('Scan for suspicious admin users created outside of WordPress', 'wordfence'),
 				'wf-option-scansEnabled-passwds' => __('Check the strength of passwords', 'wordfence'),
 				'wf-option-scansEnabled-diskSpace' => __('Monitor disk space', 'wordfence'),
 				'wf-option-scansEnabled-wafStatus' => __('Monitor Web Application Firewall status', 'wordfence'),
@@ -198,7 +198,7 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 				'showIcon' => false,
 				'indexOptions' => $indexOptions,
 				'restoreDefaultsSection' => wfConfig::OPTIONS_TYPE_ALL,
-				'restoreDefaultsMessage' => __('Are you sure you want to restore the default settings? This will undo any custom changes you have made to the options on this page. If you have manually disabled any rules or added any custom whitelisted URLs, those changes will not be overwritten.', 'wordfence'),
+				'restoreDefaultsMessage' => __('Are you sure you want to restore the default settings? This will undo any custom changes you have made to the options on this page. If you have manually disabled any rules or added any custom allowlisted URLs, those changes will not be overwritten.', 'wordfence'),
 			))->render();
 			?>
 		</div>
@@ -265,7 +265,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 					))->render();
 					?>
 					
-					<p><?php _e('These options are also available throughout the plugin pages, in the relevant sections. This page is provided for easier setup for experienced Wordfence users.', 'wordfence'); ?></p>
+					<p><?php esc_html_e('These options are also available throughout the plugin pages, in the relevant sections. This page is provided for easier setup for experienced Wordfence users.', 'wordfence'); ?></p>
 					
 					<?php
 					echo wfView::create('common/section-subtitle', array(
@@ -402,7 +402,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 								<div class="wf-block-header">
 									<div class="wf-block-header-content">
 										<div class="wf-block-title">
-											<strong><?php _e('Import/Export Options', 'wordfence'); ?></strong>
+											<strong><?php esc_html_e('Import/Export Options', 'wordfence'); ?></strong>
 										</div>
 									</div>
 								</div>
@@ -410,9 +410,9 @@ else if (wfConfig::get('touppPromptNeeded')) {
 									<ul class="wf-block-list">
 										<li>
 											<ul class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width wf-add-top wf-add-bottom">
-												<li><?php _e('Importing and exporting of options is available on the Tools page', 'wordfence'); ?></li>
+												<li><?php esc_html_e('Importing and exporting of options is available on the Tools page', 'wordfence'); ?></li>
 												<li class="wf-right wf-left-xs wf-padding-add-top-xs-small">
-													<a href="<?php echo esc_url(network_admin_url('admin.php?page=WordfenceTools&subpage=importexport')); ?>" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php _e('Import/Export Options', 'wordfence'); ?></a>
+													<a href="<?php echo esc_url(network_admin_url('admin.php?page=WordfenceTools&subpage=importexport')); ?>" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php esc_html_e('Import/Export Options', 'wordfence'); ?></a>
 												</li>
 											</ul>
 											<input type="hidden" id="wf-option-exportOptions">

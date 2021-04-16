@@ -479,6 +479,7 @@ class wfScanner {
 	 * @return array
 	 */
 	private function _scanJobsForStage($stage) {
+		$always = array();
 		$options = array();
 		switch ($stage) {
 			case self::STAGE_SPAMVERTISING_CHECKS:
@@ -497,6 +498,11 @@ class wfScanner {
 				);
 				break;
 			case self::STAGE_SERVER_STATE:
+				if ($this->scanType() != self::SCAN_TYPE_QUICK) {
+					$always = array(
+						'checkSkippedFiles',
+					);
+				}
 				$options = array(
 					'scansEnabled_checkHowGetIPs',
 					'scansEnabled_diskSpace',
@@ -557,7 +563,7 @@ class wfScanner {
 			}
 		}
 		
-		return $filteredOptions;
+		return array_merge($filteredOptions, $always);
 	}
 	
 	/**
@@ -591,9 +597,9 @@ class wfScanner {
 				continue;
 			}
 			
-			$options = $this->_scanJobsForStage($stage);
-			if (count($options)) {
-				$parameters['expected'] = count($options);
+			$jobs = $this->_scanJobsForStage($stage);
+			if (count($jobs)) {
+				$parameters['expected'] = count($jobs);
 			}
 			else {
 				$parameters['status'] = self::STATUS_DISABLED;
@@ -813,7 +819,7 @@ class wfScanner {
 		$reputationChecks = array(
 			'spamvertizeCheck' => __('Enable scan option to check if this website is being "Spamvertised".', 'wordfence'),
 			'checkSpamIP' => __('Enable scan option to check if your website IP is generating spam.', 'wordfence'),
-			'scansEnabled_checkGSB' => __('Enable scan option to check if your website is on a domain blacklist.', 'wordfence'),
+			'scansEnabled_checkGSB' => __('Enable scan option to check if your website is on a domain blocklist.', 'wordfence'),
 		);
 
 		foreach ($reputationChecks as $option => $optionLabel) {
@@ -862,6 +868,7 @@ class wfScanner {
 			'diskSpace' => array('scansEnabled_diskSpace'),
 			'wafStatus' => array('scansEnabled_wafStatus'),
 			'geoipSupport' => array('scansEnabled_geoipSupport'),
+			'checkSkippedFiles' => ($this->scanType() != self::SCAN_TYPE_QUICK), //Always runs except for quick
 			'knownFiles' => ($this->scanType() != self::SCAN_TYPE_QUICK), //Always runs except for quick, options are scansEnabled_core, scansEnabled_themes, scansEnabled_plugins, scansEnabled_coreUnknown, scansEnabled_malware
 			'checkReadableConfig' => array('scansEnabled_checkReadableConfig'),
 			'fileContents' => ($this->scanType() != self::SCAN_TYPE_QUICK), //Always runs except for quick, options are scansEnabled_fileContents and scansEnabled_fileContentsGSB
@@ -1190,9 +1197,15 @@ class wfScanner {
 						else if ($dayNumber > 6 && ($dayNumber % 7) == $currentDayOfWeekUTC && $currentHourUTC <= $hourNumber) { //It's one week from today but beyond the current hour, skip it this cycle
 							continue;
 						}
-						
+
 						$scanTime = $periodStart + $dayNumber * 86400 + $hourNumber * 3600 + wfWAFUtils::random_int(0, 3600);
-						wordfence::status(4, 'info', "Scheduled time for day {$dayNumber} hour {$hourNumber} is: " . wfUtils::formatLocalTime('l jS \of F Y h:i:s A P', $scanTime));
+						wordfence::status(4, 'info', sprintf(
+							/* translators: 1. Day of week. 2. Hour of day. 3. Localized date. */
+							__("Scheduled time for day %s hour %s is: %s", 'wordfence'),
+							$dayNumber,
+							$hourNumber,
+							wfUtils::formatLocalTime('l jS \of F Y h:i:s A P', $scanTime)
+						));
 						$this->scheduleSingleScan($scanTime);
 					}
 				}

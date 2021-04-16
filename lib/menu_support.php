@@ -28,19 +28,19 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 								<li>
 									<ul class="wf-block-list wf-block-list-horizontal">
 										<li class="wf-flex-vertical">
-											<h3><?php _e('Free Support', 'wordfence'); ?></h3>
-											<p class="wf-center"><?php _e('Support for free customers is available via our forums page on wordpress.org. The majority of requests <strong>receive an answer within a few days.</strong>', 'wordfence'); ?></p>
-											<p><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FREE); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-default wf-btn-callout-subtle"><?php _e('Go to Support Forums', 'wordfence'); ?></a></p>
+											<h3><?php esc_html_e('Free Support', 'wordfence'); ?></h3>
+											<p class="wf-center"><?php echo wp_kses(__('Support for free customers is available via our forums page on wordpress.org. The majority of requests <strong>receive an answer within a few days.</strong>', 'wordfence'), array('strong'=>array())); ?></p>
+											<p><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FREE); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-default wf-btn-callout-subtle"><?php esc_html_e('Go to Support Forums', 'wordfence'); ?></a></p>
 										</li>
 										<li class="wf-flex-vertical">
 										<?php if (wfConfig::get('isPaid')): ?>
-											<h3><?php _e('Premium Support', 'wordfence'); ?></h3>
-											<p class="wf-center"><?php _e('Our senior support engineers <strong>respond to Premium tickets within a few hours</strong> on average and have a direct line to our QA and development teams.', 'wordfence'); ?></p>
-											<p><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_PREMIUM); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php _e('Go to Premium Support', 'wordfence'); ?></a></p>
+											<h3><?php esc_html_e('Premium Support', 'wordfence'); ?></h3>
+											<p class="wf-center"><?php echo wp_kses(__('Our senior support engineers <strong>respond to Premium tickets within a few hours</strong> on average and have a direct line to our QA and development teams.', 'wordfence'), array('strong'=>array())); ?></p>
+											<p><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_PREMIUM); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Go to Premium Support', 'wordfence'); ?></a></p>
 										<?php else: ?>
-											<h3><?php _e('Upgrade Now to Access Premium Support', 'wordfence'); ?></h3>
-											<p class="wf-center"><?php _e('Our senior support engineers <strong>respond to Premium tickets within a few hours</strong> on average and have a direct line to our QA and development teams.', 'wordfence'); ?></p>
-											<p><a href="https://www.wordfence.com/gnl1supportUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php _e('Upgrade to Premium', 'wordfence'); ?></a></p>
+											<h3><?php esc_html_e('Upgrade Now to Access Premium Support', 'wordfence'); ?></h3>
+											<p class="wf-center"><?php echo wp_kses(__('Our senior support engineers <strong>respond to Premium tickets within a few hours</strong> on average and have a direct line to our QA and development teams.', 'wordfence'), array('strong'=>array())); ?></p>
+											<p><a href="https://www.wordfence.com/gnl1supportUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a></p>
 										<?php endif; ?>
 										</li>
 									</ul>
@@ -56,7 +56,7 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 						<div class="wf-block-header">
 							<div class="wf-block-header-content">
 								<div class="wf-block-title">
-									<strong><?php _e('GDPR Information', 'wordfence'); ?></strong>
+									<strong><?php esc_html_e('GDPR Information', 'wordfence'); ?></strong>
 								</div>
 								<div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive('support-gdpr') ? 'true' : 'false'); ?>" tabindex="0"></div></div>
 							</div>
@@ -67,8 +67,8 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 									<ul class="wf-option wf-option-static">
 										<li class="wf-option-title">
 											<ul class="wf-flex-vertical wf-flex-align-left">
-												<li><?php _e('General Data Protection Regulation', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
-												<li class="wf-option-subtitle"><?php _e('The GDPR is a set of rules that provides more control over EU personal data. Defiant has updated its terms of use, privacy policies, and software, as well as made available a data processing agreement to meet GDPR compliance.', 'wordfence'); ?></li>
+												<li><?php esc_html_e('General Data Protection Regulation', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
+												<li class="wf-option-subtitle"><?php esc_html_e('The GDPR is a set of rules that provides more control over EU personal data. Defiant has updated its terms of use, privacy policies, and software, as well as made available a data processing agreement to meet GDPR compliance.', 'wordfence'); ?></li>
 											</ul>
 										</li>
 									</ul>
@@ -77,8 +77,10 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 									<ul class="wf-option wf-option-static">
 										<li class="wf-option-title">
 											<ul class="wf-flex-vertical wf-flex-align-left">
-												<li><?php _e('Data Processing Agreement', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR_DPA); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
-												<li class="wf-option-subtitle"><?php printf(__('If you qualify as a data controller under the GDPR and need a data processing agreement, it can be <a href="%s" target="_blank" rel="noopener noreferrer">found here</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR_DPA)); ?></li>
+												<li><?php esc_html_e('Data Processing Agreement', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR_DPA); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
+												<li class="wf-option-subtitle"><?php echo wp_kses(sprintf(
+													/* translators: URL to support page. */
+														__('If you qualify as a data controller under the GDPR and need a data processing agreement, it can be <a href="%s" target="_blank" rel="noopener noreferrer">found here</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_GDPR_DPA)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></li>
 											</ul>
 										</li>
 									</ul>
@@ -87,8 +89,8 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 									<ul class="wf-option wf-option-static">
 										<li class="wf-option-title">
 											<ul class="wf-flex-vertical wf-flex-align-left">
-												<li><?php _e('Agreement to New Terms and Privacy Policies', 'wordfence'); ?></li>
-												<li class="wf-option-subtitle"><?php _e('To continue using Defiant products and services including the Wordfence plugin, all customers must review and agree to the updated terms and privacy policies. These changes reflect our commitment to follow data protection best practices and regulations. The Wordfence interface will remain disabled until these terms are agreed to.', 'wordfence'); ?></li>
+												<li><?php esc_html_e('Agreement to New Terms and Privacy Policies', 'wordfence'); ?></li>
+												<li class="wf-option-subtitle"><?php esc_html_e('To continue using Defiant products and services including the Wordfence plugin, all customers must review and agree to the updated terms and privacy policies. These changes reflect our commitment to follow data protection best practices and regulations. The Wordfence interface will remain disabled until these terms are agreed to.', 'wordfence'); ?></li>
 											</ul>
 										</li>
 									</ul>
@@ -101,7 +103,7 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 			<?php if (isset($support['all'])): ?>
 			<div class="wf-row">
 				<div class="wf-col-xs-12 wf-col-sm-9 wf-col-sm-half-padding-right wf-add-top">
-					<h3 class="wf-no-top"><?php _e('All Documentation', 'wordfence'); ?></h3>
+					<h3 class="wf-no-top"><?php esc_html_e('All Documentation', 'wordfence'); ?></h3>
 				</div>
 			</div>
 			<div class="wf-row">
@@ -109,7 +111,7 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 					<div class="wf-block wf-active">
 						<div class="wf-block-content">
 							<div class="wf-support-top-block">
-								<h4><?php _e('Top Topics and Questions', 'wordfence'); ?></h4> 
+								<h4><?php esc_html_e('Top Topics and Questions', 'wordfence'); ?></h4> 
 								<ol>
 								<?php
 								if (isset($support['top'])):
@@ -157,9 +159,9 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 					<div class="wf-block wf-active">
 						<div class="wf-block-content">
 							<div class="wf-support-missing-block">
-								<h4><?php _e('Documentation', 'wordfence'); ?></h4>
-								<p><?php _e('Documentation about Wordfence may be found on our website by clicking the button below or by clicking the <i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i> links on any of the plugin\'s pages.', 'wordfence'); ?></p>
-								<p class="wf-no-bottom"><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_INDEX); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-default wf-btn-callout-subtle"><?php _e('View Documentation', 'wordfence'); ?></a></p>
+								<h4><?php esc_html_e('Documentation', 'wordfence'); ?></h4>
+								<p><?php echo wp_kses(__('Documentation about Wordfence may be found on our website by clicking the button below or by clicking the <i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i> links on any of the plugin\'s pages.', 'wordfence'), array('i'=>array('class'=>array(), 'aria-hidden'=>array()))); ?></p>
+								<p class="wf-no-bottom"><a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_INDEX); ?>" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-default wf-btn-callout-subtle"><?php esc_html_e('View Documentation', 'wordfence'); ?></a></p>
 							</div>
 						</div>
 					</div>
@@ -264,7 +266,7 @@ $support = @json_decode(wfConfig::get('supportContent'), true);
 									 $.wfcolorbox.resize();
 									 });*/
 
-									var html = '<div class="wf-modal wf-modal-success"><div class="wf-model-success-wrapper"><div class="wf-modal-header"><div class="wf-modal-header-content"><div class="wf-modal-title"><?php _e('Premium License Installed', 'wordfence'); ?></div></div></div><div class="wf-modal-content"><?php _e('Congratulations! Wordfence Premium is now active on your website. Please note that some Premium features are not enabled by default.', 'wordfence'); ?></div></div><div class="wf-modal-footer"><ul class="wf-onboarding-flex-horizontal wf-onboarding-flex-align-right wf-onboarding-full-width"><li><a href="<?php echo esc_url(network_admin_url('admin.php?page=Wordfence')); ?>" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Continue', 'wordfence'); ?></a></li></ul></div></div>';
+									var html = '<div class="wf-modal wf-modal-success"><div class="wf-model-success-wrapper"><div class="wf-modal-header"><div class="wf-modal-header-content"><div class="wf-modal-title"><?php esc_html_e('Premium License Installed', 'wordfence'); ?></div></div></div><div class="wf-modal-content"><?php esc_html_e('Congratulations! Wordfence Premium is now active on your website. Please note that some Premium features are not enabled by default.', 'wordfence'); ?></div></div><div class="wf-modal-footer"><ul class="wf-onboarding-flex-horizontal wf-onboarding-flex-align-right wf-onboarding-full-width"><li><a href="<?php echo esc_url(network_admin_url('admin.php?page=Wordfence')); ?>" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Continue', 'wordfence'); ?></a></li></ul></div></div>';
 									$.wfcolorbox({
 										width: (wordfenceExt.isSmallScreen ? '300px' : '500px'),
 										html: html,

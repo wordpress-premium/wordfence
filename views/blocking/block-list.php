@@ -8,13 +8,13 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 <div class="wf-row">
 	<div class="wf-col-xs-12">
 		<div class="wf-flex-horizontal wf-flex-full-width wf-add-bottom-small">
-			<h3 class="wf-no-top wf-no-bottom"><?php printf(__('Current blocks<span class="wf-hidden-xs"> for %s</span>', 'wordfence'), preg_replace('/^https?:\/\//i', '', wfUtils::wpSiteURL())); ?></h3>
+			<h3 class="wf-no-top wf-no-bottom"><?php echo wp_kses(sprintf(/* translators: Site URL */ __('Current blocks<span class="wf-hidden-xs"> for %s</span>', 'wordfence'), preg_replace('/^https?:\/\//i', '', wfUtils::wpSiteURL())), array('span'=>array('class'=>array()))); ?></h3>
 			<div class="wf-right">
 				<div class="wf-inline-block">
 				<ul class="wf-option wf-option-toggled-boolean-switch wf-option-no-spacing" data-option="displayAutomaticBlocks" data-enabled-value="1" data-disabled-value="0" data-original-value="<?php echo wfConfig::get('displayAutomaticBlocks') ? 1 : 0; ?>">
 					<li class="wf-boolean-switch<?php echo wfConfig::get('displayAutomaticBlocks') ? ' wf-active' : ''; ?>"><a href="#" class="wf-boolean-switch-handle"></a></li>
 					<li class="wf-option-title wf-padding-add-left wf-no-right wf-padding-no-right">
-						<?php echo __('Show<span class="wf-hidden-xs"> Wordfence</span> Automatic<span class="wf-hidden-xs"> Blocks</span>', 'wordfence'); ?> 
+						<?php echo wp_kses(__('Show<span class="wf-hidden-xs"> Wordfence</span> Automatic<span class="wf-hidden-xs"> Blocks</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?>
 					</li>
 				</ul>
 				</div>
@@ -32,11 +32,11 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 							<li class="wf-padding-add-bottom-xs">
 								<ul class="wf-flex-horizontal wf-flex-full-width wf-flex-grow-first wf-no-top">
 									<li><input type="text" placeholder="<?php esc_attr_e('Filter by Type, Detail, or Reason', 'wordfence'); ?>" id="wf-blocks-filter-field" class="wf-input-text"></li>
-									<li class="wf-padding-add-left-medium"><a href="#" id="wf-blocks-apply-filter" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Filter', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING_FILTER); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
+									<li class="wf-padding-add-left-medium"><a href="#" id="wf-blocks-apply-filter" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Filter', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING_FILTER); ?>" target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
 								</ul>
 							</li>
 							<li class="wf-right wf-flex-vertical-xs">
-								<a href="#" id="blocks-bulk-unblock" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Unblock', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="blocks-bulk-make-permanent" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Make Permanent', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="<?php echo wfUtils::siteURLRelative(); ?>?_wfsf=blockedIPs&amp;nonce=<?php echo wp_create_nonce('wp-ajax'); ?>" id="blocks-export-ips" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Export<span class="wf-hidden-xs"> All IPs</span>', 'wordfence'); ?></a>
+								<a href="#" id="blocks-bulk-unblock" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Unblock', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="blocks-bulk-make-permanent" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Make Permanent', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="<?php echo wfUtils::siteURLRelative(); ?>?_wfsf=blockedIPs&amp;nonce=<?php echo wp_create_nonce('wp-ajax'); ?>" id="blocks-export-ips" class="wf-btn wf-btn-callout wf-btn-default"><?php echo wp_kses(__('Export<span class="wf-hidden-xs"> All IPs</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>
 							</li>
 						</ul>
 						<div class="wf-block wf-block-no-padding wf-block-no-header wf-active wf-no-bottom wf-overflow-y-auto-xs">
@@ -65,23 +65,23 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 <script type="text/x-jquery-template" id="wf-blocks-columns-tmpl">
 	<tr class="wf-blocks-columns">
 		<th style="width: 2%;text-align: center"><div class="wf-blocks-bulk-select wf-option-checkbox"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div></th>
-		<th data-column="type" class="wf-sortable wf-unsorted"><?php _e('Block Type', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="detail" class="wf-sortable wf-unsorted"><?php _e('Detail', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="ruleAdded" class="wf-sortable wf-unsorted"><?php _e('Rule Added', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="reason" class="wf-sortable wf-unsorted"><?php _e('Reason', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="expiration" class="wf-sortable wf-unsorted"><?php _e('Expiration', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="blockCount" class="wf-sortable wf-unsorted"><?php _e('Block Count', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
-		<th data-column="lastAttempt" class="wf-sortable wf-unsorted"><?php _e('Last Attempt', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="type" class="wf-sortable wf-unsorted"><?php esc_html_e('Block Type', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="detail" class="wf-sortable wf-unsorted"><?php esc_html_e('Detail', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="ruleAdded" class="wf-sortable wf-unsorted"><?php esc_html_e('Rule Added', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="reason" class="wf-sortable wf-unsorted"><?php esc_html_e('Reason', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="expiration" class="wf-sortable wf-unsorted"><?php esc_html_e('Expiration', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="blockCount" class="wf-sortable wf-unsorted"><?php esc_html_e('Block Count', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
+		<th data-column="lastAttempt" class="wf-sortable wf-unsorted"><?php esc_html_e('Last Attempt', 'wordfence'); ?> <i class="wf-sorted-ascending wf-ion-android-arrow-dropup" aria-hidden="true"></i><i class="wf-sorted-descending wf-ion-android-arrow-dropdown" aria-hidden="true"></i></th>
 	</tr>
 </script>
 <script type="text/x-jquery-template" id="wf-no-blocks-tmpl">
 	<tr id="wf-no-blocks">
-		<td colspan="8"><?php _e('No blocks are currently active.', 'wordfence'); ?></td>
+		<td colspan="8"><?php esc_html_e('No blocks are currently active.', 'wordfence'); ?></td>
 	</tr>
 </script>
 <script type="text/x-jquery-template" id="wf-no-filtered-blocks-tmpl">
 	<tr id="wf-no-blocks">
-		<td colspan="8"><?php _e('No blocks match the current filter.', 'wordfence'); ?></td>
+		<td colspan="8"><?php esc_html_e('No blocks match the current filter.', 'wordfence'); ?></td>
 	</tr>
 </script>
 <script type="text/x-jquery-template" id="wf-blocks-loading-tmpl">
@@ -376,13 +376,13 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 				setTimeout(function() {
 					var currentValue = $('#wf-blocks-filter-field').val() || '';
 					if (!WFAD.blocksFilter) {
-						$('#wf-blocks-apply-filter').text('<?php _e('Filter', 'wordfence'); ?>').data('filterMode', '');
+						$('#wf-blocks-apply-filter').text('<?php esc_html_e('Filter', 'wordfence'); ?>').data('filterMode', '');
 					}
 					else if (currentValue == '' || currentValue == WFAD.blocksFilter) {
-						$('#wf-blocks-apply-filter').text('<?php _e('Clear Filter', 'wordfence'); ?>').data('filterMode', 'filtered');
+						$('#wf-blocks-apply-filter').text('<?php esc_html_e('Clear Filter', 'wordfence'); ?>').data('filterMode', 'filtered');
 					}
 					else {
-						$('#wf-blocks-apply-filter').text('<?php _e('Change Filter', 'wordfence'); ?>').data('filterMode', 'pendingChange');
+						$('#wf-blocks-apply-filter').text('<?php esc_html_e('Change Filter', 'wordfence'); ?>').data('filterMode', 'pendingChange');
 					}
 				}, 4);
 			});

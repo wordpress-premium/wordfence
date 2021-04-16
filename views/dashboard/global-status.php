@@ -13,7 +13,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 <ul class="wf-block-list wf-block-list-horizontal">
 	<li id="wfStatusTourMarker">
 		<div class="wf-block-labeled-value wf-global-status wf-global-status-full-enabled">
-			<div class="wf-block-labeled-value-label"><?php _e('Wordfence Protection Activated', 'wordfence'); ?></div>
+			<div class="wf-block-labeled-value-label"><?php esc_html_e('Wordfence Protection Activated', 'wordfence'); ?></div>
 		</div>
 	</li>
 </ul>

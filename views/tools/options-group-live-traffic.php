@@ -29,7 +29,7 @@ if (!isset($hideShowMenuItem)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Live Traffic Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Live Traffic Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -37,7 +37,7 @@ if (!isset($hideShowMenuItem)) {
 			<div class="wf-block-content wf-clearfix">
 				<?php if ($showControls): ?>
 				<p>
-					<?php _e('These options let you choose which traffic to log and to ignore certain types of visitors, based on their level of access, usernames, IP address, or browser type. If you run a high-traffic website where it is not feasible to see your visitors in real-time, simply change the <strong>Traffic logging mode</strong> to "Security Only."', 'wordfence') ?>
+					<?php echo wp_kses(__('These options let you choose which traffic to log and to ignore certain types of visitors, based on their level of access, usernames, IP address, or browser type. If you run a high-traffic website where it is not feasible to see your visitors in real-time, simply change the <strong>Traffic logging mode</strong> to "Security Only."', 'wordfence'), array('strong'=>array())); ?>
 				</p>
 				
 				<div class="wf-row">

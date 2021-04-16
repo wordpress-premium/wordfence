@@ -39,9 +39,9 @@ else {
 			<li class="wfls-option-title">
 				<ul class="wfls-flex-vertical wfls-flex-align-left">
 					<li>
-						<strong id="wfls-require-2fa-admin-label"><?php _e('Require 2FA for all administrators', 'wordfence-2fa'); ?></strong>
+						<strong id="wfls-require-2fa-admin-label"><?php esc_html_e('Require 2FA for all administrators', 'wordfence-2fa'); ?></strong>
 					</li>
-					<li class="wfls-option-subtitle"><?php _e('Note: This setting requires at least one administrator to have 2FA active. On multisite, this option applies only to super admins.', 'wordfence-2fa'); ?></li>
+					<li class="wfls-option-subtitle"><?php esc_html_e('Note: This setting requires at least one administrator to have 2FA active. On multisite, this option applies only to super admins.', 'wordfence-2fa'); ?></li>
 				</ul>
 			</li>
 		</ul>
@@ -51,7 +51,7 @@ else {
 			<li class="wfls-option-spacer"></li>
 			<li id="wfls-require-2fa-grace-period" class="wfls-flex-horizontal wfls-option-date">
 				<div class="wfls-option-checkbox<?php echo $currentGracePeriodEnabledValue ? ' wfls-checked' : ''; ?><?php echo $currentRequireValue ? '' : ' wfls-disabled'; ?>" data-original-value="<?php echo $currentGracePeriodEnabledValue ? '1' : '0'; ?>"><i class="wfls-ion-ios-checkmark-empty" aria-hidden="true"></i></div>
-				<span id="wfls-require-2fa-grace-period-label" class="wfls-padding-add-left wfls-padding-add-right"><?php _e('Grace period to require 2FA', 'wordfence'); ?> </span>
+				<span id="wfls-require-2fa-grace-period-label" class="wfls-padding-add-left wfls-padding-add-right"><?php esc_html_e('Grace period to require 2FA', 'wordfence'); ?> </span>
 				<input type="text" name="require2FAGracePeriod" id="input-require2FAGracePeriod" class="wfls-datetime wfls-form-control" placeholder="Enabled on..." data-value="<?php echo $currentGracePeriodDateValue; ?>" data-original-value="<?php echo $currentGracePeriodDateValue; ?>"<?php echo $currentGracePeriodEnabledValue ? '' : ' disabled'; ?>>
 			</li>
 		</ul>
@@ -60,7 +60,7 @@ else {
 		<ul class="wfls-option wfls-padding-no-top">
 			<li class="wfls-option-spacer"></li>
 			<li class="wfls-option-spacer"></li>
-			<li><a href="#" id="wfls-send-grace-period-notification" class="wfls-btn wfls-btn-sm wfls-btn-default<?php echo (\WordfenceLS\Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_ADMIN) && \WordfenceLS\Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED) && \WordfenceLS\Controller_Time::time() < \WordfenceLS\Controller_Settings::shared()->get_int(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD)) ? '' : ' wfls-disabled'; ?>"><?php _e('Send Notification', 'wordfence-2fa'); ?></a></li>
+			<li><a href="#" id="wfls-send-grace-period-notification" class="wfls-btn wfls-btn-sm wfls-btn-default<?php echo (\WordfenceLS\Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_ADMIN) && \WordfenceLS\Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED) && \WordfenceLS\Controller_Time::time() < \WordfenceLS\Controller_Settings::shared()->get_int(\WordfenceLS\Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD)) ? '' : ' wfls-disabled'; ?>"><?php esc_html_e('Send Notification', 'wordfence-2fa'); ?></a></li>
 		</ul>
 	</li>
 </ul>

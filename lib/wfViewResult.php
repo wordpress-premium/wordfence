@@ -5,11 +5,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel='stylesheet' id='wordfence-main-style-css'  href='<?php echo wfUtils::getBaseURL() . wfUtils::versionedAsset('css/diff.css'); ?>?ver=<?php echo WORDFENCE_VERSION; ?>' type='text/css' media='all' />
 <body>
-<h1>Wordfence: File Viewer</h1>
+<h1><?php esc_html_e('Wordfence: File Viewer', 'wordfence') ?></h1>
 <table border="0" style="margin: 0 0 20px 0;" class="summary">
-<tr><td>Filename:</td><td><?php echo wp_kses($localFile, array()); ?></td></tr>
-<tr><td>File Size:</td><td><?php echo $fileSize; ?></td></tr>
-<tr><td>File last modified:</td><td><?php echo $fileMTime; ?></td></tr>
+<tr><td><?php esc_html_e('Filename:', 'wordfence') ?></td><td><?php echo wp_kses($localFile, array()); ?></td></tr>
+<tr><td><?php esc_html_e('File Size:', 'wordfence') ?></td><td><?php echo $fileSize; ?></td></tr>
+<tr><td><?php esc_html_e('File last modified:', 'wordfence') ?></td><td><?php echo $fileMTime; ?></td></tr>
 </table>
 
 <?php 
@@ -19,9 +19,9 @@
 		highlight_string($cont);
 	}
 ?>
-	
 
 
-<div class="diffFooter">&copy;&nbsp;2011 to <?php echo date('Y'); ?> Wordfence &mdash; Visit <a href="http://wordfence.com/">Wordfence.com</a> for help, security updates and more.</div>
+
+<div class="diffFooter"><?php echo wp_kses(sprintf(__('&copy;&nbsp;%d to %d Wordfence &mdash; Visit <a href="http://wordfence.com/">Wordfence.com</a> for help, security updates and more.', 'wordfence'), date_i18n('Y', WORDFENCE_EPOCH), date_i18n('Y')), array('a'=>array('href'=>array()))); ?></div>
 </body>
 </html>

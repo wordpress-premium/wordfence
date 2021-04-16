@@ -4,8 +4,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel='stylesheet' id='wordfence-main-style-css'  href='<?php echo wfUtils::getBaseURL() . wfUtils::versionedAsset('css/iptraf.css'); ?>?ver=<?php echo WORDFENCE_VERSION; ?>' type='text/css' media='all' />
+</head>
 <body>
-<h1>Wordfence: All recent hits for IP address <?php echo wp_kses($IP, array()); if($reverseLookup){ echo '[' . wp_kses($reverseLookup, array()) . ']'; } ?></h1>
-<div class="footer">&copy;&nbsp;2011 to <?php echo date('Y'); ?> Wordfence &mdash; Visit <a href="http://wordfence.com/">Wordfence.com</a> for help, security updates and more.</div>
+<h1><?php echo esc_html(sprintf(
+	/* translators: IP address. */
+		__('Wordfence: All recent hits for IP address %s', 'wordfence'), wp_kses($IP, array()) . (($reverseLookup) ? '[' . wp_kses($reverseLookup, array()) . ']' : ''))) ?></h1>
+<div class="footer"><?php echo wp_kses(sprintf(
+	/* translators: 1. year (2011). 2. year (2020) */
+		__('&copy;&nbsp;%d to %d Wordfence &mdash; Visit <a href="http://wordfence.com/">Wordfence.com</a> for help, security updates and more.', 'wordfence'), date_i18n('Y', WORDFENCE_EPOCH), date_i18n('Y')), array('a'=>array('href'=>array()))) ?></div>
 </body>
 </html>

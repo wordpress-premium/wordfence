@@ -7,12 +7,12 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 	<li class="wf-flex-vertical wf-padding-add-top wf-padding-add-bottom">
 		<table id="wf-create-block" class="wf-option">
 			<tr>
-				<th class="wf-right wf-padding-add-right"><?php _e('<span class="wf-hidden-xs">Block </span>Type', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right"><?php echo wp_kses(__('<span class="wf-hidden-xs">Block </span>Type', 'wordfence'), array('span'=>array('class'=>array()))); ?></th>
 				<td class="wf-block-type">
 					<ul id="wf-block-type" class="wf-nav wf-nav-pills wf-nav-pills-bordered wf-nav-pills-connected">
-						<li><a href="#" data-value="ip-address" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> this IP Address</span>', 'wordfence'); ?>"><?php _e('IP<span class="wf-hidden-xs"> Address</span>', 'wordfence'); ?></a></li>
-						<li><a href="#" data-value="country" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> the Selected Countries</span>', 'wordfence'); ?>" data-edit-button="<?php esc_attr_e('Update<span class="wf-hidden-xs"> Block</span>', 'wordfence'); ?>"><?php _e('Country', 'wordfence'); ?></a></li>
-						<li<?php echo $wfBlockRange ? ' class="wf-active"' : '' ?>><a href="#" data-value="custom-pattern" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> Visitors Matching this Pattern</span>', 'wordfence'); ?>"><?php _e('<span class="wf-hidden-xs">Custom </span>Pattern', 'wordfence'); ?></a></li>
+						<li><a href="#" data-value="ip-address" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> this IP Address</span>', 'wordfence'); ?>"><?php echo wp_kses(__('IP<span class="wf-hidden-xs"> Address</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></a></li>
+						<li><a href="#" data-value="country" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> the Selected Countries</span>', 'wordfence'); ?>" data-edit-button="<?php esc_attr_e('Update<span class="wf-hidden-xs"> Block</span>', 'wordfence'); ?>"><?php esc_html_e('Country', 'wordfence'); ?></a></li>
+						<li<?php echo $wfBlockRange ? ' class="wf-active"' : '' ?>><a href="#" data-value="custom-pattern" data-new-button="<?php esc_attr_e('Block<span class="wf-hidden-xs"> Visitors Matching this Pattern</span>', 'wordfence'); ?>"><?php echo wp_kses(__('<span class="wf-hidden-xs">Custom </span>Pattern', 'wordfence'), array('span'=>array('class'=>array()))); ?></a></li>
 					</ul>
 					<script type="application/javascript">
 						(function($) {
@@ -110,7 +110,7 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 				</td>
 			</tr>
 			<tr class="" style="display: none;">
-				<th class="wf-right wf-padding-add-right"><?php _e('Block Duration', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right"><?php esc_html_e('Block Duration', 'wordfence'); ?></th>
 				<td class="wf-option-text">
 					<input id="wf-block-duration" type="text" placeholder="<?php esc_attr_e('Enter a duration (default is forever)', 'wordfence'); ?>">
 					<script type="application/javascript">
@@ -129,16 +129,16 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 			</tr>
 		<?php if (wfConfig::get('isPaid')): ?>
 			<tr class="wf-block-add-country" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('<span class="wf-hidden-xs">What to </span>Block', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('<span class="wf-hidden-xs">What to </span>Block', 'wordfence'), array('span'=>array('class'=>array()))); ?></th>
 				<td class="wf-padding-add-top-small wf-form-field">
 					<div class="wf-option-checkboxes">
 						<ul id="wf-block-country-login">
 							<li class="wf-option-checkbox wf-checked"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></li>
-							<li class="wf-option-title"><?php _e('Login Form', 'wordfence'); ?></li>
+							<li class="wf-option-title"><?php esc_html_e('Login Form', 'wordfence'); ?></li>
 						</ul>
 						<ul id="wf-block-country-site">
 							<li class="wf-option-checkbox wf-checked"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></li>
-							<li class="wf-option-title"><?php _e('<span class="wf-hidden-xs">Block access to the rest of the site</span><span class="wf-visible-xs">Rest of site</span>', 'wordfence'); ?></li>
+							<li class="wf-option-title"><?php echo wp_kses(__('<span class="wf-hidden-xs">Block access to the rest of the site</span><span class="wf-visible-xs">Rest of site</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></li>
 						</ul>
 					</div>
 				</td>
@@ -146,11 +146,11 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 			<tr class="wf-block-add-country" style="display: none;">
 				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"></th>
 				<td class="wf-padding-add-top-small wf-form-field">
-					<em><?php printf(__('If you use Google Adwords, blocking countries from accessing the entire site is not recommended. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'wordfence'), wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING_FULL_SITE)); ?></em>
+					<em><?php echo wp_kses(sprintf(/* translators: Support URL */ __('If you use Google Ads, blocking countries from accessing the entire site is not recommended. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'wordfence'), wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING_FULL_SITE)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></em>
 				</td>
 			</tr>
 			<tr class="wf-block-add-country" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('Countries<span class="wf-hidden-xs"> to Block</span>', 'wordfence'); ?><br><a href="#" id="wf-block-country-countries-popup"><?php _e('Pick<span class="wf-hidden-xs"> from List</span>', 'wordfence'); ?></a></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('Countries<span class="wf-hidden-xs"> to Block</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?><br><a href="#" id="wf-block-country-countries-popup"><?php echo wp_kses(__('Pick<span class="wf-hidden-xs"> from List</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></a></th>
 				<td class="wf-option-text wf-padding-add-top-small">
 					<select id="wf-block-country-countries" multiple>
 					<?php
@@ -173,43 +173,43 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 			<tr class="wf-block-add-country" style="display: none;">
 				<td colspan="2">
 					<ul class="wf-flex-vertical">
-						<li><h3><?php _e('Put Geographic Protection In Place With Country Blocking', 'wordfence'); ?></h3></li>
-						<li><p class="wf-no-top"><?php _e('Wordfence country blocking is designed to stop an attack, prevent content theft, or end malicious activity that originates from a geographic region in less than 1/300,000th of a second. Blocking countries who are regularly creating failed logins, a large number of page not found errors, and are clearly engaged in malicious activity is an effective way to protect your site during an attack.', 'wordfence'); ?></p></li>
+						<li><h3><?php esc_html_e('Put Geographic Protection In Place With Country Blocking', 'wordfence'); ?></h3></li>
+						<li><p class="wf-no-top"><?php esc_html_e('Wordfence country blocking is designed to stop an attack, prevent content theft, or end malicious activity that originates from a geographic region in less than 1/300,000th of a second. Blocking countries who are regularly creating failed logins, a large number of page not found errors, and are clearly engaged in malicious activity is an effective way to protect your site during an attack.', 'wordfence'); ?></p></li>
 						<li><?php echo wfView::create('blocking/country-block-map')->render(); ?></li>
-						<li><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1countryBlockUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a></li>
+						<li><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1countryBlockUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a></li>
 					</ul>
 				</td>
 			</tr>
 		<?php endif; ?>
 			<tr class="wf-block-add-ip" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('IP<span class="wf-hidden-xs"> Address to Block</span>', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('IP<span class="wf-hidden-xs"> Address to Block</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></th>
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-ip" type="text" placeholder="<?php esc_attr_e('Enter an IP address', 'wordfence'); ?>"></td>
 			</tr>
 			<tr class="wf-block-add-pattern" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('IP<span class="wf-hidden-xs"> Address</span> Range', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('IP<span class="wf-hidden-xs"> Address</span> Range', 'wordfence'), array('span'=>array('class'=>array()))); ?></th>
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-ip-range" type="text" placeholder="<?php esc_attr_e('e.g., 192.168.200.200 - 192.168.200.220 or 192.168.200.0/24', 'wordfence'); ?>"></td>
 			</tr>
 			<tr class="wf-block-add-pattern" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('Hostname', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php esc_html_e('Hostname', 'wordfence'); ?></th>
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-hostname" type="text" placeholder="<?php esc_attr_e('e.g., *.amazonaws.com or *.linode.com', 'wordfence'); ?>"></td>
 			</tr>
 			<tr class="wf-block-add-pattern" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('<span class="wf-hidden-xs">Browser </span>User Agent', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('<span class="wf-hidden-xs">Browser </span>User Agent', 'wordfence'), array('span'=>array('class'=>array()))); ?></th>
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-user-agent" type="text" placeholder="<?php esc_attr_e('e.g., *badRobot*, *MSIE*, or *browserSuffix', 'wordfence'); ?>"></td>
 			</tr>
 			<tr class="wf-block-add-pattern" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('Referrer', 'wordfence'); ?></th>
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php esc_html_e('Referrer', 'wordfence'); ?></th>
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-referrer" type="text" placeholder="<?php esc_attr_e('e.g., *badwebsite.example.com*', 'wordfence'); ?>"></td>
 			</tr>
 			<tr class="wf-block-add-ip wf-block-add-pattern" style="display: none;">
-				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php _e('<span class="wf-hidden-xs">Block </span>Reason', 'wordfence'); ?><span class="wf-red-dark">*</span></th> 
+				<th class="wf-right wf-padding-add-right wf-padding-add-top-small"><?php echo wp_kses(__('<span class="wf-hidden-xs">Block </span>Reason', 'wordfence'), array('span'=>array('class'=>array()))); ?><span class="wf-red-dark">*</span></th> 
 				<td class="wf-option-text wf-padding-add-top-small"><input id="wf-block-reason" type="text" placeholder="<?php esc_attr_e('Enter a reason', 'wordfence'); ?>" maxlength="50"></td>
 			</tr>
 		</table>
 	</li>
 	<li class="<?php echo (wfConfig::get('isPaid') ? 'wf-block-add-common' : 'wf-block-add-ip wf-block-add-pattern'); ?>" style="display: none;">
 		<div class="wf-right wf-padding-add-top wf-padding-add-bottom">
-			<a id="wf-block-add-cancel" class="wf-btn wf-btn-default wf-btn-callout-subtle" href="#"><?php esc_html_e('Cancel', 'wordfence'); ?></a>&nbsp;&nbsp;<a id="wf-block-add-save" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" href="#"><?php _e('Block<span class="wf-hidden-xs"> Visitors Matching this</span> Pattern', 'wordfence'); ?></a>
+			<a id="wf-block-add-cancel" class="wf-btn wf-btn-default wf-btn-callout-subtle" href="#"><?php esc_html_e('Cancel', 'wordfence'); ?></a>&nbsp;&nbsp;<a id="wf-block-add-save" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" href="#"><?php echo wp_kses(__('Block<span class="wf-hidden-xs"> Visitors Matching this</span> Pattern', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>
 			<script type="application/javascript">
 				(function($) {
 					$(function() {
@@ -260,7 +260,7 @@ $wfBlockRange = filter_input(INPUT_GET, 'wfBlockRange', FILTER_DEFAULT, FILTER_R
 									.off('click.wfselect2-copy')
 									.on('click.wfselect2-copy', function(e) {
 										var opt = $(this).data('wfselect2-opt');
-										opt.attr('selected', false);
+										opt.prop('selected', false);
 										opt.parents('select').trigger('change');
 									}).data('wfselect2-opt', $(value));
 								list.append(li);

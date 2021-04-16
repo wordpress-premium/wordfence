@@ -6,7 +6,7 @@
 			<div class="wf-dashboard-item-inner">
 				<div class="wf-dashboard-item-content">
 					<div class="wf-dashboard-item-title">
-						<strong>Login Attempts</strong>
+						<strong><?php esc_html_e('Login Attempts', 'wordfence') ?></strong>
 					</div>
 					<div class="wf-dashboard-item-action"><div class="wf-dashboard-item-action-disclosure"></div></div>
 				</div>
@@ -17,27 +17,27 @@
 						<div>
 							<div class="wf-dashboard-toggle-btns">
 								<ul class="wf-pagination wf-pagination-sm">
-									<li class="wf-active"><a href="#" class="wf-dashboard-login-attempts" data-grouping="success">Successful</a></li>
-									<li><a href="#" class="wf-dashboard-login-attempts" data-grouping="fail">Failed</a></li>
+									<li class="wf-active"><a href="#" class="wf-dashboard-login-attempts" data-grouping="success"><?php esc_html_e('Successful', 'wordfence') ?></a></li>
+									<li><a href="#" class="wf-dashboard-login-attempts" data-grouping="fail"><?php esc_html_e('Failed', 'wordfence') ?></a></li>
 								</ul>
 							</div>
 							<div class="wf-recent-logins wf-recent-logins-success">
 								<?php if (count($d->loginsSuccess) == 0): ?>
-									<div class="wf-dashboard-item-list-text"><p><em>No successful logins have been recorded.</em></p></div>
+									<div class="wf-dashboard-item-list-text"><p><em><?php esc_html_e('No successful logins have been recorded.', 'wordfence') ?></em></p></div>
 								<?php else: ?>
 									<?php $data = array_slice($d->loginsSuccess, 0, min(10, count($d->loginsSuccess)), true); include(dirname(__FILE__) . '/widget_content_logins.php'); ?>
 									<?php if (count($d->loginsSuccess) > 10): ?>
-										<div class="wf-dashboard-item-list-text"><div class="wf-dashboard-show-more" data-grouping="logins" data-period="success"><a href="#">Show more</a></div></div>
+										<div class="wf-dashboard-item-list-text"><div class="wf-dashboard-show-more" data-grouping="logins" data-period="success"><a href="#"><?php esc_html_e('Show more', 'wordfence') ?></a></div></div>
 									<?php endif; ?>
 								<?php endif; ?>
 							</div>
 							<div class="wf-recent-logins wf-recent-logins-fail wf-hidden">
 								<?php if (count($d->loginsFail) == 0): ?>
-									<div class="wf-dashboard-item-list-text"><p><em>No failed logins have been recorded.</em></p></div>
+									<div class="wf-dashboard-item-list-text"><p><em><?php esc_html_e('No failed logins have been recorded.', 'wordfence') ?></em></p></div>
 								<?php else: ?>
 									<?php $data = array_slice($d->loginsFail, 0, min(10, count($d->loginsFail)), true); include(dirname(__FILE__) . '/widget_content_logins.php'); ?>
 									<?php if (count($d->loginsFail) > 10): ?>
-										<div class="wf-dashboard-item-list-text"><div class="wf-dashboard-show-more" data-grouping="logins" data-period="fail"><a href="#">Show more</a></div></div>
+										<div class="wf-dashboard-item-list-text"><div class="wf-dashboard-show-more" data-grouping="logins" data-period="fail"><a href="#"><?php esc_html_e('Show more', 'wordfence') ?></a></div></div>
 									<?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -74,7 +74,7 @@
 												$(self).closest('.wf-recent-logins').find('table').replaceWith(table);
 											}
 											else {
-												WFAD.colorboxModal('300px', 'An error occurred', 'We encountered an error trying load more data.');
+												WFAD.colorboxModal('300px', <?php echo json_encode(__('An error occurred', 'wordfence')) ?>, <?php echo json_encode(__('We encountered an error trying load more data.', 'wordfence')) ?>);
 												$(this).closest('.wf-dashboard-item-list-text').fadeIn();
 											}
 										});
@@ -92,9 +92,9 @@
 	<table class="wf-table wf-table-hover">
 		<thead>
 		<tr>
-			<th>Username</th>
-			<th>IP</th>
-			<th>Date</th>
+			<th><?php esc_html_e('Username', 'wordfence') ?></th>
+			<th><?php esc_html_e('IP', 'wordfence') ?></th>
+			<th><?php esc_html_e('Date', 'wordfence') ?></th>
 		</tr>
 		</thead>
 		<tbody>

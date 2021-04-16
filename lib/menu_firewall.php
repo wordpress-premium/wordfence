@@ -30,7 +30,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 						'title' => __('Firewall', 'wordfence'),
 						'headerID' => 'wf-section-firewall',
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF),
-						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about the Firewall</span>', 'wordfence'),
+						'helpLabelHTML' => wp_kses(__('Learn more<span class="wf-hidden-xs"> about the Firewall</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 					))->render();
 					require(dirname(__FILE__) . '/menu_firewall_waf.php');
 					?>
@@ -41,7 +41,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 						'title' => __('Blocking', 'wordfence'),
 						'headerID' => 'wf-section-blocking',
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING),
-						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about Blocking</span>', 'wordfence'),
+						'helpLabelHTML' => wp_kses(__('Learn more<span class="wf-hidden-xs"> about Blocking</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 					))->render();
 					require(dirname(__FILE__) . '/menu_firewall_blocking.php');
 					?>

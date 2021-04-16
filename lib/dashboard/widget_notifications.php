@@ -5,7 +5,7 @@
 			<div class="wf-dashboard-item-inner">
 				<div class="wf-dashboard-item-content">
 					<div class="wf-dashboard-item-title">
-						<strong>Notifications</strong><span class="wf-dashboard-badge wf-notification-count-container wf-notification-count-value<?php echo (count($d->notifications) == 0 ? ' wf-hidden' : ''); ?>"><?php echo number_format_i18n(count($d->notifications)); ?></span>
+						<strong><?php esc_html_e('Notifications', 'wordfence') ?></strong><span class="wf-dashboard-badge wf-notification-count-container wf-notification-count-value<?php echo (count($d->notifications) == 0 ? ' wf-hidden' : ''); ?>"><?php echo number_format_i18n(count($d->notifications)); ?></span>
 					</div>
 					<div class="wf-dashboard-item-action"><div class="wf-dashboard-item-action-disclosure"></div></div>
 				</div>
@@ -22,7 +22,7 @@
 						</li>
 					<?php endforeach; ?>
 					<?php if (count($d->notifications) == 0): ?>
-						<li class="wf-notifications-empty">No notifications received</li>
+						<li class="wf-notifications-empty"><?php esc_html_e('No notifications received', 'wordfence') ?></li>
 					<?php endif; ?>
 				</ul>
 			</div>
@@ -34,12 +34,16 @@
 				<div class="wf-central-dashboard">
 					<img class="wf-central-dashboard-logo" src="<?php echo wfUtils::getBaseURL() ?>images/wf-central-logo.svg" alt="Wordfence Central">
 					<div class="wf-central-dashboard-copy">
-						<p><strong><?php _e('Wordfence Central Status', 'wordfence') ?></strong></p>
+						<p><strong><?php esc_html_e('Wordfence Central Status', 'wordfence') ?></strong></p>
 						<p><?php
 							if ($d->wordfenceCentralConnected) {
-								printf(__('Connected by %s on %s', 'wordfence'), esc_html($d->wordfenceCentralConnectEmail), esc_html(date_i18n(get_option('date_format'), $d->wordfenceCentralConnectTime)));
+								echo esc_html(sprintf(
+								/* translators: 1. Email address. 2. Localized date. */
+										__('Connected by %1$s on %2$s', 'wordfence'), $d->wordfenceCentralConnectEmail, date_i18n(get_option('date_format'), $d->wordfenceCentralConnectTime)));
 							} elseif ($d->wordfenceCentralDisconnected) {
-								printf(__('Disconnected by %s on %s', 'wordfence'), esc_html($d->wordfenceCentralDisconnectEmail), esc_html(date_i18n(get_option('date_format'), $d->wordfenceCentralDisconnectTime)));
+								echo esc_html(sprintf(
+								/* translators: 1. Email address. 2. Localized date. */
+										__('Disconnected by %1$s on %2$s', 'wordfence'), $d->wordfenceCentralDisconnectEmail, date_i18n(get_option('date_format'), $d->wordfenceCentralDisconnectTime)));
 							} elseif (wfCentral::isPartialConnection()) {
 								_e('It looks like you\'ve tried to connect this site to Wordfence Central, but the installation did not finish.', 'wordfence');
 							} else {
@@ -51,18 +55,18 @@
 								<p>
 									<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>/sites/connection-issues?complete-setup=<?php echo esc_attr(wfConfig::get('wordfenceCentralSiteID')) ?>"
 											class="wf-central-resume wf-btn wf-btn-sm wf-btn-primary"
-									><?php _e('Resume Installation', 'wordfence') ?></a>
-									<a href="#" class="wf-central-disconnect wf-btn wf-btn-sm wf-btn-default"><strong><?php _e('Disconnect This Site', 'wordfence') ?></strong></a>
+									><?php esc_html_e('Resume Installation', 'wordfence') ?></a>
+									<a href="#" class="wf-central-disconnect wf-btn wf-btn-sm wf-btn-default"><strong><?php esc_html_e('Disconnect This Site', 'wordfence') ?></strong></a>
 								</p>
 							<?php else: ?>
 								<p class="wf-flex-row-1">
 									<?php if ($d->wordfenceCentralConnected): ?>
-										<a href="#" class="wf-central-disconnect"><strong><?php _e('Disconnect This Site', 'wordfence') ?></strong></a>
+										<a href="#" class="wf-central-disconnect"><strong><?php esc_html_e('Disconnect This Site', 'wordfence') ?></strong></a>
 									<?php else: ?>
-										<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>?newsite=<?php echo esc_attr(home_url()) ?>"><strong><?php _e($d->wordfenceCentralDisconnected ? 'Reconnect This Site' : 'Connect This Site', 'wordfence') ?></strong></a>
+										<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>?newsite=<?php echo esc_attr(home_url()) ?>"><strong><?php $d->wordfenceCentralDisconnected ? esc_html_e('Reconnect This Site', 'wordfence') : esc_html_e('Connect This Site', 'wordfence') ?></strong></a>
 									<?php endif; ?>
 								</p>
-								<p class="wf-flex-row-1 wf-right wf-nowrap"><a href="<?php echo esc_url(WORDFENCE_CENTRAL_URL_SEC) ?>" target="_blank" rel="noopener noreferrer"><strong><?php _e('Visit Wordfence Central', 'wordfence') ?></strong></a></p>
+								<p class="wf-flex-row-1 wf-right wf-nowrap"><a href="<?php echo esc_url(WORDFENCE_CENTRAL_URL_SEC) ?>" target="_blank" rel="noopener noreferrer"><strong><?php esc_html_e('Visit Wordfence Central', 'wordfence') ?></strong></a></p>
 							<?php endif ?>
 
 						</div>

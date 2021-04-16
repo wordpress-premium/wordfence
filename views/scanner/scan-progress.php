@@ -29,7 +29,7 @@ $status = $scanner->stageStatus();
 	echo wfView::create('scanner/scan-progress-element', array(
 		'scanner' => $scanner,
 		'id' => 'wf-scan-blacklist',
-		'title' => __('Blacklist Check', 'wordfence'),
+		'title' => __('Blocklist Check', 'wordfence'),
 		'status' => $status[wfScanner::STAGE_BLACKLIST_CHECK],
 	))->render();
 	

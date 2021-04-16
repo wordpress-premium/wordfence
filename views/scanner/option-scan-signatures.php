@@ -24,7 +24,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 		</ul>
 	</li>
 	<li id="wf-scan-additional-signatures">
-		<h4 id="wf-scan-additional-signatures-label">Add Additional Signatures</h4>
+		<h4 id="wf-scan-additional-signatures-label"><?php esc_html_e('Add Additional Signatures', 'wordfence') ?></h4>
 		<textarea id="wf-option-scan-include-extra" spellcheck="false" autocapitalize="none" autocomplete="off" aria-labelledby="wf-scan-additional-signatures-label"><?php echo esc_html(wfConfig::get('scan_include_extra')); ?></textarea>
 	</li>
 </ul>

@@ -29,6 +29,7 @@ class Controller_WordfenceLS {
 		Controller_AJAX::shared()->init();
 		Controller_Users::shared()->init();
 		Controller_Time::shared()->init();
+		Controller_Permissions::shared()->init();
 	}
 	
 	protected function _init_actions() {
@@ -73,7 +74,7 @@ class Controller_WordfenceLS {
 			\wfModuleController::shared()->addOptionIndex('wfls-option-allow-remember', __('Login Security: Allow remembering device for 30 days', 'wordfence-2fa'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-require-2fa-xml-rpc', __('Login Security: Require 2FA for XML-RPC call authentication', 'wordfence-2fa'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-disable-xml-rpc', __('Login Security: Disable XML-RPC authentication', 'wordfence-2fa'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-whitelist-2fa', __('Login Security: Whitelisted IP addresses that bypass 2FA', 'wordfence-2fa'));
+			\wfModuleController::shared()->addOptionIndex('wfls-option-whitelist-2fa', __('Login Security: Allowlisted IP addresses that bypass 2FA', 'wordfence-2fa'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-enable-captcha', __('Login Security: Enable reCAPTCHA on the login and user registration pages', 'wordfence-2fa'));
 			
 			$title = __('Login Security Options', 'wordfence-ls');
@@ -140,11 +141,11 @@ END
 	 */
 	
 	public function _jetpack_xml_rpc_notice() {
-		echo '<div class="notice notice-warning"><p>' . sprintf(__('XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href="%s">Manage Settings</a>', 'wordfence-2fa'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))) . '</p></div>';
+		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(__('XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href="%s">Manage Settings</a>', 'wordfence-2fa'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a'=>array('href'=>array()))) . '</p></div>';
 	}
 	
 	public function _recaptcha_test_notice() {
-		echo '<div class="notice notice-warning"><p>' . sprintf(__('reCAPTCHA test mode is enabled. While enabled, login and registration requests will be checked for their score but will not be blocked if the score is below the minimum score. <a href="%s">Manage Settings</a>', 'wordfence-2fa'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))) . '</p></div>';
+		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(__('reCAPTCHA test mode is enabled. While enabled, login and registration requests will be checked for their score but will not be blocked if the score is below the minimum score. <a href="%s">Manage Settings</a>', 'wordfence-2fa'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a'=>array('href'=>array()))) . '</p></div>';
 	}
 	
 	/**
@@ -312,30 +313,30 @@ END
 		
 		if (Controller_Users::shared()->can_activate_2fa($user) && $user->ID == get_current_user_id()):
 		?>
-		<h2><?php _e('Wordfence Login Security', 'wordfence-2fa'); ?></h2>
+		<h2><?php esc_html_e('Wordfence Login Security', 'wordfence-2fa'); ?></h2>
 		<table class="form-table">
 			<tr id="wordfence-ls">
-				<th><label for="wordfence-ls-btn"><?php _e('2FA Status'); ?></label></th>
+				<th><label for="wordfence-ls-btn"><?php esc_html_e('2FA Status'); ?></label></th>
 				<td>
-					<p><strong><?php echo (Controller_Users::shared()->has_2fa_active($user) ? __('Active', 'wordfence-2fa') :  __('Inactive', 'wordfence-2fa')); ?>:</strong> <?php echo (Controller_Users::shared()->has_2fa_active($user) ? __('Wordfence 2FA is active.', 'wordfence-2fa') :  __('Wordfence 2FA is inactive.', 'wordfence-2fa')); ?> <a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence-2fa'); ?></a></p>
-					<p><a href="<?php echo esc_url($manageURL); ?>" class="button" id="wordfence-ls-btn"><?php echo (Controller_Users::shared()->has_2fa_active($user) ? __('Manage 2FA', 'wordfence-2fa') :  __('Activate 2FA', 'wordfence-2fa')); ?></a></p>
+					<p><strong><?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Active', 'wordfence-2fa') :  esc_html__('Inactive', 'wordfence-2fa')); ?>:</strong> <?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Wordfence 2FA is active.', 'wordfence-2fa') :  esc_html__('Wordfence 2FA is inactive.', 'wordfence-2fa')); ?> <a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence-2fa'); ?></a></p>
+					<p><a href="<?php echo esc_url($manageURL); ?>" class="button" id="wordfence-ls-btn"><?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Manage 2FA', 'wordfence-2fa') :  esc_html__('Activate 2FA', 'wordfence-2fa')); ?></a></p>
 				</td>
 			</tr>
 		</table>
 		<?php
 		elseif (current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)):
 		?>
-		<h2><?php _e('Wordfence Login Security', 'wordfence-2fa'); ?></h2>
+		<h2><?php esc_html_e('Wordfence Login Security', 'wordfence-2fa'); ?></h2>
 		<table class="form-table">
 			<tr id="wordfence-ls">
-				<th><label for="wordfence-ls-btn"><?php _e('2FA Status'); ?></label></th>
+				<th><label for="wordfence-ls-btn"><?php esc_html_e('2FA Status'); ?></label></th>
 				<td>
 				<?php if (Controller_Users::shared()->can_activate_2fa($user)): ?>
-					<p><strong><?php echo (Controller_Users::shared()->has_2fa_active($user) ? __('Active', 'wordfence-2fa') :  __('Inactive', 'wordfence-2fa')); ?>:</strong> <?php echo (Controller_Users::shared()->has_2fa_active($user) ? __('Wordfence 2FA is active.', 'wordfence-2fa') :  __('Wordfence 2FA is inactive.', 'wordfence-2fa')); ?> <a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence-2fa'); ?></a></p>
-					<?php if (Controller_Users::shared()->has_2fa_active($user)): ?><p><a href="<?php echo esc_url($manageURL); ?>" class="button" id="wordfence-ls-btn"><?php echo __('Manage 2FA', 'wordfence-2fa'); ?></a></p><?php endif; ?>
+					<p><strong><?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Active', 'wordfence-2fa') :  esc_html__('Inactive', 'wordfence-2fa')); ?>:</strong> <?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Wordfence 2FA is active.', 'wordfence-2fa') :  esc_html__('Wordfence 2FA is inactive.', 'wordfence-2fa')); ?> <a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence-2fa'); ?></a></p>
+					<?php if (Controller_Users::shared()->has_2fa_active($user)): ?><p><a href="<?php echo esc_url($manageURL); ?>" class="button" id="wordfence-ls-btn"><?php echo esc_html__('Manage 2FA', 'wordfence-2fa'); ?></a></p><?php endif; ?>
 				<?php else: ?>
-					<p><strong><?php _e('Disabled', 'wordfence-2fa'); ?>:</strong> <?php _e('Two-factor authentication is not currently enabled for this account type. To enable it, visit the Wordfence 2FA Settings page.', 'wordfence-2fa'); ?> <a href="#"><?php _e('Learn More', 'wordfence-2fa'); ?></a></p>
-					<p><a href="<?php echo esc_url(is_multisite() ? network_admin_url('admin.php?page=WFLS#top#settings') : admin_url('admin.php?page=WFLS#top#settings')); ?>" class="button" id="wordfence-ls-btn"><?php _e('Manage 2FA Settings', 'wordfence-2fa'); ?></a></p>
+					<p><strong><?php esc_html_e('Disabled', 'wordfence-2fa'); ?>:</strong> <?php esc_html_e('Two-factor authentication is not currently enabled for this account type. To enable it, visit the Wordfence 2FA Settings page.', 'wordfence-2fa'); ?> <a href="#"><?php esc_html_e('Learn More', 'wordfence-2fa'); ?></a></p>
+					<p><a href="<?php echo esc_url(is_multisite() ? network_admin_url('admin.php?page=WFLS#top#settings') : admin_url('admin.php?page=WFLS#top#settings')); ?>" class="button" id="wordfence-ls-btn"><?php esc_html_e('Manage 2FA Settings', 'wordfence-2fa'); ?></a></p>
 				<?php endif; ?>
 				</td>
 			</tr>
@@ -376,7 +377,7 @@ END
 			
 			$performVerification = false;
 			$token = (isset($_POST['wfls-captcha-token']) && is_string($_POST['wfls-captcha-token']) ? $_POST['wfls-captcha-token'] : '');
-			if ($requireCAPTCHA && empty($token)) { //No CAPTCHA token means forced additional verification (if 2FA is not active)
+			if ($requireCAPTCHA && empty($token) && !Controller_CAPTCHA::shared()->test_mode()) { //No CAPTCHA token means forced additional verification (if neither 2FA nor test mode are active)
 				$performVerification = true;
 			}
 			
@@ -401,7 +402,7 @@ END
 				
 				if (!isset($score)) {
 					$score = Controller_CAPTCHA::shared()->score($token);
-					if ($score === false) { //An invalid token will require additional verification (if 2FA is not active)
+					if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //An invalid token will require additional verification (if neither 2FA nor test mode are active)
 						$performVerification = true;
 					}
 				}
@@ -457,7 +458,7 @@ END
 						));
 						wp_mail($user->user_email, __('Login Verification Required', 'wordfence-ls'), $view->render(), "Content-Type: text/html");
 						
-						return new \WP_Error('wfls_captcha_verify', __('<strong>VERIFICATION REQUIRED</strong>: Additional verification is required for login. Please check the email address associated with the account for a verification link.', 'wordfence-ls'));
+						return new \WP_Error('wfls_captcha_verify', wp_kses(__('<strong>VERIFICATION REQUIRED</strong>: Additional verification is required for login. Please check the email address associated with the account for a verification link.', 'wordfence-ls'), array('strong'=>array())));
 					}
 					//else -- Can't generate payload due to host failure, allow it to proceed
 				}
@@ -472,11 +473,11 @@ END
 		if (isset($_POST['wfls-token-jwt']) && is_string($_POST['wfls-token-jwt'])) {
 			$jwt = Model_JWT::decode_jwt($_POST['wfls-token-jwt']);
 			if (!$jwt) { //Possibly user-corrupted or expired JWT
-				return new \WP_Error('wfls_twofactor_invalid', __('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_invalid', wp_kses(__('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 			
 			if (!isset($jwt->payload['user'])) { //Possibly user-corrupted JWT
-				return new \WP_Error('wfls_twofactor_invalid', __('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_invalid', wp_kses(__('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 			
 			$decryptedUser = Model_Symmetric::decrypt($jwt->payload['user']);
@@ -499,7 +500,7 @@ END
 				}
 				
 				//Invalid nonce or expired nonce
-				return new \WP_Error('wfls_twofactor_invalid', __('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_invalid', wp_kses(__('<strong>VALIDATION FAILED</strong>: The 2FA code could not be validated. Please try logging in again.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 		}
 		
@@ -557,7 +558,7 @@ END
 					return $jwtUser;
 				}
 				
-				return new \WP_Error('wfls_twofactor_failed', __('<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_failed', wp_kses(__('<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 		}
 		
@@ -579,15 +580,15 @@ END
 			if (Controller_Users::shared()->has_2fa_active($user)) {
 				$legacy2FAActive = Controller_WordfenceLS::shared()->legacy_2fa_active();
 				if ($legacy2FAActive) {
-					return new \WP_Error('wfls_twofactor_required', __('<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field.', 'wordfence-2fa'));
+					return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field.', 'wordfence-2fa'), array('strong'=>array())));
 				}
-				return new \WP_Error('wfls_twofactor_required', __('<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 			else if (Controller_Users::shared()->requires_2fa($user)) {
-				return new \WP_Error('wfls_twofactor_blocked', __('<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on all administrator accounts.', 'wordfence-2fa'));
+				return new \WP_Error('wfls_twofactor_blocked', wp_kses(__('<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on all administrator accounts.', 'wordfence-2fa'), array('strong'=>array())));
 			}
 			else if (defined('WFLS_WILL_BE_REQUIRED') && WFLS_WILL_BE_REQUIRED) {
-				Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(sprintf(__('You do not currently have two-factor authentication active on your account, which will be required beginning %s. <a href="%s">Configure 2FA</a>', 'wordfence-2fa'), Controller_Time::format_local_time('F j, Y', Controller_Settings::shared()->get_int(Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD)), esc_url(admin_url('admin.php?page=WFLS')))), 'wfls-will-be-required', $user);
+				Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(wp_kses(sprintf(__('You do not currently have two-factor authentication active on your account, which will be required beginning %s. <a href="%s">Configure 2FA</a>', 'wordfence-2fa'), Controller_Time::format_local_time('F j, Y', Controller_Settings::shared()->get_int(Controller_Settings::OPTION_REQUIRE_2FA_GRACE_PERIOD)), esc_url((is_multisite() && is_super_admin($user->ID)) ? network_admin_url('admin.php?page=WFLS') : admin_url('admin.php?page=WFLS'))), array('a'=>array('href'=>array())))), 'wfls-will-be-required', $user);
 			}
 		}
 		
@@ -627,17 +628,19 @@ END
 		 */
 		$requireCAPTCHA = Controller_CAPTCHA::shared()->enabled() && !(defined('XMLRPC_REQUEST') && XMLRPC_REQUEST); //CAPTCHA is enabled, not an XML-RPC request
 		$requireCAPTCHA = apply_filters('wordfence_ls_require_captcha', $requireCAPTCHA);
-		
-		if ($requireCAPTCHA && (!isset($_POST['wfls-captcha-token']) || !is_string($_POST['wfls-captcha-token'])) && !empty($sanitized_user_login)) { //A CAPTCHA token must be provided for the login attempt to proceed past this point
-			$errors->add('wfls_captcha_required', __('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: This site requires a security token created when the page loads for all registration attempts. Please ensure JavaScript is enabled and try again.', 'wordfence-ls'));
+
+		$token = (isset($_POST['wfls-captcha-token']) && is_string($_POST['wfls-captcha-token']) ? $_POST['wfls-captcha-token'] : '');
+
+		if ($requireCAPTCHA && empty($token) && !empty($sanitized_user_login) && !Controller_CAPTCHA::shared()->test_mode()) { //A CAPTCHA token must be provided for the login attempt to proceed past this point except in test mode
+			$errors->add('wfls_captcha_required', wp_kses(__('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: This site requires a security token created when the page loads for all registration attempts. Please ensure JavaScript is enabled and try again.', 'wordfence-ls'), array('strong'=>array())));
 			return;
 		}
 		
 		$score = false;
 		if ($requireCAPTCHA) {
-			$score = Controller_CAPTCHA::shared()->score($_POST['wfls-captcha-token']);
-			if ($score === false) { //The token must be valid
-				$errors->add('wfls_captcha_required', __('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: The security token for the login attempt was invalid or expired. Please reload the page and try again.', 'wordfence-ls'));
+			$score = Controller_CAPTCHA::shared()->score($token);
+			if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //The token must be valid except in test mode
+				$errors->add('wfls_captcha_required', wp_kses(__('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: The security token for the login attempt was invalid or expired. Please reload the page and try again.', 'wordfence-ls'), array('strong'=>array())));
 				return;
 			}
 		}
@@ -652,10 +655,10 @@ END
 					$jwt = new Model_JWT(array('ip' => $encryptedIP, 'score' => $encryptedScore), Controller_Time::time() + 600);
 					$token = (string) $jwt;
 					
-					$message = sprintf(__('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or <a href="#" class="wfls-registration-captcha-contact" data-token="%s">contact the site owner</a> for help.', 'wordfence-ls'), esc_attr($token));
+					$message = wp_kses(sprintf(__('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or <a href="#" class="wfls-registration-captcha-contact" data-token="%s">contact the site owner</a> for help.', 'wordfence-ls'), esc_attr($token)), array('strong'=>array(), 'a'=>array('href'=>array(), 'class'=>array(), 'data-token'=>array())));
 				}
 				else {
-					$message = __('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or contact the site owner for help.', 'wordfence-ls');
+					$message = wp_kses(__('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or contact the site owner for help.', 'wordfence-ls'), array('strong'=>array()));
 				}
 				
 				/**
@@ -690,10 +693,10 @@ END
 		if (!$has_errors && isset($_REQUEST['wfls-email-verification']) && is_string($_REQUEST['wfls-email-verification'])) {
 			$jwt = Model_JWT::decode_jwt($_REQUEST['wfls-email-verification']);
 			if ($jwt && isset($jwt->payload['user'])) {
-				$errors->add('wfls_email_verified', __('Email verification succeeded. Please continue logging in.', 'wordfence-2fa'), 'message');
+				$errors->add('wfls_email_verified', esc_html__('Email verification succeeded. Please continue logging in.', 'wordfence-2fa'), 'message');
 			}
 			else {
-				$errors->add('wfls_email_not_verified', __('Email verification invalid or expired. Please try again.', 'wordfence-2fa'), 'message');
+				$errors->add('wfls_email_not_verified', esc_html__('Email verification invalid or expired. Please try again.', 'wordfence-2fa'), 'message');
 			}
 		}
 		return $errors;
@@ -774,7 +777,7 @@ END
 		$sections = array(
 			array(
 				'tab' => new Model_Tab('manage', 'manage', __('Two-Factor Authentication', 'wordfence-2fa'), __('Two-Factor Authentication', 'wordfence-2fa')),
-				'title' => new Model_Title('manage', __('Two-Factor Authentication', 'wordfence-2fa'), Controller_Support::supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA), new Model_HTML(__('Learn more<span class="wfls-hidden-xs"> about Two-Factor Authentication</span>', 'wordfence'))),
+				'title' => new Model_Title('manage', __('Two-Factor Authentication', 'wordfence-2fa'), Controller_Support::supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA), new Model_HTML(wp_kses(__('Learn more<span class="wfls-hidden-xs"> about Two-Factor Authentication</span>', 'wordfence'), array('span'=>array('class'=>array()))))),
 				'content' => new Model_View('page/manage', array(
 					'user' => $user,
 					'canEditUsers' => $canEditUsers,
@@ -785,7 +788,7 @@ END
 		if ($administrator) {
 			$sections[] = array(
 				'tab' => new Model_Tab('settings', 'settings', __('Settings', 'wordfence-2fa'), __('Settings', 'wordfence-2fa')),
-				'title' => new Model_Title('settings', __('Login Security Settings', 'wordfence-2fa'), Controller_Support::supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY), new Model_HTML(__('Learn more<span class="wfls-hidden-xs"> about Login Security</span>', 'wordfence'))),
+				'title' => new Model_Title('settings', __('Login Security Settings', 'wordfence-2fa'), Controller_Support::supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY), new Model_HTML(wp_kses(__('Learn more<span class="wfls-hidden-xs"> about Login Security</span>', 'wordfence'), array('span'=>array('class'=>array()))))),
 				'content' => new Model_View('page/settings', array(
 				)),
 			);

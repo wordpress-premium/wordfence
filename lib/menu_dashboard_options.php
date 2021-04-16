@@ -45,7 +45,7 @@ $d = new wfDashboard();
 			<?php
 			echo wfView::create('options/block-controls', array(
 				'backLink' => $dashboardURL,
-				'backLabelHTML' => __('Back<span class="wf-hidden-xs"> to Dashboard</span>', 'wordfence'),
+				'backLabelHTML' => wp_kses(__('Back<span class="wf-hidden-xs"> to Dashboard</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 				'restoreDefaultsSection' => wfConfig::OPTIONS_TYPE_GLOBAL,
 				'restoreDefaultsMessage' => __('Are you sure you want to restore the default global settings? This will undo any custom changes you have made to the options on this page. Your configured license key and alert emails will not be changed.', 'wordfence'),
 			))->render();
@@ -78,7 +78,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 					echo wfView::create('common/section-title', array(
 						'title' => __('Wordfence Global Options', 'wordfence'),
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_DASHBOARD_OPTIONS),
-						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about Global Options</span>', 'wordfence'),
+						'helpLabelHTML' => wp_kses(__('Learn more<span class="wf-hidden-xs"> about Global Options</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 						'showIcon' => true,
 					))->render();
 					?>
@@ -145,11 +145,21 @@ else if (wfConfig::get('touppPromptNeeded')) {
 															'linkNewWindow' => true,
 														))->render();
 														?>
+													<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_PAID_DELETED): ?>
+														<?php
+														echo wfView::create('common/status-critical', array(
+															'id' => 'wf-premium-alert',
+															'title' => __('Premium Protection Disabled', 'wordfence'),
+															'subtitleHtml' => __('The license you were using has been removed from your account. Please reach out to <a href="mailto:billing@wordfence.com">billing@wordfence.com</a> or create a Premium support case at <a href="https://support.wordfence.com/support/tickets" target="_blank">https://support.wordfence.com/support/tickets</a> for more information. Our staff is happy to help.', 'wordfence'),
+															'link' => null,
+															'linkLabel' => null
+														))->render();
+														?>
 													<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_FREE || wfConfig::get('keyType') === false): ?>
 														<div>
-															<p><h3><?php _e('Premium Protection Disabled', 'wordfence'); ?></h3></p>
-															<p><?php printf(__('As a free Wordfence user, you are currently using the Community version of the Threat Defense Feed. Premium users are protected by an additional %d firewall rules and malware signatures. Upgrade to Premium today to improve your protection.', 'wordfence'), ($d->tdfPremium - $d->tdfCommunity)); ?></p>
-															<p><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1dashboardUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1dashboardLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence'); ?></a></p>
+															<p><h3><?php esc_html_e('Premium Protection Disabled', 'wordfence'); ?></h3></p>
+															<p><?php esc_html_e('As a free Wordfence user, you are currently using the Community version of the Threat Defense Feed. Premium users are protected by additional firewall rules and malware signatures. Upgrade to Premium today to improve your protection.', 'wordfence'); ?></p>
+															<p><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1dashboardUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1dashboardLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence'); ?></a></p>
 														</div>
 													<?php elseif (wfConfig::get('keyExpDays') < 30 && (wfConfig::get('premiumAutoRenew', null) === '0' || wfConfig::get('premiumAutoRenew', null) === 0)): ?>
 														<?php
@@ -186,7 +196,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 																$days = __('tomorrow', 'wordfence');
 															}
 															else {
-																$days = sprintf(__('in %d days', 'wordfence'), $days);
+																$days = sprintf(/* translators: Number of days */ __('in %d days', 'wordfence'), $days);
 															}
 															
 															echo wfView::create('dashboard/status-payment-expiring', array(
@@ -223,7 +233,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 													<?php elseif (wfConfig::get('keyType') == wfAPI::KEY_TYPE_PAID_CURRENT): ?>
 														<div class="wf-block-labeled-value wf-protection-status wf-protection-status-<?php echo esc_attr($firewall->ruleMode()); ?>">
 															<div class="wf-block-labeled-value-value"><i class="wf-fa wf-fa-check" aria-hidden="true"></i></div>
-															<div class="wf-block-labeled-value-label"><?php _e('Wordfence Premium Enabled', 'wordfence'); ?></div>
+															<div class="wf-block-labeled-value-label"><?php esc_html_e('Wordfence Premium Enabled', 'wordfence'); ?></div>
 														</div>
 													<?php endif; ?>
 												</li>
@@ -265,7 +275,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 								<div class="wf-block-header">
 									<div class="wf-block-header-content">
 										<div class="wf-block-title">
-											<strong><?php _e('Import/Export Options', 'wordfence'); ?></strong>
+											<strong><?php esc_html_e('Import/Export Options', 'wordfence'); ?></strong>
 										</div>
 									</div>
 								</div>
@@ -273,9 +283,9 @@ else if (wfConfig::get('touppPromptNeeded')) {
 									<ul class="wf-block-list">
 										<li>
 											<ul class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width wf-add-top wf-add-bottom">
-												<li><?php _e('Importing and exporting of options has moved to the Tools page', 'wordfence'); ?></li>
+												<li><?php esc_html_e('Importing and exporting of options has moved to the Tools page', 'wordfence'); ?></li>
 												<li class="wf-right wf-left-xs wf-padding-add-top-xs-small">
-													<a href="<?php echo esc_url(network_admin_url('admin.php?page=WordfenceTools&subpage=importexport')); ?>" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php _e('Import/Export Options', 'wordfence'); ?></a>
+													<a href="<?php echo esc_url(network_admin_url('admin.php?page=WordfenceTools&subpage=importexport')); ?>" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php esc_html_e('Import/Export Options', 'wordfence'); ?></a>
 												</li>
 											</ul>
 										</li>

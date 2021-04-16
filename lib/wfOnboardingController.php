@@ -72,9 +72,7 @@ class wfOnboardingController {
 		if (wfUtils::isAdmin() && 
 			(($willShowAnyPluginOnboarding && preg_match('~(?:^|/)wp-admin(?:/network)?/plugins\.php~i', $_SERVER['REQUEST_URI'])) || 
 				(isset($_GET['page']) && 
-					(preg_match('/^Wordfence/', @$_GET['page']) || 
-						($willShowAnyTour && preg_match('/^WFLS/', @$_GET['page']))
-					)
+					(preg_match('/^Wordfence/', @$_GET['page']) || preg_match('/^WFLS/', @$_GET['page']))
 				)
 			)
 		) {
@@ -146,7 +144,7 @@ class wfOnboardingController {
 	}
 	
 	public static function shouldShowAttempt3() {
-		if (isset($_GET['page']) && preg_match('/^Wordfence/', $_GET['page'])) {
+		if (isset($_GET['page']) && (preg_match('/^Wordfence/', $_GET['page']) || preg_match('/^WFLS/', $_GET['page']))) {
 			$alertEmails = wfConfig::getAlertEmails();
 			return empty($alertEmails);
 		}

@@ -1,5 +1,5 @@
 <?php if (!defined('WORDFENCE_VERSION')) { exit; } ?>
-<p><?php _e('If you are a WordPress user with administrative privileges on this site please enter your email in the box below and click &quot;Send&quot;. You will then receive an email that helps you regain access.', 'wordfence'); ?></p>
+<p><?php esc_html_e('If you are a WordPress user with administrative privileges on this site please enter your email in the box below and click &quot;Send&quot;. You will then receive an email that helps you regain access.', 'wordfence'); ?></p>
 <form method="POST" id="unlock-form" action="#">
 	<?php require_once(ABSPATH . 'wp-includes/pluggable.php'); ?>
 	<input type="hidden" name="nonce" value="<?php echo wp_create_nonce('wf-form'); ?>">

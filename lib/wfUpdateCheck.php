@@ -10,6 +10,42 @@ class wfUpdateCheck {
 	private $theme_updates = array();
 	private $api = null;
 
+	public static function syncAllVersionInfo() {
+		// Load the core/plugin/theme versions into the WAF configuration.
+		wfConfig::set('wordpressVersion', wfUtils::getWPVersion());
+		wfWAFConfig::set('wordpressVersion', wfUtils::getWPVersion(), wfWAF::getInstance(), 'synced');
+
+		if (!function_exists('get_plugins')) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+		}
+
+		$pluginVersions = array();
+		foreach (get_plugins() as $pluginFile => $pluginData) {
+			$slug = plugin_basename($pluginFile);
+			if (preg_match('/^([^\/]+)\//', $pluginFile, $matches)) {
+				$slug = $matches[1];
+			} else if (preg_match('/^([^\/.]+)\.php$/', $pluginFile, $matches)) {
+				$slug = $matches[1];
+			}
+			$pluginVersions[$slug] = isset($pluginData['Version']) ? $pluginData['Version'] : null;
+		}
+
+		wfConfig::set_ser('wordpressPluginVersions', $pluginVersions);
+		wfWAFConfig::set('wordpressPluginVersions', $pluginVersions, wfWAF::getInstance(), 'synced');
+
+		if (!function_exists('wp_get_themes')) {
+			require_once(ABSPATH . '/wp-includes/theme.php');
+		}
+
+		$themeVersions = array();
+		foreach (wp_get_themes() as $slug => $theme) {
+			$themeVersions[$slug] = isset($theme['Version']) ? $theme['Version'] : null;
+		}
+
+		wfConfig::set_ser('wordpressThemeVersions', $themeVersions);
+		wfWAFConfig::set('wordpressThemeVersions', $themeVersions, wfWAF::getInstance(), 'synced');
+	}
+
 	public function __construct() {
 		$this->api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
 	}

@@ -23,7 +23,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Whitelisted URLs', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Allowlisted URLs', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -32,7 +32,7 @@ if (!isset($collapseable)) {
 				<ul class="wf-block-list">
 					<?php if ($firewall->isSubDirectoryInstallation()): ?>
 						<li>
-							<p><?php printf(__('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))); ?></p>
+							<p><?php echo wp_kses(sprintf(__('You are currently running the Wordfence Web Application Firewall from another WordPress installation. Please <a href="%s">click here</a> to configure the Firewall to run correctly on this site.', 'wordfence'), esc_attr(network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options#configureAutoPrepend'))), array('a'=>array('href'=>array()))); ?></p>
 						</li>
 					<?php else: ?>
 						<li>
@@ -61,7 +61,7 @@ if (!isset($collapseable)) {
 									),
 								),
 								'noSpacer' => true,
-								'htmlTitle' => '<strong>' . __('Monitor background requests from an administrator\'s web browser for false positives', 'wordfence') . '</strong>',
+								'htmlTitle' => '<strong>' . esc_html__('Monitor background requests from an administrator\'s web browser for false positives', 'wordfence') . '</strong>',
 								'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_MONITOR_AJAX),
 							))->render();
 							?>
@@ -78,26 +78,26 @@ if (!isset($collapseable)) {
 			<thead>
 			<tr>
 				<th style="width: 2%;text-align: center"><div class="wf-whitelist-bulk-select wf-option-checkbox" role="checkbox" aria-checked="false" tabindex="0" aria-label="<?php esc_attr_e('Select/deselect all', 'wordfence'); ?>"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div></th>
-				<th style="width: 5%;"><?php _e('Enabled', 'wordfence'); ?></th>
-				<th><?php _e('URL', 'wordfence'); ?></th>
-				<th><?php _e('Param', 'wordfence'); ?></th>
-				<th><?php _e('Created', 'wordfence'); ?></th>
-				<th><?php _e('Source', 'wordfence'); ?></th>
-				<th><?php _e('User', 'wordfence'); ?></th>
-				<th><?php _e('IP', 'wordfence'); ?></th>
+				<th style="width: 5%;"><?php esc_html_e('Enabled', 'wordfence'); ?></th>
+				<th><?php esc_html_e('URL', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Param', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Created', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Source', 'wordfence'); ?></th>
+				<th><?php esc_html_e('User', 'wordfence'); ?></th>
+				<th><?php esc_html_e('IP', 'wordfence'); ?></th>
 			</tr>
 			</thead>
 			{{if whitelistedURLParams.length > 5}}
 			<tfoot>
 			<tr>
 				<th style="width: 2%;text-align: center"><div class="wf-whitelist-bulk-select wf-option-checkbox" role="checkbox" aria-checked="false" tabindex="0" aria-label="<?php esc_attr_e('Select/deselect all', 'wordfence'); ?>"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div></th>
-				<th style="width: 5%;"><?php _e('Enabled', 'wordfence'); ?></th>
-				<th><?php _e('URL', 'wordfence'); ?></th>
-				<th><?php _e('Param', 'wordfence'); ?></th>
-				<th><?php _e('Created', 'wordfence'); ?></th>
-				<th><?php _e('Source', 'wordfence'); ?></th>
-				<th><?php _e('User', 'wordfence'); ?></th>
-				<th><?php _e('IP', 'wordfence'); ?></th>
+				<th style="width: 5%;"><?php esc_html_e('Enabled', 'wordfence'); ?></th>
+				<th><?php esc_html_e('URL', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Param', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Created', 'wordfence'); ?></th>
+				<th><?php esc_html_e('Source', 'wordfence'); ?></th>
+				<th><?php esc_html_e('User', 'wordfence'); ?></th>
+				<th><?php esc_html_e('IP', 'wordfence'); ?></th>
 			</tr>
 			{{/if}}
 			</tfoot>
@@ -154,7 +154,7 @@ if (!isset($collapseable)) {
 			{{/each}}
 			{{if (whitelistedURLParams.length == 0)}}
 			<tr>
-				<td colspan="8"><?php _e('No whitelisted URLs currently set.', 'wordfence'); ?></td>
+				<td colspan="8"><?php esc_html_e('No allowlisted URLs currently set.', 'wordfence'); ?></td>
 			</tr>
 			{{/if}}
 			</tbody>

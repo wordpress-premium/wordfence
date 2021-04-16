@@ -13,7 +13,7 @@ echo wfView::create('scanner/issue-base', array(
 		__('Current Plugin Version', 'wordfence') => '${data.version}',
 		__('Last Updated', 'wordfence') => '${data.dateUpdated}',
 		null,
-		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . __('Plugin has unpatched security issues.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}',
+		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . esc_html__('Plugin has unpatched security issues.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}',
 		null,
 		__('Plugin URL', 'wordfence') => array('data.homepage', '<a href="${data.homepage}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.homepage}</span><span class="wf-visible-xs">' . __('View', 'wordfence') . '</span></a>'),
 		__('Repository URL', 'wordfence') => array('data.wpURL', '<a href="${data.wpURL}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.wpURL}</span><span class="wf-visible-xs">' . __('View', 'wordfence') . '</span></a>'),

@@ -9,13 +9,13 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 	<div class="wfls-block-header wfls-block-header-border-bottom">
 		<div class="wfls-block-header-content">
 			<div class="wfls-block-title">
-				<strong><?php _e('Recovery Codes', 'wordfence-2fa'); ?></strong>
+				<strong><?php esc_html_e('Recovery Codes', 'wordfence-2fa'); ?></strong>
 			</div>
 		</div>
 	</div>
 	<div class="wfls-block-content wfls-padding-add-bottom">
-		<p id="wfls-recovery-code-count"><?php printf($remaining == 1 ? __('%d unused recovery code remains. You may generate a new set by clicking below.', 'wordfence-2fa') : __('%d unused recovery codes remain. You may generate a new set by clicking below.', 'wordfence-2fa'), $remaining); ?></p>
-		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery" target="_blank" rel="noopener noreferrer"><?php _e('Generate New Codes', 'wordfence-2fa'); ?></a></p>
+		<p id="wfls-recovery-code-count"><?php echo esc_html(sprintf($remaining == 1 ? __('%d unused recovery code remains. You may generate a new set by clicking below.', 'wordfence-2fa') : __('%d unused recovery codes remain. You may generate a new set by clicking below.', 'wordfence-2fa'), $remaining)); ?></p>
+		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Generate New Codes', 'wordfence-2fa'); ?></a></p>
 	</div>
 </div>
 <script type="text/x-jquery-template" id="wfls-tmpl-recovery-prompt">

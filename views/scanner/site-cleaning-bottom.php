@@ -9,12 +9,12 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 		<ul class="wf-block-list">
 			<li>
 				<div class="wf-flex-vertical">
-					<h3 class="wf-center"><?php _e('Need help from a web security expert?', 'wordfence'); ?></h3>
-					<p class="wf-center wf-no-top"><?php _e('Whether you want to proactively lock your site down or it has already been hacked, we\'re here to help. All services include a detailed report and a 90-day guarantee for an affordable price. <strong class="wf-blue">Includes a 1-year Premium license.</strong>', 'wordfence'); ?></p>
+					<h3 class="wf-center"><?php esc_html_e('Need help from the WordPress security experts?', 'wordfence'); ?></h3>
+					<p class="wf-center wf-no-top"><?php echo wp_kses(__('Wordfence security analysts can help you tighten site security or remove an active infection for good. All security services include a detailed report and a <strong class="wf-blue">Wordfence Premium license, with a 1-year clean site guarantee.</strong>', 'wordfence'), array('strong'=>array('class'=>array()))); ?></p>
 					<p class="wf-center wf-add-bottom">
-						<a class="wf-btn wf-btn-default wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1scanLowerAd/site-security-audit/" target="_blank" rel="noopener noreferrer"><?php _e('Audit My Site Security', 'wordfence'); ?></a>
+						<a class="wf-btn wf-btn-default wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1scanLowerAd/site-security-audit/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Audit My Site Security', 'wordfence'); ?></a>
 						&nbsp;&nbsp;&nbsp;
-						<a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1scanLowerAd/wordfence-site-cleanings/" target="_blank" rel="noopener noreferrer"><?php _e('Clean My Hacked Site', 'wordfence'); ?></a>
+						<a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1scanLowerAd/wordfence-site-cleanings/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Clean My Hacked Site', 'wordfence'); ?></a>
 					</p>
 				</div>
 			</li>

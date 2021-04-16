@@ -49,7 +49,7 @@ class wfView {
 		$view = preg_replace('/\.{2,}/', '.', $this->view);
 		$view_path = $this->view_path . '/' . $view . $this->view_file_extension;
 		if (!file_exists($view_path)) {
-			throw new wfViewNotFoundException('The view ' . $view_path . ' does not exist or is not readable.');
+			throw new wfViewNotFoundException(sprintf(/* translators: File path. */ __('The view %s does not exist or is not readable.', 'wordfence'), $view_path));
 		}
 
 		extract($this->data, EXTR_SKIP);
@@ -67,7 +67,7 @@ class wfView {
 		try {
 			return $this->render();
 		} catch (wfViewNotFoundException $e) {
-			return defined('WP_DEBUG') && WP_DEBUG ? $e->getMessage() : 'The view could not be loaded.';
+			return defined('WP_DEBUG') && WP_DEBUG ? esc_html($e->getMessage()) : esc_html__('The view could not be loaded.', 'wordfence');
 		}
 	}
 

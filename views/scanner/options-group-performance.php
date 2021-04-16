@@ -20,7 +20,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Performance Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Performance Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -31,9 +31,9 @@ if (!isset($collapseable)) {
 					$options = array(
 						array('key' => 'lowResourceScansEnabled', 'label' => __('Use low resource scanning (reduces server load by lengthening the scan duration)', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_LOW_RESOURCE)),
 						array('key' => 'scan_maxIssues', 'label' => __('Limit the number of issues sent in the scan results email', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_LIMIT_ISSUES), 'view' => 'options/option-text', 'parameters' => array('subtitle' => __('0 or empty means unlimited issues will be sent', 'wordfence'))),
-						array('key' => 'scan_maxDuration', 'label' => __('Time limit that a scan can run in seconds', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_OVERALL_TIME_LIMIT), 'view' => 'options/option-text', 'parameters' => array('subtitle' => sprintf(__('0 or empty means the default of %s will be used', 'wordfence'), wfUtils::makeDuration(WORDFENCE_DEFAULT_MAX_SCAN_TIME)))),
+						array('key' => 'scan_maxDuration', 'label' => __('Time limit that a scan can run in seconds', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_OVERALL_TIME_LIMIT), 'view' => 'options/option-text', 'parameters' => array('subtitle' => sprintf(/* translators: Time until. */ __('0 or empty means the default of %s will be used', 'wordfence'), wfUtils::makeDuration(WORDFENCE_DEFAULT_MAX_SCAN_TIME)))),
 						array('key' => 'maxMem', 'label' => __('How much memory should Wordfence request when scanning', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_MEMORY_LIMIT), 'view' => 'options/option-text', 'parameters' => array('subtitle' => __('Memory size in megabytes', 'wordfence'))),
-						array('key' => 'maxExecutionTime', 'label' => __('Maximum execution time for each scan stage ', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_STAGE_TIME_LIMIT), 'view' => 'options/option-text', 'parameters' => array('subtitle' => sprintf(__('0 for default. Must be %d or greater and 10-20 or higher is recommended for most servers', 'wordfence'), intval(WORDFENCE_SCAN_MIN_EXECUTION_TIME)))),
+						array('key' => 'maxExecutionTime', 'label' => __('Maximum execution time for each scan stage ', 'wordfence'), 'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_SCAN_OPTION_STAGE_TIME_LIMIT), 'view' => 'options/option-text', 'parameters' => array('subtitle' => sprintf(/* translators: PHP max execution time (number). */ __('0 for default. Must be %d or greater and 10-20 or higher is recommended for most servers', 'wordfence'), intval(WORDFENCE_SCAN_MIN_EXECUTION_TIME)))),
 					);
 					foreach ($options as $o):
 						?>

@@ -176,7 +176,6 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 		$table = $this->networkTable('wfHits');
 
 		$failedRulesString = '';
-		$actionDescription = '';
 		if (is_array($failedRules)) {
 			/**
 			 * @var int $index
@@ -185,14 +184,11 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 			foreach ($failedRules as $index => $rule) {
 				if ($rule instanceof wfWAFRule) {
 					$failedRulesString .= $rule->getRuleID() . '|';
-					$actionDescription .= $rule->getDescription() . ', ';
 				} else {
 					$failedRulesString .= $rule . '|';
-					$actionDescription .= $rule . ', ';
 				}
 			}
 			$failedRulesString = wfWAFUtils::substr($failedRulesString, 0, -1);
-			$actionDescription = wfWAFUtils::substr($actionDescription, 0, -2);
 		}
 		if (preg_match('/\blogged\b/i', $failedRulesString)) {
 			$statusCode = 200;
@@ -226,7 +222,6 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 			'referer'           => $referer,
 			'UA'                => $ua,
 			'action'            => $action,
-			'actionDescription' => $actionDescription,
 			'actionData'        => wfWAFUtils::json_encode(array(
 				'failedRules'     => $failedRulesString,
 				'paramKey'        => base64_encode($failedParamKey),

@@ -1,4 +1,6 @@
 (function($) {
+	var __ = window.wfi18n.__;
+	var sprintf = window.wfi18n.sprintf;
 
 	var LISTING_LIMIT = 50;
 
@@ -18,32 +20,32 @@
 		};
 		self.filters = ko.observableArray(filters);
 
-		var urlGroupBy = new GroupByModel('url', 'URL');
+		var urlGroupBy = new GroupByModel('url', __('URL'));
 		var groupBys = [
-			new GroupByModel('type', 'Type'),
-			new GroupByModel('user_login', 'Username'),
-			new GroupByModel('statusCode', 'HTTP Response Code'),
-			new GroupByModel('action', 'Firewall Response', 'enum', ['ok', 'throttled', 'lockedOut', 'blocked', 'blocked:waf']),
-			new GroupByModel('ip', 'IP'),
+			new GroupByModel('type', __('Type')),
+			new GroupByModel('user_login', __('Username')),
+			new GroupByModel('statusCode', __('HTTP Response Code')),
+			new GroupByModel('action', __('Firewall Response'), 'enum', ['ok', 'throttled', 'lockedOut', 'blocked', 'blocked:waf']),
+			new GroupByModel('ip', __('IP')),
 			urlGroupBy
 		];
 
 		self.presetFiltersOptions = ko.observableArray([
-			new PresetFilterModel('All Hits', "all", []),
-			new PresetFilterModel('Humans', "humans", [new ListingsFilterModel(self, 'type', 'human')]),
-			new PresetFilterModel('Registered Users', "users", [new ListingsFilterModel(self, 'userID', '0', '!=')]),
-			new PresetFilterModel('Crawlers', "crawlers", [new ListingsFilterModel(self, 'type', 'bot')]),
-			new PresetFilterModel('Google Crawlers', "google", [new ListingsFilterModel(self, 'isGoogle', '1')]),
-			new PresetFilterModel('Pages Not Found', "404s", [new ListingsFilterModel(self, 'statusCode', '404')]),
-			new PresetFilterModel('Logins and Logouts', "logins", [
+			new PresetFilterModel(__('All Hits'), "all", []),
+			new PresetFilterModel(__('Humans'), "humans", [new ListingsFilterModel(self, 'type', 'human')]),
+			new PresetFilterModel(__('Registered Users'), "users", [new ListingsFilterModel(self, 'userID', '0', '!=')]),
+			new PresetFilterModel(__('Crawlers'), "crawlers", [new ListingsFilterModel(self, 'type', 'bot')]),
+			new PresetFilterModel(__('Google Crawlers'), "google", [new ListingsFilterModel(self, 'isGoogle', '1')]),
+			new PresetFilterModel(__('Pages Not Found'), "404s", [new ListingsFilterModel(self, 'statusCode', '404')]),
+			new PresetFilterModel(__('Logins and Logouts'), "logins", [
 				new ListingsFilterModel(self, 'action', 'login', 'contains'),
 				new ListingsFilterModel(self, 'action', 'logout', 'contains')
 			]),
 			//new PresetFilterModel('Top Consumers', "top_consumers", [new ListingsFilterModel(self, 'statusCode', '200')], urlGroupBy),
 			//new PresetFilterModel('Top 404s', "top_404s", [new ListingsFilterModel(self, 'statusCode', '404')], urlGroupBy),
-			new PresetFilterModel('Locked Out', "lockedOut", [new ListingsFilterModel(self, 'action', 'lockedOut')]),
-			new PresetFilterModel('Blocked', "blocked", [new ListingsFilterModel(self, 'action', 'blocked', 'contains')]),
-			new PresetFilterModel('Blocked By Firewall', "blocked:waf", [new ListingsFilterModel(self, 'action', 'blocked:waf')])
+			new PresetFilterModel(__('Locked Out'), "lockedOut", [new ListingsFilterModel(self, 'action', 'lockedOut')]),
+			new PresetFilterModel(__('Blocked'), "blocked", [new ListingsFilterModel(self, 'action', 'blocked', 'contains')]),
+			new PresetFilterModel(__('Blocked By Firewall'), "blocked:waf", [new ListingsFilterModel(self, 'action', 'blocked:waf')])
 		]);
 
 		self.showAdvancedFilters = ko.observable(false);
@@ -388,20 +390,20 @@
 			if (groupBy == 'action') {
 				switch (self.action()) {
 					case 'lockedOut':
-						return 'Locked out from logging in';
+						return __('Locked out from logging in');
 					case 'blocked:waf-always':
-						return 'Blocked by the Wordfence Application Firewall and plugin settings';
+						return __('Blocked by the Wordfence Application Firewall and plugin settings');
 					case 'blocked:wordfence':
-						return 'Blocked by Wordfence plugin settings';
+						return __('Blocked by Wordfence plugin settings');
 					case 'blocked:wfsnrepeat':
 					case 'blocked:wfsn':
-						return 'Blocked by the Wordfence Security Network';
+						return __('Blocked by the Wordfence Security Network');
 					case 'blocked:waf':
-						return 'Blocked by the Wordfence Web Application Firewall';
+						return __('Blocked by the Wordfence Web Application Firewall');
 					case 'cbl:redirect':
-						return 'Redirected by Country Blocking bypass URL';
+						return __('Redirected by Country Blocking bypass URL');
 					default:
-						return 'Blocked by Wordfence';
+						return __('Blocked by Wordfence');
 				}
 			}
 
@@ -409,7 +411,7 @@
 			var desc = '';
 			switch (self.action()) {
 				case 'lockedOut':
-					return 'locked out from logging in';
+					return __('locked out from logging in');
 
 				case 'blocked:waf-always':
 				case 'blocked:wordfence':
@@ -418,10 +420,10 @@
 					if (desc && desc.toLowerCase().indexOf('block') === 0) {
 						return 'b' + desc.substring(1);
 					}
-					return 'blocked for ' + desc;
+					return sprintf(__('blocked for %s'), desc);
 
 				case 'blocked:wfsn':
-					return 'blocked by the Wordfence Security Network';
+					return __('blocked by the Wordfence Security Network');
 
 				case 'blocked:waf':
 					var data = self.actionData();
@@ -435,28 +437,28 @@
 						if (matches) {
 							switch (matches[1]) {
 								case 'request.queryString':
-									desc = self.actionDescription() + ' in query string: ' + matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue));
+									desc = sprintf(__('%s in query string: %s'), self.actionDescription(), matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue)));
 									break;
 								case 'request.body':
-									desc = self.actionDescription() + ' in POST body: ' + matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue));
+									desc = sprintf(__('%s in POST body: %s'), self.actionDescription(), matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue)));
 									break;
 								case 'request.cookie':
-									desc = self.actionDescription() + ' in cookie: ' + matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue));
+									desc = sprintf(__('%s in cookie: %s'), self.actionDescription(), matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue)));
 									break;
 								case 'request.fileNames':
-									desc = 'a ' + self.actionDescription() + ' in file: ' + matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue));
+									desc = sprintf(__('%s in file: %s'), self.actionDescription(), matches[2] + '=' + LiveTrafficViewModel.truncateText(encodeURIComponent(paramValue)));
 									break;
 							}
 						}
 						if (desc) {
-							return 'blocked by firewall for ' + desc;
+							return sprintf(__('blocked by firewall for %s'), desc);
 						}
 						if (data.failedRules == 'blocked') {
-							return 'blocked by real-time IP blacklist';
+							return __('blocked by real-time IP blocklist');
 						}
-						return 'blocked by firewall';
+						return __('blocked by firewall');
 					}
-					return 'blocked by firewall for ' + self.actionDescription();
+					return sprintf(__('blocked by firewall for %s'), self.actionDescription());
 				case 'cbl:redirect':
 					desc = self.actionDescription();
 					return desc;
@@ -503,21 +505,21 @@
 		});
 
 		self.typeText = ko.pureComputed(function() {
-			var type = 'Type: ';
+			var type = '';
 			if (self.action() == 'loginFailValidUsername' || self.action() == 'loginFailInvalidUsername') {
-				type += 'Failed Login';
+				type = __('Failed Login');
 			} else if (self.statusCode() == 403 || self.statusCode() == 503) {
-				type += 'Blocked';
+				type = __('Blocked');
 			} else if (self.statusCode() == 404) {
-				type += '404 Not Found';
+				type = __('404 Not Found');
 			} else if (self.statusCode() == 302) {
-				type += 'Redirected';
+				type = __('Redirected');
 			} else if (self.jsRun() == 1) {
-				type += 'Human';
+				type = __('Human');
 			} else {
-				type += 'Bot';
+				type = __('Bot');
 			}
-			return type;
+			return sprintf(__('Type: %s'), type);
 		});
 
 		function slideInDrawer() {
@@ -544,7 +546,7 @@
 				.animate({
 					opacity: 1
 				}, 200)
-				.html('<h4 style=\'margin-top:0;\'>WHOIS LOOKUP</h4>' + whoisHTML);
+				.html('<h4 style=\'margin-top:0;\'>' + __('WHOIS LOOKUP') + '</h4>' + whoisHTML);
 				$(window).trigger('wf-live-traffic-overlay-bind', self);
 			});
 		};
@@ -561,7 +563,7 @@
 				.animate({
 					opacity: 1
 				}, 200)
-				.html('<h3 style=\'margin-top:0;\'>Recent Activity</h3>' + result.result);
+				.html('<h3 style=\'margin-top:0;\'>' + __('Recent Activity') + '</h3>' + result.result);
 				$(window).trigger('wf-live-traffic-overlay-bind', self);
 				WFAD.avatarLookup();
 			});
@@ -579,7 +581,7 @@
 			WFAD.unblockNetwork(self.ipRangeID());
 		};
 		self.blockIP = function() {
-			WFAD.blockIP(self.IP(), 'Manual block by administrator', function() {
+			WFAD.blockIP(self.IP(), __('Manual block by administrator'), function() {
 				$(window).trigger('wf-live-traffic-ip-blocked', self.IP());
 			});
 		};
@@ -620,32 +622,32 @@
 		]);
 
 		self.filterParamOptions = ko.observableArray([
-			new FilterParamModel('type', 'Type', 'enum', [
-				new FilterParamEnumOptionModel('human', 'Human'),
-				new FilterParamEnumOptionModel('bot', 'Bot')
+			new FilterParamModel('type', __('Type'), 'enum', [
+				new FilterParamEnumOptionModel('human', __('Human')),
+				new FilterParamEnumOptionModel('bot', __('Bot'))
 			]),
-			new FilterParamModel('user_login', 'Username'),
-			new FilterParamModel('userID', 'UserID'),
-			new FilterParamModel('isGoogle', 'Google Bot', 'bool'),
-			new FilterParamModel('ip', 'IP'),
-			new FilterParamModel('ua', 'User Agent'),
-			new FilterParamModel('referer', 'Referer'),
-			new FilterParamModel('url', 'URL'),
-			new FilterParamModel('statusCode', 'HTTP Response Code'),
-			new FilterParamModel('action', 'Firewall Response', 'enum', [
-				new FilterParamEnumOptionModel('', 'OK'),
-				new FilterParamEnumOptionModel('throttled', 'Throttled'),
-				new FilterParamEnumOptionModel('lockedOut', 'Locked Out'),
-				new FilterParamEnumOptionModel('blocked', 'Blocked', containsOperator),
-				new FilterParamEnumOptionModel('blocked:waf', 'Blocked WAF')
+			new FilterParamModel('user_login', __('Username')),
+			new FilterParamModel('userID', __('User ID')),
+			new FilterParamModel('isGoogle', __('Google Bot'), 'bool'),
+			new FilterParamModel('ip', __('IP')),
+			new FilterParamModel('ua', __('User Agent')),
+			new FilterParamModel('referer', __('Referer')),
+			new FilterParamModel('url', __('URL')),
+			new FilterParamModel('statusCode', __('HTTP Response Code')),
+			new FilterParamModel('action', __('Firewall Response'), 'enum', [
+				new FilterParamEnumOptionModel('', __('OK')),
+				new FilterParamEnumOptionModel('throttled', __('Throttled')),
+				new FilterParamEnumOptionModel('lockedOut', __('Locked Out')),
+				new FilterParamEnumOptionModel('blocked', __('Blocked'), containsOperator),
+				new FilterParamEnumOptionModel('blocked:waf', __('Blocked WAF'))
 			]),
-			new FilterParamModel('action', 'Logins', 'enum', [
-				new FilterParamEnumOptionModel('loginOK', 'Logged In'),
-				new FilterParamEnumOptionModel('loginFail', 'Failed Login'),
-				new FilterParamEnumOptionModel('loginFailInvalidUsername', 'Failed Login: Invalid Username'),
-				new FilterParamEnumOptionModel('loginFailValidUsername', 'Failed Login: Valid Username')
+			new FilterParamModel('action', __('Logins'), 'enum', [
+				new FilterParamEnumOptionModel('loginOK', __('Logged In')),
+				new FilterParamEnumOptionModel('loginFail', __('Failed Login')),
+				new FilterParamEnumOptionModel('loginFailInvalidUsername', __('Failed Login: Invalid Username')),
+				new FilterParamEnumOptionModel('loginFailValidUsername', __('Failed Login: Valid Username'))
 			]),
-			new FilterParamModel('action', 'Security Event')
+			new FilterParamModel('action', __('Security Event'))
 		]);
 
 		self.filterParamOptionsText = function(item) {
@@ -811,7 +813,7 @@
 		var liveTrafficWrapper = $('#wf-live-traffic');
 		$('#wf-lt-preset-filters').wfselect2({
 			templateSelection: function(value) {
-				return $('<span><em>Filter Traffic</em>: ' + value.text + '</span>');
+				return $('<span><em>' + __('Filter Traffic') + '</em>: ' + value.text + '</span>');
 			}
 		});
 

@@ -36,7 +36,7 @@ if (isset($backLabel) && !isset($backLabelHTML)) {
 			</li>
 			<?php if (!isset($suppressControls) || !$suppressControls): ?>
 				<li class="wf-right">
-					<a id="wf-restore-defaults" class="wf-btn wf-btn-default wf-btn-callout-subtle" href="#" data-restore-defaults-section="<?php echo esc_attr($restoreDefaultsSection); ?>"><?php _e('<span class="wf-hidden-xs">Restore </span>Defaults', 'wordfence'); ?></a>&nbsp;&nbsp;<a id="wf-cancel-changes" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-disabled" href="#"><?php _e('Cancel<span class="wf-hidden-xs wf-hidden-sm"> Changes</span>', 'wordfence'); ?></a>&nbsp;&nbsp;<a id="wf-save-changes" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" href="#"><?php _e('Save<span class="wf-hidden-xs wf-hidden-sm"> Changes</span>', 'wordfence'); ?></a>
+					<a id="wf-restore-defaults" class="wf-btn wf-btn-default wf-btn-callout-subtle" href="#" data-restore-defaults-section="<?php echo esc_attr($restoreDefaultsSection); ?>"><?php echo wp_kses(__('<span class="wf-hidden-xs">Restore </span>Defaults', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>&nbsp;&nbsp;<a id="wf-cancel-changes" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-disabled" href="#"><?php echo wp_kses(__('Cancel<span class="wf-hidden-xs wf-hidden-sm"> Changes</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>&nbsp;&nbsp;<a id="wf-save-changes" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" href="#"><?php echo wp_kses(__('Save<span class="wf-hidden-xs wf-hidden-sm"> Changes</span>', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>
 				</li>
 			<?php endif; ?>
 		</ul>
@@ -162,7 +162,7 @@ if (isset($backLabel) && !isset($backLabelHTML)) {
 			'title' => __('Confirm Restore Defaults', 'wordfence'),
 			'message' => $restoreDefaultsMessage,
 			'primaryButton' => array('id' => 'wf-restore-defaults-prompt-cancel', 'label' => __('Cancel', 'wordfence'), 'link' => '#'),
-			'secondaryButtons' => array(array('id' => 'wf-restore-defaults-prompt-confirm', 'labelHTML' => __('Restore<span class="wf-hidden-xs"> Defaults</span>', 'wordfence'), 'link' => '#')),
+			'secondaryButtons' => array(array('id' => 'wf-restore-defaults-prompt-confirm', 'labelHTML' => wp_kses(__('Restore<span class="wf-hidden-xs"> Defaults</span>', 'wordfence'), array('span'=>array('class'=>array()))), 'link' => '#')),
 		))->render();
 		?>
 	</script>

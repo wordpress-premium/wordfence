@@ -26,12 +26,12 @@ class wfBlockAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_block')) {
-			$message = sprintf(__('Wordfence has blocked IP address %s.', 'wordfence'), $this->IP) . "\n";
-			$message .= sprintf(__('The reason is: "%s".', 'wordfence'), $this->reason);
+			$message = sprintf(/* translators: IP address. */ __('Wordfence has blocked IP address %s.', 'wordfence'), $this->IP) . "\n";
+			$message .= sprintf(/* translators: Description of firewall action. */ __('The reason is: "%s".', 'wordfence'), $this->reason);
 			if ($this->secsToGo > 0) {
-				$message .= "\n" . sprintf(__('The duration of the block is %s.', 'wordfence'), wfUtils::makeDuration($this->secsToGo, true));
+				$message .= "\n" . sprintf(/* translators: Time until. */ __('The duration of the block is %s.', 'wordfence'), wfUtils::makeDuration($this->secsToGo, true));
 			}
-			wordfence::alert(sprintf(__('Blocking IP %s', 'wordfence'), $this->IP), $message, $this->IP);
+			wordfence::alert(sprintf(/* translators: IP address. */__('Blocking IP %s', 'wordfence'), $this->IP), $message, $this->IP);
 		}
 	}
 
@@ -50,7 +50,7 @@ class wfAutoUpdatedAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_update') == '1' && $this->version) {
-			wordfence::alert("Wordfence Upgraded to version " . $this->version, "Your Wordfence installation has been upgraded to version " . $this->version, '127.0.0.1');
+			wordfence::alert(sprintf(/* translators: Software version. */ __("Wordfence Upgraded to version %s", 'wordfence'), $this->version), sprintf(/* translators: Software version. */ __("Your Wordfence installation has been upgraded to version %s", 'wordfence'), $this->version), false);
 		}
 	}
 
@@ -72,7 +72,7 @@ class wfWafDeactivatedAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_wafDeactivated')) {
-			wordfence::alert(__('Wordfence WAF Deactivated', 'wordfence'), sprintf(__('A user with username "%s" deactivated the Wordfence Web Application Firewall on your WordPress site.', 'wordfence'), $this->username), $this->IP);
+			wordfence::alert(__('Wordfence WAF Deactivated', 'wordfence'), sprintf(/* translators: WP username. */__('A user with username "%s" deactivated the Wordfence Web Application Firewall on your WordPress site.', 'wordfence'), $this->username), $this->IP);
 		}
 	}
 
@@ -93,7 +93,7 @@ class wfWordfenceDeactivatedAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_wordfenceDeactivated')) {
-			wordfence::alert("Wordfence Deactivated", "A user with username \"$this->username\" deactivated Wordfence on your WordPress site.", $this->IP);
+			wordfence::alert(__("Wordfence Deactivated", 'wordfence'), sprintf(/* translators: WP username. */ __("A user with username \"%s\" deactivated Wordfence on your WordPress site.", 'wordfence'), $this->username), $this->IP);
 		}
 	}
 
@@ -115,7 +115,7 @@ class wfLostPasswdFormAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_lostPasswdForm')) {
-			wordfence::alert("Password recovery attempted", "Someone tried to recover the password for user with email address: " . wp_kses($this->user->user_email, array()), $this->IP);
+			wordfence::alert(__("Password recovery attempted", 'wordfence'), sprintf(/* translators: Email address. */__("Someone tried to recover the password for user with email address: %s", 'wordfence'), wp_kses($this->user->user_email, array())), $this->IP);
 		}
 	}
 
@@ -137,9 +137,11 @@ class wfLoginLockoutAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_loginLockout')) {
-			$message = sprintf(__('A user with IP addr %s has been locked out from signing in or using the password recovery form for the following reason: %s.', 'wordfence'), $this->IP, $this->reason);
+			$message = sprintf(
+				/* translators: 1. IP address. 2. Description of firewall action. */
+				__('A user with IP address %1$s has been locked out from signing in or using the password recovery form for the following reason: %2$s.', 'wordfence'), $this->IP, $this->reason);
 			if (wfBlock::lockoutDuration() > 0) {
-				$message .= "\n" . sprintf(__('The duration of the lockout is %s.', 'wordfence'), wfUtils::makeDuration(wfBlock::lockoutDuration(), true));
+				$message .= "\n" . sprintf(/* translators: Time until. */ __('The duration of the lockout is %s.', 'wordfence'), wfUtils::makeDuration(wfBlock::lockoutDuration(), true));
 			}
 			wordfence::alert(__('User locked out from signing in', 'wordfence'), $message, $this->IP);
 		}
@@ -174,7 +176,7 @@ class wfAdminLoginAlert extends wfBaseAlert {
 			}
 
 			if ($shouldAlert) {
-				wordfence::alert("Admin Login", "A user with username \"$this->username\" who has administrator access signed in to your WordPress site.", $this->IP);
+				wordfence::alert(__("Admin Login", 'wordfence'), sprintf(/* translators: WP username. */ __("A user with username \"%s\" who has administrator access signed in to your WordPress site.", 'wordfence'), $this->username), $this->IP);
 			}
 		}
 	}
@@ -208,7 +210,7 @@ class wfNonAdminLoginAlert extends wfBaseAlert {
 			}
 
 			if ($shouldAlert) {
-				wordfence::alert("User login", "A non-admin user with username \"$this->username\" signed in to your WordPress site.", $this->IP);
+				wordfence::alert(__("User login", 'wordfence'), sprintf(/* translators: WP username. */ __("A non-admin user with username \"%s\" signed in to your WordPress site.", 'wordfence'), $this->username), $this->IP);
 			}
 		}
 	}
@@ -236,7 +238,9 @@ class wfBreachLoginAlert extends wfBaseAlert {
 
 	public function send() {
 		if (wfConfig::get('alertOn_breachLogin')) {
-			wordfence::alert(__('User login blocked for insecure password', 'wordfence'), sprintf(__('A user with username "%s" tried to sign in to your WordPress site. Access was denied because the password being used exists on lists of passwords leaked in data breaches. Attackers use such lists to break into sites and install malicious code. Please change or reset the password (%s) to reactivate this account. Learn More: %s', 'wordfence'), $this->username, $this->lostPasswordUrl, $this->supportUrl), $this->IP);
+			wordfence::alert(__('User login blocked for insecure password', 'wordfence'), sprintf(
+				/* translators: 1. WP username. 2. Reset password URL. 3. Support URL. */
+				__('A user with username "%1$s" tried to sign in to your WordPress site. Access was denied because the password being used exists on lists of passwords leaked in data breaches. Attackers use such lists to break into sites and install malicious code. Please change or reset the password (%2$s) to reactivate this account. Learn More: %3$s', 'wordfence'), $this->username, $this->lostPasswordUrl, $this->supportUrl), $this->IP);
 		}
 	}
 }
@@ -253,6 +257,6 @@ class wfIncreasedAttackRateAlert extends wfBaseAlert {
 	}
 
 	public function send() {
-		wordfence::alert('Increased Attack Rate', $this->message, false);
+		wordfence::alert(__('Increased Attack Rate', 'wordfence'), $this->message, false);
 	}
 }

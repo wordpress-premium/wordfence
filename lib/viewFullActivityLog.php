@@ -7,8 +7,9 @@
 <style type="text/css">
 
 </style>
+</head>
 <body>
-<h1>Wordfence Full Activity Log</h1>
+<h1><?php esc_html_e('Wordfence Full Activity Log', 'wordfence') ?></h1>
 <?php
 $db = new wfDB();
 global $wpdb;

@@ -6,24 +6,24 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 		<div class="wf-modal-header">
 			<div class="wf-modal-header-content">
 				<div class="wf-modal-title">
-					<strong><?php _e('Uninstall Wordfence Firewall', 'wordfence'); ?></strong>
+					<strong><?php esc_html_e('Uninstall Wordfence Firewall', 'wordfence'); ?></strong>
 				</div>
 			</div>
 			<div class="wf-modal-header-action">
-				<div><?php printf(__('If you cannot complete the uninstall process, <a target="_blank" rel="noopener noreferrer" href="%s">click here for help</a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)); ?></div>
+				<div><?php echo wp_kses(sprintf(__('If you cannot complete the uninstall process, <a target="_blank" rel="noopener noreferrer" href="%s">click here for help</a>', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></div>
 				<div class="wf-padding-add-left-small wf-modal-header-action-close"><a href="#" onclick="WFAD.colorboxClose(); return false"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 			</div>
 		</div>
 		<div class="wf-modal-content">
 		<?php
-		if (WF_IS_WP_ENGINE) {
+		if (WF_IS_WP_ENGINE || WF_IS_PRESSABLE) {
 			$currentAutoPrependFile = wordfence::getWAFBootstrapPath();
 		} else {
 			$currentAutoPrependFile = ini_get('auto_prepend_file');
 		}
 
 		?>
-			<p><?php _e('Extended Protection Mode of the Wordfence Web Application Firewall uses the PHP ini setting called <code>auto_prepend_file</code> in order to ensure it runs before any potentially vulnerable code runs. This PHP setting currently refers to the Wordfence file at:', 'wordfence'); ?></p>
+			<p><?php echo wp_kses(__('Extended Protection Mode of the Wordfence Web Application Firewall uses the PHP ini setting called <code>auto_prepend_file</code> in order to ensure it runs before any potentially vulnerable code runs. This PHP setting currently refers to the Wordfence file at:', 'wordfence'), array('code'=>array())); ?></p>
 			<pre class='wf-pre'><?php echo esc_html($currentAutoPrependFile); ?></pre>
 		<?php
 		$contents = file_get_contents($currentAutoPrependFile);
@@ -31,9 +31,9 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 		
 		if (!$refersToWAF):
 		?>
-			<p><?php printf(__('Automatic uninstallation cannot be completed, but you may still be able to <a href="%s" target="_blank" rel="noopener noreferrer">manually uninstall extended protection</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)); ?></p>
+			<p><?php echo wp_kses(sprintf(/* translators: Support URL. */ __('Automatic uninstallation cannot be completed, but you may still be able to <a href="%s" target="_blank" rel="noopener noreferrer">manually uninstall extended protection</a>.', 'wordfence'), wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_REMOVE_MANUALLY)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
 		<?php else: ?>
-				<p><?php _e('Before this file can be deleted, the configuration for the <code>auto_prepend_file</code> setting needs to be removed.', 'wordfence'); ?></p>
+				<p><?php echo wp_kses(__('Before this file can be deleted, the configuration for the <code>auto_prepend_file</code> setting needs to be removed.', 'wordfence'), array('code'=>array())); ?></p>
 				<?php
 				$serverInfo = wfWebServerInfo::createFromEnvironment();
 				$dropdown = array(
@@ -49,6 +49,8 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 				$wafPrependOptions = '';
 				foreach ($dropdown as $option) {
 					list($optionValue, $optionText, $selected) = $option;
+					$optionValue=esc_attr($optionValue);
+					$optionText=esc_html($optionText);
 					$wafPrependOptions .= "<option value=\"{$optionValue}\"" . ($selected ? ' selected' : '') . ">{$optionText}" . ($selected ? ' (recommended based on our tests)' : '') . "</option>\n";
 					if ($selected) {
 						$hasRecommendedOption = true;
@@ -56,9 +58,9 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 				}
 				
 				if (!$hasRecommendedOption): ?>
-					<p><?php _e('If you know your web server\'s configuration, please select it from the list below.', 'wordfence'); ?></p>
+					<p><?php esc_html_e('If you know your web server\'s configuration, please select it from the list below.', 'wordfence'); ?></p>
 				<?php else: ?>
-					<p><?php _e('We\'ve preselected your server configuration based on our tests, but if you know your web server\'s configuration, please select it now.', 'wordfence'); ?></p>
+					<p><?php esc_html_e('We\'ve preselected your server configuration based on our tests, but if you know your web server\'s configuration, please select it now.', 'wordfence'); ?></p>
 				<?php endif; ?>
 				<select name='serverConfiguration' id='wf-waf-server-config'>
 					<?php echo $wafPrependOptions; ?>
@@ -82,7 +84,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 					$jsonBackups = json_encode(array_map('basename', $filteredBackups));
 					?>
 					<div class="wf-waf-backups wf-waf-backups-<?php echo $class; ?>" style="display: none;" data-backups="<?php echo esc_attr($jsonBackups); ?>">
-						<?php if (count($filteredBackups)): ?><p><?php _e('Please download a backup of the following files before we make the necessary changes:', 'wordfence'); ?></p><?php endif; ?>
+						<?php if (count($filteredBackups)): ?><p><?php esc_html_e('Please download a backup of the following files before we make the necessary changes:', 'wordfence'); ?></p><?php endif; ?>
 						<ul class="wf-waf-backup-file-list">
 							<?php
 							foreach ($filteredBackups as $index => $backup) {
@@ -92,7 +94,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 										'backupIndex'         => $index,
 										'serverConfiguration' => $helper->getServerConfig(),
 										'wfnonce'             => $wfnonce,
-									), $adminURL)) . '">' . sprintf(__('Download %s', 'wordfence'), esc_html(basename($backup))) . '</a></li>';
+									), $adminURL)) . '">' . esc_html(sprintf(__('Download %s', 'wordfence'), basename($backup))) . '</a></li>';
 							}
 							?>
 						</ul>
@@ -102,8 +104,8 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 		</div>
 		<div class="wf-modal-footer">
 			<ul class="wf-flex-horizontal wf-flex-full-width">
-				<li class="wf-waf-download-instructions"><?php _e('Once you have downloaded the files, click Continue to complete uninstallation.', 'wordfence'); ?></li>
-				<li class="wf-right"><a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" id="wf-waf-uninstall-continue"><?php _e('Continue', 'wordfence'); ?></a></li>
+				<li class="wf-waf-download-instructions"><?php esc_html_e('Once you have downloaded the files, click Continue to complete uninstallation.', 'wordfence'); ?></li>
+				<li class="wf-right"><a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" id="wf-waf-uninstall-continue"><?php esc_html_e('Continue', 'wordfence'); ?></a></li>
 			</ul>
 		</div>
 	</div>

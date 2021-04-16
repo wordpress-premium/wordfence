@@ -13,7 +13,7 @@ else {
 echo wfView::create('common/section-title', array(
 	'title'     => __('Two-Factor Authentication', 'wordfence'),
 	'helpLink'  => $helpLink,
-	'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about Two-Factor Authentication</span>', 'wordfence'),
+	'helpLabelHTML' => wp_kses(__('Learn more<span class="wf-hidden-xs"> about Two-Factor Authentication</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 ))->render();
 ?>
 
@@ -32,15 +32,15 @@ echo wfView::create('common/section-title', array(
 	<div class="wf-row">
 		<div class="wf-col-xs-12">
 			<div id="wordfenceTwoFactorLegacy">
-				<p><strong><?php _e('2FA Mode: Legacy', 'wordfence') ?>.</strong> <?php _e('Two-factor authentication is using legacy support, which enables SMS-based codes but is less compatible. An improved interface and use by non-administrators is available by activating the new login security module.', 'wordfence'); ?></p>
-				<p><a id="wf-migrate2fanew-start" class="wf-btn wf-btn-default wf-btn-sm wf-dismiss-link" href="#"><?php _e('Switch to New 2FA', 'wordfence'); ?></a></p>
+				<p><strong><?php esc_html_e('2FA Mode: Legacy', 'wordfence') ?>.</strong> <?php esc_html_e('Two-factor authentication is using legacy support, which enables SMS-based codes but is less compatible. An improved interface and use by non-administrators is available by activating the new login security module.', 'wordfence'); ?></p>
+				<p><a id="wf-migrate2fanew-start" class="wf-btn wf-btn-default wf-btn-sm wf-dismiss-link" href="#"><?php esc_html_e('Switch to New 2FA', 'wordfence'); ?></a></p>
 			</div>
 		</div>
 	</div>
 	<?php if (!wfConfig::get('isPaid')): ?>
 		<div class="wf-premium-callout wf-add-bottom">
-			<h3><?php _e("Take Login Security to the next level with Two-Factor Authentication", 'wordfence') ?></h3>
-			<p><?php _e('Used by banks, government agencies, and military worldwide, two-factor authentication is one of the most secure forms of remote system authentication available. With it enabled, an attacker needs to know your username, password, <em>and</em> have control of your phone to log into your site. Upgrade to Premium now to enable this powerful feature.', 'wordfence') ?></p>
+			<h3><?php esc_html_e("Take Login Security to the next level with Two-Factor Authentication", 'wordfence') ?></h3>
+			<p><?php echo wp_kses(__('Used by banks, government agencies, and military worldwide, two-factor authentication is one of the most secure forms of remote system authentication available. With it enabled, an attacker needs to know your username, password, <em>and</em> have control of your phone to log into your site. Upgrade to Premium now to enable this powerful feature.', 'wordfence'), array('em'=>array())) ?></p>
 
 			<p class="wf-nowrap">
 				<img id="wf-two-factor-img1" src="<?php echo wfUtils::getBaseURL() . 'images/2fa1.svg' ?>" alt="">
@@ -48,7 +48,7 @@ echo wfView::create('common/section-title', array(
 			</p>
 
 			<p class="center">
-				<a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1twoFac1/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence') ?></a>
+				<a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1twoFac1/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence') ?></a>
 			</p>
 		</div>
 
@@ -56,7 +56,7 @@ echo wfView::create('common/section-title', array(
 		<div class="wf-row">
 			<div class="wf-col-xs-12 wf-flex-row">
 				<div class="wf-flex-row-1">
-					<p><?php _e('With Two-Factor Authentication enabled, an attacker needs to know your username, password <em>and</em> have control of your phone to log in to your site. We recommend you enable Two-Factor Authentication for all Administrator level accounts.', 'wordfence') ?></p>
+					<p><?php echo wp_kses(__('With Two-Factor Authentication enabled, an attacker needs to know your username, password <em>and</em> have control of your phone to log in to your site. We recommend you enable Two-Factor Authentication for all Administrator level accounts.', 'wordfence'), array('em'=>array())) ?></p>
 				</div>
 				<div class="wf-flex-row-0 wf-padding-add-left">
 					<?php
@@ -75,14 +75,14 @@ echo wfView::create('common/section-title', array(
 				<div class="wf-block wf-active">
 					<?php if (!wfConfig::get('loginSecurityEnabled')): ?>
 						<ul class="wf-block-banner">
-							<li><?php _e('<strong>Note:</strong> Two-Factor Authentication is disabled when the option "Enable Brute Force Protection" is off.', 'wordfence'); ?></li>
-							<li><a href="#" class="wf-btn wf-btn-default" id="wf-2fa-enable"><?php _e('Turn On', 'wordfence'); ?></a></li>
+							<li><?php echo wp_kses(__('<strong>Note:</strong> Two-Factor Authentication is disabled when the option "Enable Brute Force Protection" is off.', 'wordfence'), array('strong'=>array())); ?></li>
+							<li><a href="#" class="wf-btn wf-btn-default" id="wf-2fa-enable"><?php esc_html_e('Turn On', 'wordfence'); ?></a></li>
 						</ul>
 					<?php endif; ?>
 					<div class="wf-block-header">
 						<div class="wf-block-header-content">
 							<div class="wf-block-title">
-								<strong><?php _e('Enable Two-Factor Authentication', 'wordfence') ?></strong>
+								<strong><?php esc_html_e('Enable Two-Factor Authentication', 'wordfence') ?></strong>
 							</div>
 						</div>
 					</div>
@@ -101,7 +101,7 @@ echo wfView::create('common/section-title', array(
 										<input class="wf-option-radio" type="radio" name="wf2faMode" id="wf2faMode-authenticator" value="authenticator" checked>
 										<label for="wf2faMode-authenticator">&nbsp;&nbsp;</label>
 									</li>
-									<li class="wf-option-title"><?php _e('Use authenticator app', 'wordfence') ?></li>
+									<li class="wf-option-title"><?php esc_html_e('Use authenticator app', 'wordfence') ?></li>
 								</ul>
 							</li>
 							<li>
@@ -110,7 +110,7 @@ echo wfView::create('common/section-title', array(
 										<input class="wf-option-radio" type="radio" name="wf2faMode" id="wf2faMode-phone" value="phone">
 										<label for="wf2faMode-phone">&nbsp;&nbsp;</label>
 									</li>
-									<li class="wf-option-title"><?php _e('Send code to a phone number:', 'wordfence') ?>&nbsp;&nbsp;</li>
+									<li class="wf-option-title"><?php esc_html_e('Send code to a phone number:', 'wordfence') ?>&nbsp;&nbsp;</li>
 									<li class="wf-option-text">
 										<input class="wf-form-control" type="text" value="" id="wfPhone" placeholder="<?php echo esc_attr(__('+1 (000) 000 0000', 'wordfence')) ?>">
 									</li>
@@ -131,7 +131,7 @@ echo wfView::create('common/section-title', array(
 		</div>
 		<div class="wf-row">
 			<div class="wf-col-xs-12">
-				<h2><?php _e('Two-Factor Authentication Users', 'wordfence') ?></h2>
+				<h2><?php esc_html_e('Two-Factor Authentication Users', 'wordfence') ?></h2>
 
 				<div id="wfTwoFacUsers"></div>
 			</div>
@@ -172,10 +172,10 @@ echo wfView::create('common/section-title', array(
 			<table class="wf-striped-table wf-table-twofactor">
 				<thead>
 				<tr>
-					<th>User</th>
-					<th>Mode</th>
-					<th>Status</th>
-					<th class="wf-center">Delete</th>
+					<th><?php esc_html_e('User', 'wordfence') ?></th>
+					<th><?php esc_html_e('Mode', 'wordfence') ?></th>
+					<th><?php esc_html_e('Status', 'wordfence') ?></th>
+					<th class="wf-center"><?php esc_html_e('Delete', 'wordfence') ?></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -183,17 +183,17 @@ echo wfView::create('common/section-title', array(
 				<tr id="twoFactorUser-${user.userID}">
 					<td style="white-space: nowrap;">${user.username}</td>
 					{{if user.mode == 'phone'}}
-					<td style="white-space: nowrap;"><?php printf(__('Phone (%s)', 'wordfence'), '${user.phone}') ?></td>
+					<td style="white-space: nowrap;"><?php echo esc_html(sprintf(/* translators: Phone number. */ __('Phone (%s)', 'wordfence'), '${user.phone}')) ?></td>
 					{{else}}
-					<td style="white-space: nowrap;"><?php _e('Authenticator', 'wordfence') ?></td>
+					<td style="white-space: nowrap;"><?php esc_html_e('Authenticator', 'wordfence') ?></td>
 					{{/if}}
 					<td style="white-space: nowrap;">
 						{{if user.status == 'activated'}}
-						<span style="color: #0A0;"><?php _e('Cellphone Sign-in Enabled', 'wordfence') ?></span>
+						<span style="color: #0A0;"><?php esc_html_e('Cellphone Sign-in Enabled', 'wordfence') ?></span>
 						{{else}}
 						<div class="wf-form-inline">
 							<div class="wf-form-group">
-								<label class="wf-plain wf-hidden-xs" style="margin: 0;" for="wfActivate-${user.userID}"><?php _e('Enter activation code:', 'wordfence') ?></label>
+								<label class="wf-plain wf-hidden-xs" style="margin: 0;" for="wfActivate-${user.userID}"><?php esc_html_e('Enter activation code:', 'wordfence') ?></label>
 								<input class="wf-form-control" type="text" id="wfActivate-${user.userID}" size="6" placeholder="<?php esc_attr_e('Code', 'wordfence') ?>">
 							</div>
 							<input class="wf-btn wf-btn-default" type="button" value="<?php esc_attr_e('Activate', 'wordfence') ?>" onclick="WFAD.twoFacActivate('${user.userID}', jQuery('#wfActivate-${user.userID}').val());">
@@ -207,7 +207,7 @@ echo wfView::create('common/section-title', array(
 				{{/each}}
 				{{if (users.length == 0)}}
 				<tr id="twoFactorUser-none">
-					<td colspan="4"><?php _e('No users currently have cellphone sign-in enabled.', 'wordfence') ?></td>
+					<td colspan="4"><?php esc_html_e('No users currently have cellphone sign-in enabled.', 'wordfence') ?></td>
 				</tr>
 				{{/if}}
 				</tbody>
@@ -218,9 +218,9 @@ echo wfView::create('common/section-title', array(
 	<div class="wf-row">
 		<div class="wf-col-xs-12">
 			<div id="wordfenceTwoFactorModern">
-				<p><strong><?php _e('2FA Mode: Normal', 'wordfence') ?>.</strong> <?php _e('Legacy support for SMS-based two-factor authentication is being phased out, as it is less secure than using a modern authenticator app.', 'wordfence') ?></p>
-				<p><?php _e('If you have a conflict with the new 2FA method, you can temporarily switch back to the Legacy version.', 'wordfence'); ?></p>
-				<p><a id="wf-migrate2faold-start" class="wf-btn wf-btn-default wf-btn-sm wf-dismiss-link" href="#"><?php _e('Revert to Legacy 2FA', 'wordfence'); ?></a></p>
+				<p><strong><?php esc_html_e('2FA Mode: Normal', 'wordfence') ?>.</strong> <?php esc_html_e('Legacy support for SMS-based two-factor authentication is being phased out, as it is less secure than using a modern authenticator app.', 'wordfence') ?></p>
+				<p><?php esc_html_e('If you have a conflict with the new 2FA method, you can temporarily switch back to the Legacy version.', 'wordfence'); ?></p>
+				<p><a id="wf-migrate2faold-start" class="wf-btn wf-btn-default wf-btn-sm wf-dismiss-link" href="#"><?php esc_html_e('Revert to Legacy 2FA', 'wordfence'); ?></a></p>
 			</div>
 		</div>
 	</div>

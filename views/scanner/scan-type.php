@@ -17,26 +17,26 @@ $highSensitivityOptions = array_filter(wfScanner::highSensitivityScanTypeOptions
 		<ul class="wf-scan-type" data-option-name="scanType" data-original-value="<?php echo esc_attr($scanner->scanType()); ?>" role="radiogroup">
 			<li>
 				<ul class="wf-scan-type-option<?php if ($scanner->scanType() == wfScanner::SCAN_TYPE_LIMITED) { echo ' wf-active'; } ?>" data-option-value="<?php echo esc_attr(wfScanner::SCAN_TYPE_LIMITED); ?>" data-selected-options="<?php echo esc_attr(json_encode($limitedOptions)); ?>">
-					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_LIMITED ? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php _e('Limited Scan', 'wordfence'); ?></span></li>
-					<li class="wf-scan-type-option-description"><?php _e('For entry-level hosting plans. Provides limited detection capability with very low resource utilization.', 'wordfence'); ?></li>
+					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_LIMITED ? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php esc_html_e('Limited Scan', 'wordfence'); ?></span></li>
+					<li class="wf-scan-type-option-description"><?php esc_html_e('For entry-level hosting plans. Provides limited detection capability with very low resource utilization.', 'wordfence'); ?></li>
 				</ul>
 			</li>
 			<li>
 				<ul class="wf-scan-type-option<?php if ($scanner->scanType() == wfScanner::SCAN_TYPE_STANDARD) { echo ' wf-active'; } ?>" data-option-value="<?php echo esc_attr(wfScanner::SCAN_TYPE_STANDARD); ?>" data-selected-options="<?php echo esc_attr(json_encode($standardOptions)); ?>">
-					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_STANDARD ? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php _e('Standard Scan', 'wordfence'); ?></span></li>
-					<li class="wf-scan-type-option-description"><?php _e('Our recommendation for all websites. Provides the best detection capability in the industry.', 'wordfence'); ?></li>
+					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_STANDARD ? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php esc_html_e('Standard Scan', 'wordfence'); ?></span></li>
+					<li class="wf-scan-type-option-description"><?php esc_html_e('Our recommendation for all websites. Provides the best detection capability in the industry.', 'wordfence'); ?></li>
 				</ul>
 			</li>
 			<li>
 				<ul class="wf-scan-type-option<?php if ($scanner->scanType() == wfScanner::SCAN_TYPE_HIGH_SENSITIVITY) { echo ' wf-active'; } ?>" data-option-value="<?php echo esc_attr(wfScanner::SCAN_TYPE_HIGH_SENSITIVITY); ?>" data-selected-options="<?php echo esc_attr(json_encode($highSensitivityOptions)); ?>">
-					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_HIGH_SENSITIVITY? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php _e('High Sensitivity', 'wordfence'); ?></span></li>
-					<li class="wf-scan-type-option-description"><?php _e('For site owners who think they may have been hacked. More thorough but may produce false positives.', 'wordfence'); ?></li>
+					<li class="wf-scan-type-option-name"><div class="wf-option-checkbox" role="radio" aria-checked="<?php echo ($scanner->scanType() == wfScanner::SCAN_TYPE_HIGH_SENSITIVITY? 'true' : 'false'); ?>" tabindex="0"><i class="wf-ion-ios-checkmark-empty" aria-hidden="true"></i></div><span><?php esc_html_e('High Sensitivity', 'wordfence'); ?></span></li>
+					<li class="wf-scan-type-option-description"><?php esc_html_e('For site owners who think they may have been hacked. More thorough but may produce false positives.', 'wordfence'); ?></li>
 				</ul>
 			</li>
 			<li>
 				<ul class="wf-scan-type-option wf-scan-type-option-custom<?php if ($scanner->scanType() == wfScanner::SCAN_TYPE_CUSTOM) { echo ' wf-active'; } ?>" data-option-value="<?php echo esc_attr(wfScanner::SCAN_TYPE_CUSTOM); ?>">
-					<li class="wf-scan-type-option-name"><span><?php _e('Custom Scan', 'wordfence'); ?></span></li>
-					<li class="wf-scan-type-option-description"><?php _e('Selected automatically when General Options have been customized for this website.', 'wordfence'); ?></li>
+					<li class="wf-scan-type-option-name"><span><?php esc_html_e('Custom Scan', 'wordfence'); ?></span></li>
+					<li class="wf-scan-type-option-description"><?php esc_html_e('Selected automatically when General Options have been customized for this website.', 'wordfence'); ?></li>
 				</ul>
 			</li>
 		</ul>

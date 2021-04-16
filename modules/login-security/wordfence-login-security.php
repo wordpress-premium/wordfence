@@ -26,8 +26,8 @@ if ($wfCoreActive && !(isset($wfCoreLoading) && $wfCoreLoading)) {
 else {
 	define('WORDFENCE_LS_FROM_CORE', ($wfCoreActive && isset($wfCoreLoading) && $wfCoreLoading));
 	
-	define('WORDFENCE_LS_VERSION', '1.0.4');
-	define('WORDFENCE_LS_BUILD_NUMBER', '1575390485');
+	define('WORDFENCE_LS_VERSION', '1.0.6');
+	define('WORDFENCE_LS_BUILD_NUMBER', '1616621048');
 	
 	if (!defined('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES')) { define('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15); }
 	

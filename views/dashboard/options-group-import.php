@@ -19,7 +19,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Import/Export Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Import/Export Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -28,9 +28,9 @@ if (!isset($collapseable)) {
 				<ul class="wf-block-list">
 					<li>
 						<ul id="wf-option-exportOptions" class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width wf-add-top wf-add-bottom">
-							<li><?php _e('Export this site\'s Wordfence options for import on another site', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_EXPORT); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
+							<li><?php esc_html_e('Export this site\'s Wordfence options for import on another site', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_EXPORT); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a></li>
 							<li class="wf-right wf-left-xs wf-padding-add-top-xs-small">
-								<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php _e('Export<span class="wf-hidden-xs"> Wordfence</span> Options', 'wordfence'); ?></a>
+								<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-export-options"><?php echo wp_kses(__('Export<span class="wf-hidden-xs"> Wordfence</span> Options', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>
 							</li>
 						</ul>
 					</li>
@@ -41,7 +41,7 @@ if (!isset($collapseable)) {
 									<li class="wf-option-content">
 										<ul>
 											<li class="wf-option-title">
-												<?php _e('Import Wordfence options from another site using a token', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_IMPORT); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a>
+												<?php esc_html_e('Import Wordfence options from another site using a token', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_IMPORT); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a>
 											</li>
 											<li class="wf-option-text wf-option-full-width wf-no-right">
 												<input type="text" value="" id="wf-import-token">
@@ -53,7 +53,7 @@ if (!isset($collapseable)) {
 							<li>
 								<ul class="wf-flex-horizontal wf-flex-full-width">
 									<li class="wf-right wf-left-xs" id="wf-license-controls">
-										<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" id="wf-import-options"><?php _e('Import<span class="wf-hidden-xs"> Wordfence</span> Options', 'wordfence'); ?></a>
+										<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle wf-disabled" id="wf-import-options"><?php echo wp_kses(__('Import<span class="wf-hidden-xs"> Wordfence</span> Options', 'wordfence'), array('span'=>array('class'=>array()))); ?></a>
 									</li>
 								</ul>
 							</li>
@@ -143,7 +143,7 @@ if (!isset($collapseable)) {
 	<?php
 	echo wfView::create('common/modal-prompt', array(
 		'title' => __('Export Successful', 'wordfence'),
-		'messageHTML' => '<p>' . __('We successfully exported your site options. To import your site options on another site, copy and paste the token below into the import text box on the destination site. Keep this token secret &mdash; it is like a password. If anyone else discovers the token it will allow them to import your options excluding your license.', 'wordfence') . '</p><p><input type="text" class="wf-full-width" value="${token}" onclick="this.select();" /></p>',
+		'messageHTML' => '<p>' . esc_html__('We successfully exported your site options. To import your site options on another site, copy and paste the token below into the import text box on the destination site. Keep this token secret &mdash; it is like a password. If anyone else discovers the token it will allow them to import your options excluding your license.', 'wordfence') . '</p><p><input type="text" class="wf-full-width" value="${token}" onclick="this.select();" /></p>',
 		'primaryButton' => array('id' => 'wf-export-prompt-close', 'label' => __('Close', 'wordfence'), 'link' => '#'),
 	))->render();
 	?>
@@ -163,7 +163,7 @@ if (!isset($collapseable)) {
 	<?php
 	echo wfView::create('common/modal-prompt', array(
 		'title' => __('Import Successful', 'wordfence'),
-		'messageHTML' => __('We successfully imported the site options.', 'wordfence'),
+		'messageHTML' => esc_html__('We successfully imported the site options.', 'wordfence'),
 		'primaryButton' => array('id' => 'wf-import-prompt-reload', 'label' => __('Reload', 'wordfence'), 'link' => '#'),
 	))->render();
 	?>

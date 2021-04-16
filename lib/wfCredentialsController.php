@@ -157,7 +157,7 @@ class wfCredentialsController {
 			return false;
 		}
 		
-		$result = $wpdb->get_row($wpdb->prepare("SELECT id FROM {$table_wfLogins} WHERE action = 'loginOK' AND userID = %d AND IP = %s", $id, wfUtils::inet_pton($ip)), ARRAY_A);
+		$result = $wpdb->get_row($wpdb->prepare("SELECT id FROM {$table_wfLogins} WHERE action = 'loginOK' AND userID = %d AND IP = %s LIMIT 0,1", $id, wfUtils::inet_pton($ip)), ARRAY_A);
 		if (is_array($result)) {
 			return true;
 		}

@@ -191,7 +191,7 @@ class wfDashboard {
 			'7d' => (int) $activityReport->getBlockedCount(7, wfActivityReport::BLOCK_TYPE_BRUTE_FORCE),
 			'30d' => (int) $activityReport->getBlockedCount(30, wfActivityReport::BLOCK_TYPE_BRUTE_FORCE),
 		);
-		$this->localBlocks[] = array('title' => __('Blacklist', 'wordfence'), 'type' => wfActivityReport::BLOCK_TYPE_BLACKLIST,
+		$this->localBlocks[] = array('title' => __('Blocklist', 'wordfence'), 'type' => wfActivityReport::BLOCK_TYPE_BLACKLIST,
 			'24h' => (int) $activityReport->getBlockedCount(1, wfActivityReport::BLOCK_TYPE_BLACKLIST),
 			'7d' => (int) $activityReport->getBlockedCount(7, wfActivityReport::BLOCK_TYPE_BLACKLIST),
 			'30d' => (int) $activityReport->getBlockedCount(30, wfActivityReport::BLOCK_TYPE_BLACKLIST),
@@ -224,7 +224,7 @@ class wfDashboard {
 		}
 
 		// Wordfence Central
-		$this->wordfenceCentralConnected = wfConfig::get('wordfenceCentralConnected');
+		$this->wordfenceCentralConnected = wfCentral::_isConnected(); // This value is cached.
 		$this->wordfenceCentralConnectTime = wfConfig::get('wordfenceCentralConnectTime');
 		$this->wordfenceCentralConnectEmail = wfConfig::get('wordfenceCentralConnectEmail');
 		$this->wordfenceCentralDisconnected = wfConfig::get('wordfenceCentralDisconnected');

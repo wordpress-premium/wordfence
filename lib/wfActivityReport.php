@@ -372,14 +372,15 @@ SQL
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns list of firewall activity up to $limit number of entries.
-	 * 
+	 *
 	 * @param int $limit Max events to return in results
+	 * @param int $remainder
 	 * @return array
 	 */
-	public function getRecentFirewallActivity($limit = 300, &$remainder) {
+	public function getRecentFirewallActivity($limit, &$remainder) {
 		$dateRange = wfActivityReport::getReportDateRange();
 		$recent_firewall_activity = new wfRecentFirewallActivity(null, max(604800, $dateRange[1] - $dateRange[0]));
 		$recent_firewall_activity->run();
@@ -503,8 +504,8 @@ SQL
 		$success = true;
 		if (is_string($email_addresses)) { $email_addresses = explode(',', $email_addresses); }
 		foreach ($email_addresses as $email) {
-			$uniqueContent = str_replace('<!-- ##UNSUBSCRIBE## -->', sprintf(__('No longer an administrator for this site? <a href="%s" target="_blank">Click here</a> to stop receiving security alerts.', 'wordfence'), wfUtils::getSiteBaseURL() . '?_wfsf=removeAlertEmail&jwt=' . wfUtils::generateJWT(array('email' => $email))), $content);
-			if (!wp_mail($email, 'Wordfence activity for ' . date_i18n(get_option('date_format')) . ' on ' . $shortSiteURL, $uniqueContent, 'Content-Type: text/html')) {
+			$uniqueContent = str_replace('<!-- ##UNSUBSCRIBE## -->', sprintf(/* translators: URL to the WordPress admin panel. */ __('No longer an administrator for this site? <a href="%s" target="_blank">Click here</a> to stop receiving security alerts.', 'wordfence'), wfUtils::getSiteBaseURL() . '?_wfsf=removeAlertEmail&jwt=' . wfUtils::generateJWT(array('email' => $email))), $content);
+			if (!wp_mail($email, sprintf(/* translators: 1. Site URL. 2. Localized date. */ __('Wordfence activity for %1$s on %2$s', 'wordfence'), date_i18n(get_option('date_format')), $shortSiteURL), $uniqueContent, 'Content-Type: text/html')) {
 				$success = false;
 			}
 		}
@@ -580,10 +581,10 @@ SQL
 				}
 				
 				if (isset($actionData['failedRules']) && $actionData['failedRules'] == 'blocked') {
-					$row->longDescription = "Blocked because the IP is blacklisted";
+					$row->longDescription = __("Blocked because the IP is blocklisted", 'wordfence');
 				}
 				else {
-					$row->longDescription = "Blocked for " . $row->actionDescription;
+					$row->longDescription = sprintf(__("Blocked for %s", 'wordfence'), $row->actionDescription);
 				}
 				
 				$paramKey = base64_decode($actionData['paramKey']);
@@ -595,16 +596,16 @@ SQL
 				if (preg_match('/([a-z0-9_]+\.[a-z0-9_]+)(?:\[(.+?)\](.*))?/i', $paramKey, $matches)) {
 					switch ($matches[1]) {
 						case 'request.queryString':
-							$row->longDescription = "Blocked for " . $row->actionDescription . ' in query string: ' . $matches[2] . '=' . $paramValue;
+							$row->longDescription = sprintf(__('Blocked for %1$s in query string: %2$s = %3$s', 'wordfence'), $row->actionDescription, $matches[2], $paramValue);
 							break;
 						case 'request.body':
-							$row->longDescription = "Blocked for " . $row->actionDescription . ' in POST body: ' . $matches[2] . '=' . $paramValue;
+							$row->longDescription = sprintf(__('Blocked for %1$s in POST body: %2$s = %3$s', 'wordfence'), $row->actionDescription, $matches[2], $paramValue);
 							break;
 						case 'request.cookie':
-							$row->longDescription = "Blocked for " . $row->actionDescription . ' in cookie: ' . $matches[2] . '=' . $paramValue;
+							$row->longDescription = sprintf(__('Blocked for %1$s in cookie: %2$s = %3$s', 'wordfence'), $row->actionDescription, $matches[2], $paramValue);
 							break;
 						case 'request.fileNames':
-							$row->longDescription = "Blocked for a " . $row->actionDescription . ' in file: ' . $matches[2] . '=' . $paramValue;
+							$row->longDescription = sprintf(__('Blocked for %1$s in file: %2$s = %3$s', 'wordfence'), $row->actionDescription, $matches[2], $paramValue);
 							break;
 					}
 				}
@@ -748,7 +749,7 @@ class wfActivityReportView extends wfView {
 	public function displayIP($binaryIP) {
 		$readableIP = wfUtils::inet_ntop($binaryIP);
 		$country = wfUtils::countryCode2Name(wfUtils::IP2Country($readableIP));
-		return "{$readableIP} (" . ($country ? $country : 'Unknown') . ")"; 
+		return "{$readableIP} (" . ($country ? $country : __('Unknown', 'wordfence')) . ")";
 	}
 }
 }

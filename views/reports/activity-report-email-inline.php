@@ -8,7 +8,9 @@ $start_time = wfActivityReport::getReportDateFrom();
 $end_time = time();
 $report_start = wfUtils::formatLocalTime(get_option('date_format'), $start_time);
 $report_end = wfUtils::formatLocalTime(get_option('date_format'), $end_time);
-$title = sprintf(__('Wordfence activity from <br><strong>%s</strong> to <strong>%s</strong>', 'wordfence'), $report_start, $report_end);
+$title = wp_kses(sprintf(
+	/* translators: 1. Start date. 2. End date. */
+		__('Wordfence activity from <br><strong>%1$s</strong> to <strong>%2$s</strong>', 'wordfence'), $report_start, $report_end), array('strong'=>array()));
 $bg_colors = array(
 	'even' => 'background-color: #eeeeee;',
 	'odd' => '',
@@ -123,11 +125,17 @@ h6 a:visited { color: purple !important; }
 				<a href="http://www.wordfence.com/zz5/" style="font-size: 100%; vertical-align: baseline; outline: none; color: orange; text-decoration: none; margin: 0; padding: 0; border: 0;"><img src="<?php echo wfUtils::getBaseURL(); ?>images/logo.png" alt="" style="font-size: 100%; vertical-align: baseline; -ms-interpolation-mode: bicubic; outline: none; text-decoration: none; margin: 0; padding: 0; border: 0 none; width: 560px;" /></a>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<?php printf(__('This email was sent from your website <a href="%s">%s</a> and is a summary of security related activity that Wordfence monitors for the period %s to %s.', 'wordfence'), network_site_url(), network_site_url(), $report_start, $report_end); ?> <?php if (!wfConfig::get('isPaid')): ?><?php _e('NOTE: You are using the free version of Wordfence and are missing out on features like cellphone sign-in, country blocking and detecting if your site IP is sending spam. <a href="http://www.wordfence.com/zz6/">Click here to upgrade to Wordfence Premium now</a>.', 'wordfence'); ?><?php endif ?>
+					<?php echo wp_kses(sprintf(
+							/* translators: 1. Site URL. 2. Start date. 3. End date. */
+						__('This email was sent from your website <a href="%1$s">%1$s</a> and is a summary of security related activity that Wordfence monitors for the period %2$s to %3$s.', 'wordfence'),
+						network_site_url(),
+						$report_start,
+						$report_end
+					), array('a'=>array('href'=>array()))); ?> <?php if (!wfConfig::get('isPaid')): ?><?php echo wp_kses(__('NOTE: You are using the free version of Wordfence and are missing out on features like cellphone sign-in, country blocking and detecting if your site IP is sending spam. <a href="http://www.wordfence.com/zz6/">Click here to upgrade to Wordfence Premium now</a>.', 'wordfence'), array('a'=>array('href'=>array()))); ?><?php endif ?>
 				</p>
 
 				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;">
-					<?php _e('Top 10 IPs Blocked', 'wordfence'); ?>
+					<?php esc_html_e('Top 10 IPs Blocked', 'wordfence'); ?>
 				</h2>
 
 				<?php wfHelperString::cycle(); ?>
@@ -135,9 +143,9 @@ h6 a:visited { color: purple !important; }
 				<table class="activity-table" style="font-size: 100%; vertical-align: baseline; border-collapse: collapse; border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; max-width: 100%; margin: 0; padding: 0; border: 0;">
 					<thead style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 						<tr style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('IP', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Country', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Block Count', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('IP', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Country', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Block Count', 'wordfence'); ?></th>
 						</tr>
 					</thead>
 					<tbody style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
@@ -163,7 +171,7 @@ h6 a:visited { color: purple !important; }
 										&nbsp;
 										<?php echo esc_html($row->countryName) ?>
 									<?php else: ?>
-										<?php _e('(Unknown)', 'wordfence'); ?>
+										<?php esc_html_e('(Unknown)', 'wordfence'); ?>
 									<?php endif ?>
 								</td>
 								<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;<?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline"><?php echo (int)$row->blockCount ?></td>
@@ -172,7 +180,7 @@ h6 a:visited { color: purple !important; }
 						<?php else: ?>
 							<tr>
 								<td colspan="3">
-									<?php _e('No data currently.', 'wordfence'); ?>
+									<?php esc_html_e('No data currently.', 'wordfence'); ?>
 								</td>
 							</tr>
 						<?php endif ?>
@@ -180,19 +188,19 @@ h6 a:visited { color: purple !important; }
 				</table>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF#top#blocking') ?>"  style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php _e('Update Blocked IPs', 'wordfence'); ?></a>
+					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF#top#blocking') ?>"  style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php esc_html_e('Update Blocked IPs', 'wordfence'); ?></a>
 				</p>
 
 				<?php wfHelperString::cycle(); ?>
 
-				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Top 10 Countries Blocked', 'wordfence'); ?></h2>
+				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Top 10 Countries Blocked', 'wordfence'); ?></h2>
 
 				<table class="activity-table" style="font-size: 100%; vertical-align: baseline; border-collapse: collapse; border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; max-width: 100%; margin: 0; padding: 0; border: 0;">
 					<thead style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 						<tr style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Country', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Total IPs Blocked', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Block Count', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Country', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Total IPs Blocked', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Block Count', 'wordfence'); ?></th>
 						</tr>
 					</thead>
 					<tbody style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
@@ -217,7 +225,7 @@ h6 a:visited { color: purple !important; }
 											&nbsp;
 											<?php echo esc_html($row->countryName) ?>
 										<?php else: ?>
-											<?php _e('(Unknown)', 'wordfence'); ?>
+											<?php esc_html_e('(Unknown)', 'wordfence'); ?>
 										<?php endif ?>
 									</td>
 									<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;<?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline"><?php echo esc_html($row->totalIPs) ?></td>
@@ -227,7 +235,7 @@ h6 a:visited { color: purple !important; }
 						<?php else: ?>
 							<tr>
 								<td colspan="3">
-									<?php _e('No data currently.', 'wordfence'); ?>
+									<?php esc_html_e('No data currently.', 'wordfence'); ?>
 								</td>
 							</tr>
 						<?php endif ?>
@@ -235,19 +243,19 @@ h6 a:visited { color: purple !important; }
 				</table>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF#top#blocking') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php _e('Update Blocked Countries', 'wordfence'); ?></a>
+					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF#top#blocking') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php esc_html_e('Update Blocked Countries', 'wordfence'); ?></a>
 				</p>
 
 				<?php wfHelperString::cycle(); ?>
 
-				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Top 10 Failed Logins', 'wordfence'); ?></h2>
+				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Top 10 Failed Logins', 'wordfence'); ?></h2>
 
 				<table class="activity-table" style="font-size: 100%; vertical-align: baseline; border-collapse: collapse; border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; max-width: 100%; margin: 0; padding: 0; border: 0;">
 					<thead style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 						<tr style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Username', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Login Attempts', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Existing User', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Username', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Login Attempts', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Existing User', 'wordfence'); ?></th>
 						</tr>
 					</thead>
 					<tbody style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
@@ -259,13 +267,13 @@ h6 a:visited { color: purple !important; }
 								<tr class="<?php echo $stripe ?>" style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 									<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc; word-wrap: break-word; word-break: break-all; <?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline"><?php echo esc_html($row->username) ?></td>
 									<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;<?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline"><?php echo esc_html($row->fail_count) ?></td>
-									<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;<?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline" class="<?php echo sanitize_html_class($row->is_valid_user ? 'loginFailValidUsername' : 'loginFailInvalidUsername') ?>"><?php echo $row->is_valid_user ? __('Yes', 'wordfence') : __('No', 'wordfence') ?></td>
+									<td style="font-size: 100%; vertical-align: baseline; font-weight: normal; text-align: left; border-collapse: collapse; margin: 0; padding: 6px 4px; border: 1px solid #cccccc;<?php echo $bg_colors[$stripe] ?>" align="left" valign="baseline" class="<?php echo sanitize_html_class($row->is_valid_user ? 'loginFailValidUsername' : 'loginFailInvalidUsername') ?>"><?php echo $row->is_valid_user ? esc_html__('Yes', 'wordfence') : esc_html__('No', 'wordfence') ?></td>
 								</tr>
 							<?php endforeach ?>
 						<?php else: ?>
 							<tr>
 								<td colspan="3">
-									<?php _e('No failed logins yet.', 'wordfence'); ?>
+									<?php esc_html_e('No failed logins yet.', 'wordfence'); ?>
 								</td>
 							</tr>
 						<?php endif ?>
@@ -273,18 +281,18 @@ h6 a:visited { color: purple !important; }
 				</table>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF&subpage=waf_options#waf-options-bruteforce') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php _e('Update Login Security Options', 'wordfence'); ?></a>
+					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceWAF&subpage=waf_options#waf-options-bruteforce') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php esc_html_e('Update Login Security Options', 'wordfence'); ?></a>
 				</p>
 				
 				<?php wfHelperString::cycle(); ?>
 				
-				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Recently Blocked Attacks', 'wordfence'); ?></h2>
+				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Recently Blocked Attacks', 'wordfence'); ?></h2>
 				
 				<table class="activity-table" style="font-size: 100%; vertical-align: baseline; border-collapse: collapse; border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; max-width: 100%; margin: 0; padding: 0; border: 0;">
 					<thead style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 					<tr style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-						<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Time', 'wordfence'); ?></th>
-						<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('IP / Action', 'wordfence'); ?></th>
+						<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Time', 'wordfence'); ?></th>
+						<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('IP / Action', 'wordfence'); ?></th>
 					</tr>
 					</thead>
 					<tbody style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
@@ -305,7 +313,7 @@ h6 a:visited { color: purple !important; }
 					<?php else: ?>
 						<tr>
 							<td colspan="2">
-								<?php _e('No blocked attacks yet.', 'wordfence'); ?>
+								<?php esc_html_e('No blocked attacks yet.', 'wordfence'); ?>
 							</td>
 						</tr>
 					<?php endif ?>
@@ -315,22 +323,22 @@ h6 a:visited { color: purple !important; }
 				<?php
 				if ($omitted_firewall_activity > 10):
 				?>
-				<div style="font-size: 14px; vertical-align: baseline; clear: both; color: #f00 !important; margin: 8px 0 4px; padding: 0; border: 0;"><?php printf(__('and %d additional attacks', 'wordfence'), $omitted_firewall_activity); ?></div>
+				<div style="font-size: 14px; vertical-align: baseline; clear: both; color: #f00 !important; margin: 8px 0 4px; padding: 0; border: 0;"><?php printf(esc_html__('and %d additional attacks', 'wordfence'), $omitted_firewall_activity); ?></div>
 				<?php endif ?> 
 				
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceTools&subpage=livetraffic') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php _e('View Recent Traffic', 'wordfence'); ?></a>
+					<a class="button" href="<?php echo wfUtils::wpAdminURL('admin.php?page=WordfenceTools&subpage=livetraffic') ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php esc_html_e('View Recent Traffic', 'wordfence'); ?></a>
 				</p>
 
 				<?php wfHelperString::cycle(); ?>
 
-				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Recently Modified Files', 'wordfence'); ?></h2>
+				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Recently Modified Files', 'wordfence'); ?></h2>
 
 				<table class="activity-table" style="font-size: 100%; vertical-align: baseline; border-collapse: collapse; border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; max-width: 100%; margin: 0; padding: 0; border: 0;">
 					<thead style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
 						<tr style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('Modified', 'wordfence'); ?></th>
-							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php _e('File', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('Modified', 'wordfence'); ?></th>
+							<th style="font-size: 100%; vertical-align: baseline; font-weight: bold; text-align: left; color: #FFFFFF; background-color: #222; margin: 0; padding: 6px 4px; border: 1px solid #474747;" align="left" bgcolor="#222" valign="baseline"><?php esc_html_e('File', 'wordfence'); ?></th>
 						</tr>
 					</thead>
 					<tbody style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
@@ -350,11 +358,11 @@ h6 a:visited { color: purple !important; }
 					</tbody>
 				</table>
 
-				<div style="font-size: 12px; font-style: italic; vertical-align: baseline; clear: both; margin: 8px 0 4px; padding: 0; border: 0;"><?php _e('This list may include WordPress core/plugin/theme updates, error logs, cache files, and other normal changes.', 'wordfence'); ?></div>
+				<div style="font-size: 12px; font-style: italic; vertical-align: baseline; clear: both; margin: 8px 0 4px; padding: 0; border: 0;"><?php esc_html_e('This list may include WordPress core/plugin/theme updates, error logs, cache files, and other normal changes.', 'wordfence'); ?></div>
 
 				<?php wfHelperString::cycle(); ?>
 
-				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Updates Needed', 'wordfence'); ?></h2>
+				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Updates Needed', 'wordfence'); ?></h2>
 				
 				<?php
 				if (!is_array($updates_needed)) {
@@ -362,33 +370,33 @@ h6 a:visited { color: purple !important; }
 				}
 				?>
 				<?php if ($updates_needed['core']): ?>
-					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Core', 'wordfence'); ?></h4>
+					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Core', 'wordfence'); ?></h4>
 					<ul style="font-size: 100%; vertical-align: baseline; list-style-type: none; margin: 0; padding: 0; border: 0;">
-						<li style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;"><?php printf(__('A new version of WordPress (v%s) is available.', 'wordfence'), esc_html($updates_needed['core'])); ?></li>
+						<li style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;"><?php echo esc_html(sprintf(/* translators: WordPress version. */ __('A new version of WordPress (v%s) is available.', 'wordfence'), $updates_needed['core'])); ?></li>
 					</ul>
 				<?php endif ?>
 				<?php if ($updates_needed['plugins']): ?>
-					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Plugins', 'wordfence'); ?></h4>
+					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Plugins', 'wordfence'); ?></h4>
 					<ul style="font-size: 100%; vertical-align: baseline; list-style-type: none; margin: 0; padding: 0; border: 0;">
 						<?php
 						foreach ($updates_needed['plugins'] as $plugin):
 							$newVersion = ($plugin['newVersion'] == 'Unknown' ? $plugin['newVersion'] : "v{$plugin['newVersion']}");
 						?>
 							<li style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-								<?php printf(__('A new version of the plugin "%s" is available.', 'wordfence'), esc_html("{$plugin['Name']} ({$newVersion})")); ?> <?php if (isset($plugin['vulnerable']) && $plugin['vulnerable']) { _e('<strong>This update includes security-related fixes.</strong>', 'wordfence'); } ?>
+								<?php echo esc_html(sprintf(/* translators: Plugin name. */ __('A new version of the plugin "%s" is available.', 'wordfence'), "{$plugin['Name']} ({$newVersion})")); ?> <?php if (isset($plugin['vulnerable']) && $plugin['vulnerable']) { echo wp_kses(__('<strong>This update includes security-related fixes.</strong>', 'wordfence'), array('strong'=>array())); } ?>
 							</li>
 						<?php endforeach ?>
 					</ul>
 				<?php endif ?>
 				<?php if ($updates_needed['themes']): ?>
-					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php _e('Themes', 'wordfence'); ?></h4>
+					<h4 style="font-size: 16px; vertical-align: baseline; clear: both; color: #666666 !important; margin: 20px 0 4px; padding: 0; border: 0;"><?php esc_html_e('Themes', 'wordfence'); ?></h4>
 					<ul style="font-size: 100%; vertical-align: baseline; list-style-type: none; margin: 0; padding: 0; border: 0;">
 						<?php
 						foreach ($updates_needed['themes'] as $theme):
 							$newVersion = ($theme['newVersion'] == 'Unknown' ? $theme['newVersion'] : "v{$theme['newVersion']}");
 						?>
 							<li style="font-size: 100%; vertical-align: baseline; margin: 0; padding: 0; border: 0;">
-								<?php printf(__('A new version of the theme "%s" is available.', 'wordfence'), esc_html("{$theme['name']} ({$newVersion})")); ?> <?php if (isset($theme['vulnerable']) && $theme['vulnerable']) { _e('<strong>This update includes security-related fixes.</strong>', 'wordfence'); } ?>
+								<?php echo esc_html(sprintf(/* translators: Theme name. */ __('A new version of the theme "%s" is available.', 'wordfence'), "{$theme['name']} ({$newVersion})")); ?> <?php if (isset($theme['vulnerable']) && $theme['vulnerable']) { echo wp_kses(__('<strong>This update includes security-related fixes.</strong>', 'wordfence'), array('strong'=>array())); } ?>
 							</li>
 						<?php endforeach ?>
 					</ul>
@@ -396,16 +404,22 @@ h6 a:visited { color: purple !important; }
 				
 				<?php if ($updates_needed['core'] || $updates_needed['plugins'] || $updates_needed['themes']): ?>
 					<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-						<a class="button" href="<?php echo esc_attr(wfUtils::wpAdminURL('update-core.php')) ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php _e('Update Now', 'wordfence'); ?></a>
+						<a class="button" href="<?php echo esc_attr(wfUtils::wpAdminURL('update-core.php')) ?>" style="font-size: 13px; vertical-align: baseline; outline: none; color: #FFF; text-decoration: none; display: inline-block; line-height: 26px; height: 28px; cursor: pointer; border-radius: 3px; white-space: nowrap; box-sizing: border-box; box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15); background-image: none; background-attachment: scroll; background-repeat: repeat; background-color: #2EA2CC; margin: 0; padding: 0 10px 1px; border: 1px solid #0074a2;"><?php esc_html_e('Update Now', 'wordfence'); ?></a>
 					</p>
 				<?php else: ?>
 					<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-						<?php _e('No updates are available at this time.', 'wordfence'); ?>
+						<?php esc_html_e('No updates are available at this time.', 'wordfence'); ?>
 					</p>
 				<?php endif ?>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">
-					<?php printf(__('If you would like to sign-in to <a href="%s">%s</a> please <a href="%s">click here</a> now. You can change the frequency of this email or turn it on and off by visiting your <a href="%s">Wordfence options page</a>.', 'wordfence'), network_site_url(), network_site_url(), wfUtils::wpAdminURL(), wfUtils::wpAdminURL('admin.php?page=Wordfence&subpage=global_options#global-options-email-summary')); ?>
+					<?php echo wp_kses(sprintf(
+						/* translators: 1. Site URL. 2. WordPress admin panel URL. 3. WordPress admin panel URL. */
+							__('If you would like to sign-in to <a href="%1$s">%1$s</a> please <a href="%2$s">click here</a> now. You can change the frequency of this email or turn it on and off by visiting your <a href="%3$s">Wordfence options page</a>.', 'wordfence'),
+							network_site_url(),
+							wfUtils::wpAdminURL(),
+							wfUtils::wpAdminURL('admin.php?page=Wordfence&subpage=global_options#global-options-email-summary')
+					), array('a'=>array('href'=>array()))); ?>
 				</p>
 
 				<p style="font-size: 100%; vertical-align: baseline; margin: 1em 0; padding: 0; border: 0;">

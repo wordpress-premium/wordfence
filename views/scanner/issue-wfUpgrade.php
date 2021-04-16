@@ -12,7 +12,7 @@ echo wfView::create('scanner/issue-base', array(
 		__('Current WordPress Version', 'wordfence') => '${data.currentVersion}',
 		__('New WordPress Version', 'wordfence') => '${data.newVersion}',
 		null,
-		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . __('Update includes security-related fixes.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}<br><a href="' . get_admin_url() . 'update-core.php' . '">' . __('Click here to update now', 'wordfence') . '</a>.',
+		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . esc_html__('Update includes security-related fixes.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}<br><a href="' . get_admin_url() . 'update-core.php' . '">' . esc_html__('Click here to update now', 'wordfence') . '</a>.',
 		null,
 		__('Vulnerability Information', 'wordfence') => array('data.vulnerabilityLink', '<a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">' . __('View', 'wordfence') . '</span></a>'),
 	),

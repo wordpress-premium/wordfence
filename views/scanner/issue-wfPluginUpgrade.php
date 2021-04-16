@@ -13,7 +13,7 @@ echo wfView::create('scanner/issue-base', array(
 		__('Current Plugin Version', 'wordfence') => '${data.Version}',
 		__('New Plugin Version', 'wordfence') => '${data.newVersion}',
 		null,
-		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . __('Update includes security-related fixes.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}<br><a href="' . get_admin_url() . 'update-core.php' . '">' . __('Click here to update now', 'wordfence') . '</a>.',
+		__('Details', 'wordfence') => '{{if data.vulnerable}}<strong>' . esc_html__('Update includes security-related fixes.', 'wordfence') . '</strong><br>{{/if}}{{html longMsg}}<br><a href="' . get_admin_url() . 'update-core.php' . '">' . esc_html__('Click here to update now', 'wordfence') . '</a>.',
 		null,
 		__('Plugin URL', 'wordfence') => array('data.PluginURI', '<a href="${data.PluginURI}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">' . __('View', 'wordfence') . '</span></a>'),
 		__('Changelog', 'wordfence') => array('data.wpURL', '<a href="${data.wpURL}/#developers" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.wpURL}/#developers</span><span class="wf-visible-xs">' . __('View', 'wordfence') . '</span></a>'),

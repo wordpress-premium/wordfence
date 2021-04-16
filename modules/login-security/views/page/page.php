@@ -5,6 +5,7 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
  * @var array $sections The content tabs, each element is an array of the syntax array('tab' => Model_Tab instance, 'title' => Title instance, 'content' => HTML content). Required.
  */
 ?>
+<?php do_action('wfls_activation_page_header'); ?>
 <div class="wrap wordfence-ls">
 	<?php
 	if (\WordfenceLS\Controller_Permissions::shared()->can_manage_settings() && !\WordfenceLS\Controller_Settings::shared()->get_bool(\WordfenceLS\Controller_Settings::OPTION_DISMISSED_FRESH_INSTALL_MODAL) && !WORDFENCE_LS_FROM_CORE) {

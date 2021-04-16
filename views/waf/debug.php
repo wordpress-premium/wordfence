@@ -86,7 +86,7 @@ $failedRules = array();
 try {
 	$waf->runRules();
 } catch (wfWAFAllowException $e) {
-	$result = '<strong class="ok">Whitelisted</strong>';
+	$result = '<strong class="ok">Allowlisted</strong>';
 } catch (wfWAFBlockException $e) {
 	$result = '<strong class="error">Blocked</strong>';
 	$failedRules = $waf->getFailedRules();

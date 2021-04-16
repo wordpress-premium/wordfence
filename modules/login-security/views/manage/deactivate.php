@@ -14,13 +14,13 @@ if ($ownUser->ID == $user->ID) {
 	<div class="wfls-block-header wfls-block-header-border-bottom">
 		<div class="wfls-block-header-content">
 			<div class="wfls-block-title">
-				<strong><?php _e('Wordfence 2FA Active', 'wordfence-2fa'); ?></strong>
+				<strong><?php esc_html_e('Wordfence 2FA Active', 'wordfence-2fa'); ?></strong>
 			</div>
 		</div>
 	</div>
 	<div class="wfls-block-content wfls-padding-add-bottom">
-		<p><?php if ($ownAccount) { _e('Wordfence two-factor authentication is currently active on your account. You may deactivate it by clicking the button below.', 'wordfence-2fa'); } else { printf(__('Wordfence two-factor authentication is currently active on the account <strong>%s</strong>. You may deactivate it by clicking the button below.', 'wordfence-2fa'), esc_html($user->user_login)); } ?></p>
-		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-deactivate" target="_blank" rel="noopener noreferrer"><?php _e('Deactivate', 'wordfence-2fa'); ?></a></p>
+		<p><?php if ($ownAccount) { esc_html_e('Wordfence two-factor authentication is currently active on your account. You may deactivate it by clicking the button below.', 'wordfence-2fa'); } else { echo wp_kses(sprintf(__('Wordfence two-factor authentication is currently active on the account <strong>%s</strong>. You may deactivate it by clicking the button below.', 'wordfence-2fa'), esc_html($user->user_login)), array('strong'=>array())); } ?></p>
+		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-deactivate" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Deactivate', 'wordfence-2fa'); ?></a></p>
 	</div>
 </div>
 <script type="text/x-jquery-template" id="wfls-tmpl-deactivate-prompt">

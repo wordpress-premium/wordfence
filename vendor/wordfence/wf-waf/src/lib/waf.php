@@ -245,14 +245,14 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 					if ($path && $paramKey && $ruleID) {
 						$this->whitelistRuleForParam($path, $paramKey, $ruleID, array(
 							'timestamp'   => time(),
-							'description' => 'Whitelisted by via false positive dialog',
+							'description' => wfWAFI18n::__('Allowlisted via false positive dialog'),
 							'source'	  => 'false-positive',
 							'ip'          => $request->getIP(),
 						));
 						$whitelistCount++;
 					}
 				}
-				exit("Successfully whitelisted $whitelistCount params.");
+				exit(sprintf(wfWAFI18n::__('Successfully allowlisted %d params.'), $whitelistCount));
 			}
 		}
 
@@ -298,7 +298,6 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 
 		$ping = $this->getRequest()->getBody('ping');
 		$pingResponse = $this->getRequest()->getBody('ping_response');
-		$wfIP = $this->isWordfenceIP($this->getRequest()->getIP());
 		$pingIsApiKey = wfWAFUtils::hash_equals($ping, sha1($this->getStorageEngine()->getConfig('apiKey', null, 'synced')));
 
 		if ($ping && $pingResponse && $pingIsApiKey &&
@@ -602,17 +601,6 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 			wfWAFUtils::hash_hmac('sha1', $data, $this->getStorageEngine()->getConfig('apiKey', null, 'synced')));
 	}
 
-	/**
-	 * @param string $ip
-	 * @return bool
-	 */
-	public function isWordfenceIP($ip) {
-		if (preg_match('/69.46.36.(\d+)/', $ip, $matches)) {
-			return $matches[1] >= 1 && $matches[1] <= 32;
-		}
-		return false;
-	}
-	
 	/**
 	 * @return array
 	 */
@@ -1261,7 +1249,7 @@ HTML
 
 						$data = array(
 							'timestamp' => time(),
-							'description' => 'Whitelisted while in Learning Mode.',
+							'description' => 'Allowlisted while in Learning Mode.',
 							'source' => 'learning-mode',
 							'ip' => $this->getRequest()->getIP(),
 						);
@@ -1387,6 +1375,7 @@ HTML
 							'h'      => $this->getStorageEngine()->getConfig('homeURL', null, 'synced') ? $this->getStorageEngine()->getConfig('homeURL', null, 'synced') :
 								sprintf('%s://%s/', $this->getRequest()->getProtocol(), rawurlencode($this->getRequest()->getHost())),
 							't'		 => microtime(true),
+							'lang'   => $this->getStorageEngine()->getConfig('WPLANG', null, 'synced'),
 						), null, '&'), $this->getStorageEngine()->getAttackData(), $request);
 
 					if ($response instanceof wfWAFHTTPResponse && $response->getBody()) {
@@ -1816,6 +1805,7 @@ class wfWAFCronFetchRulesEvent extends wfWAFCronEvent {
 				'h'        => $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') : $guessSiteURL,
 				'openssl'  => $waf->hasOpenSSL() ? 1 : 0,
 				'betaFeed' => (int) $waf->getStorageEngine()->getConfig('betaThreatDefenseFeed', null, 'synced'),
+				'lang'     => $waf->getStorageEngine()->getConfig('WPLANG', null, 'synced'),
 			);
 			if ($waf->getStorageEngine()->getConfig('other_WFNet', true, 'synced')) {
 				$payload['disabled'] = implode('|', $waf->getDisabledRuleIDs());
@@ -1867,6 +1857,7 @@ class wfWAFCronFetchRulesEvent extends wfWAFCronEvent {
 					'h'        => $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') : $guessSiteURL,
 					'openssl'  => $waf->hasOpenSSL() ? 1 : 0,
 					'betaFeed' => (int) $waf->getStorageEngine()->getConfig('betaThreatDefenseFeed', null, 'synced'),
+					'lang'   => $waf->getStorageEngine()->getConfig('WPLANG', null, 'synced'),
 				), null, '&'), null, 15, 5);
 			if ($this->response) {
 				$jsonData = wfWAFUtils::json_decode($this->response->getBody(), true);
@@ -1982,11 +1973,12 @@ class wfWAFCronFetchIPListEvent extends wfWAFCronEvent {
 					's'      => $waf->getStorageEngine()->getConfig('siteURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('siteURL', null, 'synced') : $guessSiteURL,
 					'h'      => $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') : $guessSiteURL,
 					't'		 => microtime(true),
+					'lang'   => $waf->getStorageEngine()->getConfig('WPLANG', null, 'synced'),
 				), null, '&'), '[]', $request);
 			
 			if ($response instanceof wfWAFHTTPResponse && $response->getBody()) {
 				$jsonData = wfWAFUtils::json_decode($response->getBody(), true);
-				if (array_key_exists('data', $jsonData) && array_key_exists('watchedIPList', $jsonData['data'])) {
+				if (is_array($jsonData) && array_key_exists('data', $jsonData) && is_array($jsonData['data']) && array_key_exists('watchedIPList', $jsonData['data'])) {
 					$waf->getStorageEngine()->setConfig('watchedIPs', $jsonData['data']['watchedIPList'], 'transient');
 				}
 			}
@@ -2024,6 +2016,7 @@ class wfWAFCronFetchBlacklistPrefixesEvent extends wfWAFCronEvent {
 						's'      => $waf->getStorageEngine()->getConfig('siteURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('siteURL', null, 'synced') : $guessSiteURL,
 						'h'      => $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') ? $waf->getStorageEngine()->getConfig('homeURL', null, 'synced') : $guessSiteURL,
 						't'		 => microtime(true),
+						'lang'   => $waf->getStorageEngine()->getConfig('WPLANG', null, 'synced'),
 					), null, '&'), $request);
 				
 				if ($response instanceof wfWAFHTTPResponse && $response->getBody()) {

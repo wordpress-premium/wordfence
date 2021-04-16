@@ -20,11 +20,11 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 <?php if (!wfConfig::get('isPaid')): ?>
 	<li class="wf-flex-horizontal wf-flex-full-width">
 		<div class="wf-flex-vertical wf-flex-align-left">
-			<h4 class="wf-no-bottom">Upgrade to Premium</h4>
-			<p class="wf-add-top-smaller">Enable country blocking by upgrading to Premium.</p>
+			<h4 class="wf-no-bottom"><?php esc_html_e('Upgrade to Premium', 'wordfence') ?></h4>
+			<p class="wf-add-top-smaller"><?php esc_html_e('Enable country blocking by upgrading to Premium.', 'wordfence') ?></p>
 		</div>
 		<div class="wf-flex-horizontal wf-flex-full-width">
-			<p class="wf-right"><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1blockingUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1blockingLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence'); ?></a></p>
+			<p class="wf-right"><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1blockingUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1blockingLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence'); ?></a></p>
 		</div>
 	</li>
 <?php endif; ?>

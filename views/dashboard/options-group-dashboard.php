@@ -19,7 +19,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Dashboard Notification Options', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Dashboard Notification Options', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -103,8 +103,8 @@ if (!isset($collapseable)) {
 							<ul class="wf-option">
 								<li class="wf-option-spacer"></li>
 								<li class="wf-flex-vertical wf-flex-align-left">
-									<p><?php _e('Dashboard notifications will also be displayed for Security Alerts, Promotions, Blog Highlights, and Product Updates. These notifications can be disabled by upgrading to a premium license.', 'wordfence'); ?></p>
-									<p class="wf-no-top"><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1dashboardUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1dashboardLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Learn More', 'wordfence'); ?></a></p>
+									<p><?php esc_html_e('Dashboard notifications will also be displayed for Security Alerts, Promotions, Blog Highlights, and Product Updates. These notifications can be disabled by upgrading to a premium license.', 'wordfence'); ?></p>
+									<p class="wf-no-top"><a class="wf-btn wf-btn-primary wf-btn-callout-subtle" href="https://www.wordfence.com/gnl1dashboardUpgrade/wordfence-signup/#premium-order-form" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a>&nbsp;&nbsp;<a class="wf-btn wf-btn-callout-subtle wf-btn-default" href="https://www.wordfence.com/gnl1dashboardLearn/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', 'wordfence'); ?></a></p>
 								</li>
 							</ul>
 						</li>

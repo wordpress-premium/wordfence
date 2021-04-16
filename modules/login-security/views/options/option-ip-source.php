@@ -16,7 +16,7 @@ $selectOptions = array(
 		<ul id="wfls-option-ip-source" class="wfls-option wfls-option-ip-source" data-option="<?php echo esc_attr(\WordfenceLS\Controller_Settings::OPTION_IP_SOURCE); ?>" data-original-value="<?php echo esc_attr(\WordfenceLS\Controller_Settings::shared()->get(\WordfenceLS\Controller_Settings::OPTION_IP_SOURCE)); ?>" data-text-area-option="<?php echo esc_attr(\WordfenceLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES); ?>" data-original-text-area-value="<?php echo esc_attr(\WordfenceLS\Controller_Settings::shared()->get(\WordfenceLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES)); ?>">
 			<li class="wfls-option-content wfls-no-right">
 				<ul class="wfls-flex-vertical wfls-flex-align-left">
-					<li class="wfls-option-title"><strong><?php _e('How to get IPs', 'wordfence-2fa'); ?></strong></li>
+					<li class="wfls-option-title"><strong><?php esc_html_e('How to get IPs', 'wordfence-2fa'); ?></strong></li>
 					<li>
 						<ul class="wfls-flex-vertical wfls-flex-align-left">
 							<li class="wfls-padding-add-left">
@@ -44,8 +44,8 @@ $selectOptions = array(
 				<ul>
 					<li class="wfls-option-title">
 						<ul class="wfls-flex-vertical wfls-flex-align-left">
-							<li><?php _e('Trusted Proxies', 'wordfence-2fa'); ?></li>
-							<li class="wfls-option-subtitle"><?php _e('These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.', 'wordfence-2fa'); ?></li>
+							<li><?php esc_html_e('Trusted Proxies', 'wordfence-2fa'); ?></li>
+							<li class="wfls-option-subtitle"><?php esc_html_e('These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.', 'wordfence-2fa'); ?></li>
 						</ul>
 					</li>
 					<li class="wfls-option-textarea">
@@ -116,7 +116,7 @@ $selectOptions = array(
 					var option = optionElement.data('option');
 					var originalValue = optionElement.data('originalValue');
 
-					$(this).attr('checked', originalValue == $(this).attr('value'));
+					$(this).prop('checked', originalValue == $(this).attr('value'));
 				});
 
 				$('#wfls-ip-source-trusted-proxies textarea').each(function() {

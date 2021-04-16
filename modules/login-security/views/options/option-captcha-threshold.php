@@ -25,8 +25,8 @@ $selectOptions = array(
 				<ul>
 					<li class="wfls-option-title">
 						<ul class="wfls-flex-vertical wfls-flex-align-left">
-							<li><span id="wfls-option-recaptcha-threshold-label"><strong><?php _e('reCAPTCHA human/bot threshold score', 'wordfence-2fa'); ?></strong></span></li>
-							<li class="wfls-option-subtitle"><?php _e('A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.', 'wordfence-2fa'); ?></li>
+							<li><span id="wfls-option-recaptcha-threshold-label"><strong><?php esc_html_e('reCAPTCHA human/bot threshold score', 'wordfence-2fa'); ?></strong></span></li>
+							<li class="wfls-option-subtitle"><?php esc_html_e('A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.', 'wordfence-2fa'); ?></li>
 						</ul>
 					</li>
 					<li class="wfls-option-select wfls-padding-add-top-xs-small">
@@ -45,7 +45,7 @@ $selectOptions = array(
 			<li class="wfls-option-spacer"></li>
 			<li>
 				<canvas id="wfls-recaptcha-score-history"></canvas>
-				<div class="wfls-center"><a href="#" id="wfls-reset-recaptcha-score-stats" class="wfls-text-small"><?php _e('Reset Score Statistics', 'wordfence'); ?></a></div>
+				<div class="wfls-center"><a href="#" id="wfls-reset-recaptcha-score-stats" class="wfls-text-small"><?php esc_html_e('Reset Score Statistics', 'wordfence'); ?></a></div>
 			</li>
 		</ul>
 	</li>

@@ -27,7 +27,7 @@ $tabs = array(
 	?>
 	<li class="wf-tab<?php if ($index == 0) { echo ' wf-active'; } ?>" id="wf-scan-tab-<?php echo esc_attr($t->id); ?>" data-target="<?php echo esc_attr($t->id); ?>" data-tab-title="<?php echo esc_attr($t->tabTitle); ?>"><a href="<?php echo esc_attr($a); ?>"><?php echo $t->tabTitle; ?></a></li>
   <?php endforeach; ?>
-	<li id="wf-scan-bulk-buttons"><span class="wf-hidden-xs"><a href="#" id="wf-scan-bulk-buttons-delete" class="wf-btn wf-btn-default wf-btn-callout-subtle<?php echo ($hasDeleteableIssue ? '' : ' wf-disabled'); ?>"><?php _e('Delete All Deletable Files', 'wordfence'); ?></a>&nbsp;&nbsp;&nbsp;<a href="#" id="wf-scan-bulk-buttons-repair" class="wf-btn wf-btn-default wf-btn-callout-subtle<?php echo ($hasRepairableIssue ? '' : ' wf-disabled'); ?>"><?php _e('Repair All Repairable Files', 'wordfence'); ?></a></span></li>
+	<li id="wf-scan-bulk-buttons"><span class="wf-hidden-xs"><a href="#" id="wf-scan-bulk-buttons-delete" class="wf-btn wf-btn-default wf-btn-callout-subtle<?php echo ($hasDeleteableIssue ? '' : ' wf-disabled'); ?>"><?php esc_html_e('Delete All Deletable Files', 'wordfence'); ?></a>&nbsp;&nbsp;&nbsp;<a href="#" id="wf-scan-bulk-buttons-repair" class="wf-btn wf-btn-default wf-btn-callout-subtle<?php echo ($hasRepairableIssue ? '' : ' wf-disabled'); ?>"><?php esc_html_e('Repair All Repairable Files', 'wordfence'); ?></a></span></li>
 </ul>
 <ul class="wf-scan-results">
 	<li class="wf-scan-results-stats">
@@ -36,31 +36,31 @@ $tabs = array(
 				<ul class="wf-block-list wf-block-list-horizontal wf-block-list-horizontal-5 wf-block-list-equal wf-hidden-xs">
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Posts, Comments, &amp; Files', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Posts, Comments, &amp; Files', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-postscommentsfiles"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_POSTS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_COMMENTS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_FILES, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Themes &amp; Plugins', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Themes &amp; Plugins', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-themesplugins"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_PLUGINS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_THEMES, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Users Checked', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Users Checked', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-users"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_USERS, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('URLs Checked', 'wordfence'); ?></li>
+							<li><?php esc_html_e('URLs Checked', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-urls"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_URLS, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Results Found', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Results Found', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-issues"><?php echo $issues->getIssueCount(); ?></li>
 						</ul>
 					</li>
@@ -68,31 +68,31 @@ $tabs = array(
 				<ul class="wf-block-list wf-hidden-sm wf-hidden-md wf-hidden-lg">
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Posts, Comments, &amp; Files', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Posts, Comments, &amp; Files', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-postscommentsfiles"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_POSTS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_COMMENTS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_FILES, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Themes &amp; Plugins', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Themes &amp; Plugins', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-themesplugins"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_PLUGINS, 0) + $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_THEMES, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Users Checked', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Users Checked', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-users"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_USERS, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('URLs Checked', 'wordfence'); ?></li>
+							<li><?php esc_html_e('URLs Checked', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-urls"><?php echo $scanner->getSummaryItem(wfScanner::SUMMARY_SCANNED_URLS, 0); ?></li>
 						</ul>
 					</li>
 					<li>
 						<ul class="wf-flex-horizontal wf-flex-full-width">
-							<li><?php _e('Results Found', 'wordfence'); ?></li>
+							<li><?php esc_html_e('Results Found', 'wordfence'); ?></li>
 							<li class="wf-scan-results-stats-issues"><?php echo $issues->getIssueCount(); ?></li>
 						</ul>
 					</li>

@@ -63,7 +63,9 @@ switch ($action) {
 										//else - outputs credentials form
 									}
 									else {
-										echo '<p>' . sprintf(__('Security token has expired. Click <a href="%s">here</a> to return to the scan page.', 'wordfence'), esc_url($scanURL)) . '</p>';
+										echo '<p>' . wp_kses(sprintf(
+											/* translators: URL to the WordPress admin panel. */
+												__('Security token has expired. Click <a href="%s">here</a> to return to the scan page.', 'wordfence'), esc_url($scanURL)), array('a'=>array('href'=>array()))) . '</p>';
 									}
 									?>
 								</div>

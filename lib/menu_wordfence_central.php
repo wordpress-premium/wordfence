@@ -54,16 +54,18 @@ else {
 							<div class="wf-central-dashboard">
 								<img class="wf-central-dashboard-logo" src="<?php echo wfUtils::getBaseURL() ?>images/wf-central-logo.svg" alt="Wordfence Central">
 								<div class="wf-central-dashboard-copy">
-									<p><strong><?php _e('Wordfence Central', 'wordfence') ?></strong></p>
-									<p><?php _e('Wordfence Central allows you to manage Wordfence on multiple sites from one location. It makes security monitoring and configuring Wordfence easier.', 'wordfence') ?></p>
-									<p class="wf-right-lg"><a href="https://www.wordfence.com/central" target="_blank" rel="noopener noreferrer"><strong><?php _e('Visit Wordfence Central', 'wordfence') ?></strong></a></p>
+									<p><strong><?php esc_html_e('Wordfence Central', 'wordfence') ?></strong></p>
+									<p><?php esc_html_e('Wordfence Central allows you to manage Wordfence on multiple sites from one location. It makes security monitoring and configuring Wordfence easier.', 'wordfence') ?></p>
+									<p class="wf-right-lg"><a href="https://www.wordfence.com/central" target="_blank" rel="noopener noreferrer"><strong><?php esc_html_e('Visit Wordfence Central', 'wordfence') ?></strong></a></p>
 								</div>
 							</div>
 						</div>
 						<div class="wf-flex-row-1 wf-block wf-active">
-							<p><strong><?php _e('Wordfence Central Status', 'wordfence') ?></strong></p>
-							<p><?php printf(__('Activated - connected by %s on %s', 'wordfence'), esc_html(wfConfig::get('wordfenceCentralConnectEmail')), date_i18n('F j, Y', (int) wfConfig::get('wordfenceCentralConnectTime'))) ?></p>
-							<p class="wf-right-lg"><a href="<?php echo esc_url($wordfenceURL); ?>"><strong><?php _e('Disconnect This Site', 'wordfence') ?></strong></a></p>
+							<p><strong><?php esc_html_e('Wordfence Central Status', 'wordfence') ?></strong></p>
+							<p><?php echo esc_html(sprintf(
+									/* translators: 1. Email address. 2. Localized date. */
+									__('Activated - connected by %1$s on %2$s', 'wordfence'), wfConfig::get('wordfenceCentralConnectEmail')), date_i18n('F j, Y', (int) wfConfig::get('wordfenceCentralConnectTime'))) ?></p>
+							<p class="wf-right-lg"><a href="<?php echo esc_url($wordfenceURL); ?>"><strong><?php esc_html_e('Disconnect This Site', 'wordfence') ?></strong></a></p>
 						</div>
 					</div>
 				</div>
@@ -72,7 +74,7 @@ else {
 					<div class="wf-block wf-active">
 						<div class="wf-block-header">
 							<div class="wf-block-header-content">
-								<strong><?php _e('Wordfence Central Installation Process') ?></strong>
+								<strong><?php esc_html_e('Wordfence Central Installation Process', 'wordfence') ?></strong>
 							</div>
 						</div>
 						<div class="wf-block-content">
@@ -102,20 +104,20 @@ else {
 				</div>
 			<?php elseif ($partialConnection): ?>
 				<div class="wf-center-lg">
-					<p><?php _e('It looks like you\'ve tried to connect this site to Wordfence Central, but the installation did not finish.', 'wordfence') ?></p>
+					<p><?php esc_html_e('It looks like you\'ve tried to connect this site to Wordfence Central, but the installation did not finish.', 'wordfence') ?></p>
 					<p>
 						<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>/sites/connection-issues?complete-setup=<?php echo esc_attr(wfConfig::get('wordfenceCentralSiteID')) ?>"
 								class="wf-btn wf-btn-primary"
-						><?php _e('Resume Installation', 'wordfence') ?></a>
-						<a href="<?php echo esc_url($wordfenceURL); ?>" class="wf-btn wf-btn-warning"><?php _e('Disconnect Site', 'wordfence') ?></a>
+						><?php esc_html_e('Resume Installation', 'wordfence') ?></a>
+						<a href="<?php echo esc_url($wordfenceURL); ?>" class="wf-btn wf-btn-warning"><?php esc_html_e('Disconnect Site', 'wordfence') ?></a>
 					</p>
 				</div>
 			<?php else: ?>
 				<div class="wf-center-lg">
-					<p><?php _e('Wordfence Central allows you to manage Wordfence on multiple sites from one location. It makes security monitoring and configuring Wordfence easier.', 'wordfence') ?></p>
-					<p><?php _e('To connect your site your site to Wordfence Central, use the link below:', 'wordfence') ?></p>
+					<p><?php esc_html_e('Wordfence Central allows you to manage Wordfence on multiple sites from one location. It makes security monitoring and configuring Wordfence easier.', 'wordfence') ?></p>
+					<p><?php esc_html_e('To connect your site your site to Wordfence Central, use the link below:', 'wordfence') ?></p>
 					<p class="wf-center">
-						<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>?newsite=<?php echo esc_attr(home_url()) ?>" class="wf-btn wf-btn-primary"><?php _e('Connect Site', 'wordfence') ?></a>
+						<a href="<?php echo WORDFENCE_CENTRAL_URL_SEC ?>?newsite=<?php echo esc_attr(home_url()) ?>" class="wf-btn wf-btn-primary"><?php esc_html_e('Connect Site', 'wordfence') ?></a>
 					</p>
 				</div>
 			<?php endif ?>

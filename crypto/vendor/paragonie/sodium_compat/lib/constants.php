@@ -2,6 +2,8 @@
 // phpcs:ignoreFile -- compatibility library for PHP 5-7.1
 namespace Sodium;
 
+require_once dirname(dirname(__FILE__)) . '/autoload.php';
+
 use ParagonIE_Sodium_Compat;
 
 const CRYPTO_AEAD_AES256GCM_KEYBYTES = ParagonIE_Sodium_Compat::CRYPTO_AEAD_AES256GCM_KEYBYTES;

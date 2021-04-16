@@ -2,7 +2,7 @@
     "name": "wordpress-premium/wordfence-security",
     "type": "wordpress-plugin",
 	"homepage": "http://www.wordfence.com/",
-	"version": "7.4.3",
+	"version": "7.5.2",
     "require": {
         "composer/installers": ">=1.0"
     },

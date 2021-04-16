@@ -3,9 +3,9 @@
 <table class="wf-table wf-table-hover">
 	<thead>
 		<tr>
-			<th>Username</th>
-			<th>IP</th>
-			<th>Date</th>
+			<th><?php esc_html_e('Username', 'wordfence') ?></th>
+			<th><?php esc_html_e('IP', 'wordfence') ?></th>
+			<th><?php esc_html_e('Date', 'wordfence') ?></th>
 		</tr>
 	</thead>
 	<tbody>

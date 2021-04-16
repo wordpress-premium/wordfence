@@ -54,8 +54,8 @@ switch ($status) {
 		<div class="wf-scan-step-complete-warning"></div>
 		<div class="wf-scan-step-disabled"></div>
 	</div>
-	<div class="wf-scan-step-title"><?php echo esc_attr($title); ?></div>
+	<div class="wf-scan-step-title"><?php echo esc_html($title); ?></div>
 	<?php if ($status == wfScanner::STATUS_PREMIUM): ?>
-		<div class="wf-scan-step-subtitle"><a href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php _e('Upgrade', 'wordfence'); ?></a></div>
+		<div class="wf-scan-step-subtitle"><a href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Upgrade', 'wordfence'); ?></a></div>
 	<?php endif; ?>
 </li>

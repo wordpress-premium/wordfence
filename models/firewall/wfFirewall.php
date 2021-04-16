@@ -458,7 +458,7 @@ class wfFirewall
 			}
 			return array(
 				'percentage' => 1.0,
-				'title'      => __('Enable Real-Time IP Blacklist.', 'wordfence'),
+				'title'      => __('Enable Real-Time IP Blocklist.', 'wordfence'),
 			);
 		}
 		catch (Exception $e) {
@@ -467,7 +467,7 @@ class wfFirewall
 			
 		return array(
 			'percentage' => 1.0,
-			'title'      => __('Enable Real-Time IP Blacklist.', 'wordfence'),
+			'title'      => __('Enable Real-Time IP Blocklist.', 'wordfence'),
 		);
 	}
 

@@ -2,7 +2,7 @@
 if (!defined('WORDFENCE_VERSION')) { exit; }
 ?>
 <ul id="wf-option-wafWhitelist" class="wf-option wf-flex-vertical wf-flex-full-width">
-	<li><strong><?php _e('Add Whitelisted URL/Param', 'wordfence'); ?></strong> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_WHITELIST); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a> <?php _e('The URL/parameters in this table will not be tested by the firewall. They are typically added while the firewall is in Learning Mode or by an admin who identifies a particular action/request is a false positive.', 'wordfence'); ?></li>
+	<li><strong><?php esc_html_e('Add Allowlisted URL/Param', 'wordfence'); ?></strong> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_FIREWALL_WAF_WHITELIST); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a> <?php esc_html_e('The URL/parameters in this table will not be tested by the firewall. They are typically added while the firewall is in Learning Mode or by an admin who identifies a particular action/request is a false positive.', 'wordfence'); ?></li>
 	<li id="whitelist-form"> 
 		<div class="wf-form-inline">
 			<div class="wf-form-group">
@@ -10,17 +10,17 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 			</div>
 			<div class="wf-form-group">
 				<select class="wf-form-control" name="whitelistParam" id="whitelistParam">
-					<option value="request.body"><?php _e('POST Body', 'wordfence'); ?></option>
-					<option value="request.cookies"><?php _e('Cookie', 'wordfence'); ?></option>
-					<option value="request.fileNames"><?php _e('File Name', 'wordfence'); ?></option>
-					<option value="request.headers"><?php _e('Header', 'wordfence'); ?></option>
-					<option value="request.queryString"><?php _e('Query String', 'wordfence'); ?></option>
+					<option value="request.body"><?php esc_html_e('POST Body', 'wordfence'); ?></option>
+					<option value="request.cookies"><?php esc_html_e('Cookie', 'wordfence'); ?></option>
+					<option value="request.fileNames"><?php esc_html_e('File Name', 'wordfence'); ?></option>
+					<option value="request.headers"><?php esc_html_e('Header', 'wordfence'); ?></option>
+					<option value="request.queryString"><?php esc_html_e('Query String', 'wordfence'); ?></option>
 				</select>
 			</div>
 			<div class="wf-form-group">
 				<input class="wf-form-control" type="text" name="whitelistParamName" id="whitelistParamName" placeholder="<?php esc_attr_e('Param Name', 'wordfence'); ?>">
 			</div>
-			<a href="#" class="wf-btn wf-btn-callout wf-btn-primary wf-disabled" id="waf-whitelisted-urls-add"><?php _e('Add', 'wordfence'); ?></a>
+			<a href="#" class="wf-btn wf-btn-callout wf-btn-primary wf-disabled" id="waf-whitelisted-urls-add"><?php esc_html_e('Add', 'wordfence'); ?></a>
 		</div>
 		<script type="application/javascript">
 			(function($) {
@@ -50,14 +50,14 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 							var key = pathKey + '|' + paramKey;
 							var matches = $('#waf-whitelisted-urls-wrapper .whitelist-table > tbody > tr[data-key="' + key + '"]');
 							if (matches.length > 0) {
-								WFAD.colorboxModal((WFAD.isSmallScreen ? '300px' : '400px'), '<?php esc_attr_e('Whitelist Entry Exists', 'wordfence'); ?>', '<?php esc_attr_e('A whitelist entry for this URL and parameter already exists.', 'wordfence'); ?>');
+								WFAD.colorboxModal((WFAD.isSmallScreen ? '300px' : '400px'), '<?php esc_attr_e('Allowlist Entry Exists', 'wordfence'); ?>', '<?php esc_attr_e('An allowlist entry for this URL and parameter already exists.', 'wordfence'); ?>');
 								return;
 							}
 							
 							//Generate entry and add to display data set
 							var entry = {
 								data: {
-									description: "<?php esc_attr_e('Whitelisted via Firewall Options page', 'wordfence'); ?>",
+									description: "<?php esc_attr_e('Allowlisted via Firewall Options page', 'wordfence'); ?>",
 									source: 'waf-options',
 									disabled: false,
 									ip: "<?php echo esc_attr(wfUtils::getIP()); ?>",
@@ -99,18 +99,18 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 	</li>
 	<li><hr id="whitelist-form-separator"></li>
 	<li id="whitelist-table-controls" class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width">
-		<div><a href="#" id="whitelist-bulk-delete" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Delete', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="whitelist-bulk-enable" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Enable', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="whitelist-bulk-disable" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Disable', 'wordfence'); ?></a></div>
+		<div><a href="#" id="whitelist-bulk-delete" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Delete', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="whitelist-bulk-enable" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Enable', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="#" id="whitelist-bulk-disable" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Disable', 'wordfence'); ?></a></div>
 		<div class="wf-right wf-left-xs wf-padding-add-top-xs-small">
 			<div class="wf-select-group wf-flex-vertical-xs wf-flex-full-width">
 				<select name="filterColumn">
-					<option value="url"><?php _e('URL', 'wordfence'); ?></option>
-					<option value="param"><?php _e('Param', 'wordfence'); ?></option>
-					<option value="source"><?php _e('Source', 'wordfence'); ?></option>
-					<option value="user"><?php _e('User', 'wordfence'); ?></option>
-					<option value="ip"><?php _e('IP', 'wordfence'); ?></option>
+					<option value="url"><?php esc_html_e('URL', 'wordfence'); ?></option>
+					<option value="param"><?php esc_html_e('Param', 'wordfence'); ?></option>
+					<option value="source"><?php esc_html_e('Source', 'wordfence'); ?></option>
+					<option value="user"><?php esc_html_e('User', 'wordfence'); ?></option>
+					<option value="ip"><?php esc_html_e('IP', 'wordfence'); ?></option>
 				</select>
 				<input type="text" class="wf-form-control" placeholder="<?php esc_attr_e('Filter Value', 'wordfence'); ?>" name="filterValue">
-				<div><span class="wf-hidden-xs">&nbsp;&nbsp;</span><a href="#" id="whitelist-apply-filter" class="wf-btn wf-btn-callout wf-btn-default"><?php _e('Filter', 'wordfence'); ?></a></div>
+				<div><span class="wf-hidden-xs">&nbsp;&nbsp;</span><a href="#" id="whitelist-apply-filter" class="wf-btn wf-btn-callout wf-btn-default"><?php esc_html_e('Filter', 'wordfence'); ?></a></div>
 			</div>
 			<script type="application/javascript">
 				(function($) {

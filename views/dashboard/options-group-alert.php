@@ -19,7 +19,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Email Alert Preferences', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Email Alert Preferences', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -137,7 +137,7 @@ if (!isset($collapseable)) {
 							'subEnabledValue' => 1,
 							'subDisabledValue' => 0,
 							'subValue' => wfConfig::get('alertOn_firstAdminLoginOnly') ? 1 : 0,
-							'subTitle' => __('Only alert me when that administrator signs in from a new device or location', 'wordfence'),
+							'subTitle' => __('Only alert me when that administrator signs in from a new device', 'wordfence'),
 						))->render();
 						?>
 					</li>
@@ -154,7 +154,7 @@ if (!isset($collapseable)) {
 							'subEnabledValue' => 1,
 							'subDisabledValue' => 0,
 							'subValue' => wfConfig::get('alertOn_firstNonAdminLoginOnly') ? 1 : 0,
-							'subTitle' => __('Only alert me when that user signs in from a new device or location', 'wordfence'),
+							'subTitle' => __('Only alert me when that user signs in from a new device', 'wordfence'),
 						))->render();
 						?>
 					</li>

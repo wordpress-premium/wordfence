@@ -28,14 +28,17 @@ class wfRESTAuthenticationController {
 		register_rest_route('wordfence/v1', '/authenticate', array(
 			'methods'  => WP_REST_Server::READABLE,
 			'callback' => array($this, 'nonce'),
+			'permission_callback' => '__return_true',
 		));
 		register_rest_route('wordfence/v1', '/authenticate', array(
 			'methods'  => WP_REST_Server::CREATABLE,
 			'callback' => array($this, 'authenticate'),
+			'permission_callback' => '__return_true',
 		));
 		register_rest_route('wordfence/v1', '/authenticate-premium', array(
 			'methods'  => WP_REST_Server::CREATABLE,
 			'callback' => array($this, 'authenticatePremium'),
+			'permission_callback' => '__return_true',
 		));
 	}
 

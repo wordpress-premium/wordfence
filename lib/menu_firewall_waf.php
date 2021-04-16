@@ -66,12 +66,12 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 								echo wfView::create('common/status-detail', array(
 									'id' => 'waf-blacklist',
 									'percentage' => $firewall->blacklistStatus(),
-									'title' => __('Real-Time IP Blacklist: ', 'wordfence') . ($firewall->blacklistMode() == wfFirewall::BLACKLIST_MODE_ENABLED ? __('Enabled', 'wordfence') : __('Disabled', 'wordfence')),
+									'title' => __('Real-Time IP Blocklist: ', 'wordfence') . ($firewall->blacklistMode() == wfFirewall::BLACKLIST_MODE_ENABLED ? __('Enabled', 'wordfence') : __('Disabled', 'wordfence')),
 									'subtitle' => __('Blocks requests from known malicious IPs', 'wordfence'),
 									'link' => (($firewall->ruleMode() == wfFirewall::RULE_MODE_PREMIUM) ? network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_options') : 'https://www.wordfence.com/gnl1wafUpgrade/wordfence-signup/'),
-									'linkLabel' => $firewall->firewallMode() == wfFirewall::FIREWALL_MODE_DISABLED ? null : ($firewall->ruleMode() == wfFirewall::RULE_MODE_PREMIUM ? ($firewall->blacklistMode() == wfFirewall::BLACKLIST_MODE_ENABLED ? __('Manage Real-Time IP Blacklist', 'wordfence') : ($firewall->isSubDirectoryInstallation() ? null : __('Enable', 'wordfence'))) : __('Upgrade to Premium', 'wordfence')),
+									'linkLabel' => $firewall->firewallMode() == wfFirewall::FIREWALL_MODE_DISABLED ? null : ($firewall->ruleMode() == wfFirewall::RULE_MODE_PREMIUM ? ($firewall->blacklistMode() == wfFirewall::BLACKLIST_MODE_ENABLED ? __('Manage Real-Time IP Blocklist', 'wordfence') : ($firewall->isSubDirectoryInstallation() ? null : __('Enable', 'wordfence'))) : __('Upgrade to Premium', 'wordfence')),
 									'linkNewWindow' => ($firewall->ruleMode() != wfFirewall::RULE_MODE_PREMIUM),
-									'statusTitle' => __('Blacklist Status', 'wordfence'),
+									'statusTitle' => __('Blocklist Status', 'wordfence'),
 									'statusList' => $firewall->wafStatusList('blacklist'),
 									'helpLink' => __('https://www.wordfence.com/help/firewall/#firewall-status', 'wordfence'),
 								))->render();
@@ -243,8 +243,8 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 
 	<script type="text/x-jquery-template" id="wfWAFNewTour1">
 		<div>
-			<h3><?php _e('The Wordfence firewall protects your sites from attackers', 'wordfence'); ?></h3>
-			<p><?php _e('This is where you can monitor the work Wordfence is doing to protect your site and also where you can manage the options to optimize the firewall\'s configuration.', 'wordfence'); ?></p>
+			<h3><?php esc_html_e('The Wordfence firewall protects your sites from attackers', 'wordfence'); ?></h3>
+			<p><?php esc_html_e('This is where you can monitor the work Wordfence is doing to protect your site and also where you can manage the options to optimize the firewall\'s configuration.', 'wordfence'); ?></p>
 			<div class="wf-pointer-footer">
 				<ul class="wf-tour-pagination">
 					<li class="wf-active">&bullet;</li>
@@ -252,15 +252,15 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 					<li>&bullet;</li>
 					<li>&bullet;</li>
 				</ul>
-				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Next', 'wordfence'); ?></a></div>
+				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Next', 'wordfence'); ?></a></div>
 			</div>
 			<div id="wf-tour-close"><a href="#"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 		</div>
 	</script>
 	<script type="text/x-jquery-template" id="wfWAFNewTour2">
 		<div>
-			<h3><?php _e('Web Application Firewall (WAF)', 'wordfence'); ?></h3>
-			<p><?php _e('The Wordfence Web Application Firewall blocks known and emerging attacks using firewall rules. When you first install the WAF, it will be in learning mode. This allows Wordfence to learn about your site so that we can understand how to protect it and how to allow normal visitors through the firewall. We recommend you let Wordfence learn for a week before you enable the firewall.', 'wordfence'); ?></p>
+			<h3><?php esc_html_e('Web Application Firewall (WAF)', 'wordfence'); ?></h3>
+			<p><?php esc_html_e('The Wordfence Web Application Firewall blocks known and emerging attacks using firewall rules. When you first install the WAF, it will be in learning mode. This allows Wordfence to learn about your site so that we can understand how to protect it and how to allow normal visitors through the firewall. We recommend you let Wordfence learn for a week before you enable the firewall.', 'wordfence'); ?></p>
 			<div class="wf-pointer-footer">
 				<ul class="wf-tour-pagination">
 					<li>&bullet;</li>
@@ -268,16 +268,16 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 					<li>&bullet;</li>
 					<li>&bullet;</li>
 				</ul>
-				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php _e('Previous', 'wordfence'); ?></a></div>
-				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Next', 'wordfence'); ?></a></div>
+				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php esc_html_e('Previous', 'wordfence'); ?></a></div>
+				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Next', 'wordfence'); ?></a></div>
 			</div>
 			<div id="wf-tour-close"><a href="#"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 		</div>
 	</script>
 	<script type="text/x-jquery-template" id="wfWAFNewTour3">
 		<div>
-			<h3><?php _e('Brute Force Protection', 'wordfence'); ?></h3>
-			<p><?php _e('Wordfence protects your site from password-guessing attacks by locking out attackers and helping you avoid weak passwords.', 'wordfence'); ?></p>
+			<h3><?php esc_html_e('Brute Force Protection', 'wordfence'); ?></h3>
+			<p><?php esc_html_e('Wordfence protects your site from password-guessing attacks by locking out attackers and helping you avoid weak passwords.', 'wordfence'); ?></p>
 			<div class="wf-pointer-footer">
 				<ul class="wf-tour-pagination">
 					<li>&bullet;</li>
@@ -285,17 +285,17 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 					<li class="wf-active">&bullet;</li>
 					<li>&bullet;</li>
 				</ul>
-				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php _e('Previous', 'wordfence'); ?></a></div>
-				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Next', 'wordfence'); ?></a></div>
+				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php esc_html_e('Previous', 'wordfence'); ?></a></div>
+				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Next', 'wordfence'); ?></a></div>
 			</div>
 			<div id="wf-tour-close"><a href="#"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 		</div>
 	</script>
 	<script type="text/x-jquery-template" id="wfWAFNewTour4">
 		<div>
-			<h3><?php _e('Firewall Options', 'wordfence'); ?></h3>
+			<h3><?php esc_html_e('Firewall Options', 'wordfence'); ?></h3>
 			<p class="wf-center"><svg viewBox="0 0 100.11 100.11" class="wf-icon"><path d="M99.59,41.42a2.06,2.06,0,0,0-1.37-.82L86.3,38.78a39.34,39.34,0,0,0-2.67-6.39q1.17-1.63,3.52-4.6t3.32-4.33A2.52,2.52,0,0,0,91,22a2.1,2.1,0,0,0-.46-1.43Q88.18,17.2,79.78,9.45a2.52,2.52,0,0,0-1.63-.65,2.12,2.12,0,0,0-1.57.59l-9.25,7a40.09,40.09,0,0,0-5.87-2.41L59.64,2a1.92,1.92,0,0,0-.75-1.4A2.46,2.46,0,0,0,57.29,0H42.82a2.19,2.19,0,0,0-2.34,1.82,106,106,0,0,0-1.89,12.12,37.62,37.62,0,0,0-5.93,2.48l-9-7A2.78,2.78,0,0,0,22,8.8q-1.44,0-6.16,4.66a64.88,64.88,0,0,0-6.42,7A2.75,2.75,0,0,0,8.8,22a2.44,2.44,0,0,0,.65,1.56q4.37,5.28,7,9a32.38,32.38,0,0,0-2.54,6L1.76,40.34a2,2,0,0,0-1.24.85A2.5,2.5,0,0,0,0,42.69V57.16a2.44,2.44,0,0,0,.52,1.53,2,2,0,0,0,1.37.82l11.93,1.76a31.91,31.91,0,0,0,2.67,6.45Q15.31,69.35,13,72.31T9.65,76.65a2.54,2.54,0,0,0-.07,3q2.54,3.52,10.75,11a2.25,2.25,0,0,0,1.63.71,2.35,2.35,0,0,0,1.63-.59l9.19-7a40.54,40.54,0,0,0,5.87,2.41l1.82,12a1.92,1.92,0,0,0,.75,1.4,2.45,2.45,0,0,0,1.6.55H57.29a2.2,2.2,0,0,0,2.35-1.82,107.41,107.41,0,0,0,1.89-12.12,37.19,37.19,0,0,0,5.93-2.48l9,7a3.18,3.18,0,0,0,1.69.59q1.43,0,6.13-4.62a65.86,65.86,0,0,0,6.45-7,2.16,2.16,0,0,0,.59-1.5,2.51,2.51,0,0,0-.65-1.63q-4.69-5.74-7-9a41.57,41.57,0,0,0,2.54-5.93l12.06-1.82a2,2,0,0,0,1.3-.85,2.52,2.52,0,0,0,.52-1.5V43a2.46,2.46,0,0,0-.52-1.53ZM61.85,61.86a16.08,16.08,0,0,1-11.8,4.89A16.69,16.69,0,0,1,33.37,50.06,16.69,16.69,0,0,1,50.06,33.37,16.69,16.69,0,0,1,66.74,50.06a16.08,16.08,0,0,1-4.89,11.8Zm0,0"></path></svg></p>
-			<p><?php _e('Set up the way you want the firewall to protect your site including the web application firewall, brute force protection, rate limiting, and blocking.', 'wordfence'); ?></p>
+			<p><?php esc_html_e('Set up the way you want the firewall to protect your site including the web application firewall, brute force protection, rate limiting, and blocking.', 'wordfence'); ?></p>
 			<div class="wf-pointer-footer">
 				<ul class="wf-tour-pagination">
 					<li>&bullet;</li>
@@ -303,8 +303,8 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 					<li>&bullet;</li>
 					<li class="wf-active">&bullet;</li>
 				</ul>
-				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php _e('Previous', 'wordfence'); ?></a></div>
-				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Got it', 'wordfence'); ?></a></div>
+				<div id="wf-tour-previous"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-default"><?php esc_html_e('Previous', 'wordfence'); ?></a></div>
+				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Got it', 'wordfence'); ?></a></div>
 			</div>
 			<div id="wf-tour-close"><a href="#"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 		</div>
@@ -344,14 +344,14 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&subpage=waf_optio
 
 	<script type="text/x-jquery-template" id="wfWAFUpgradeTour1">
 		<div>
-			<h3><?php _e('Firewall Options', 'wordfence'); ?></h3>
+			<h3><?php esc_html_e('Firewall Options', 'wordfence'); ?></h3>
 			<p class="wf-center"><svg viewBox="0 0 100.11 100.11" class="wf-icon"><path d="M99.59,41.42a2.06,2.06,0,0,0-1.37-.82L86.3,38.78a39.34,39.34,0,0,0-2.67-6.39q1.17-1.63,3.52-4.6t3.32-4.33A2.52,2.52,0,0,0,91,22a2.1,2.1,0,0,0-.46-1.43Q88.18,17.2,79.78,9.45a2.52,2.52,0,0,0-1.63-.65,2.12,2.12,0,0,0-1.57.59l-9.25,7a40.09,40.09,0,0,0-5.87-2.41L59.64,2a1.92,1.92,0,0,0-.75-1.4A2.46,2.46,0,0,0,57.29,0H42.82a2.19,2.19,0,0,0-2.34,1.82,106,106,0,0,0-1.89,12.12,37.62,37.62,0,0,0-5.93,2.48l-9-7A2.78,2.78,0,0,0,22,8.8q-1.44,0-6.16,4.66a64.88,64.88,0,0,0-6.42,7A2.75,2.75,0,0,0,8.8,22a2.44,2.44,0,0,0,.65,1.56q4.37,5.28,7,9a32.38,32.38,0,0,0-2.54,6L1.76,40.34a2,2,0,0,0-1.24.85A2.5,2.5,0,0,0,0,42.69V57.16a2.44,2.44,0,0,0,.52,1.53,2,2,0,0,0,1.37.82l11.93,1.76a31.91,31.91,0,0,0,2.67,6.45Q15.31,69.35,13,72.31T9.65,76.65a2.54,2.54,0,0,0-.07,3q2.54,3.52,10.75,11a2.25,2.25,0,0,0,1.63.71,2.35,2.35,0,0,0,1.63-.59l9.19-7a40.54,40.54,0,0,0,5.87,2.41l1.82,12a1.92,1.92,0,0,0,.75,1.4,2.45,2.45,0,0,0,1.6.55H57.29a2.2,2.2,0,0,0,2.35-1.82,107.41,107.41,0,0,0,1.89-12.12,37.19,37.19,0,0,0,5.93-2.48l9,7a3.18,3.18,0,0,0,1.69.59q1.43,0,6.13-4.62a65.86,65.86,0,0,0,6.45-7,2.16,2.16,0,0,0,.59-1.5,2.51,2.51,0,0,0-.65-1.63q-4.69-5.74-7-9a41.57,41.57,0,0,0,2.54-5.93l12.06-1.82a2,2,0,0,0,1.3-.85,2.52,2.52,0,0,0,.52-1.5V43a2.46,2.46,0,0,0-.52-1.53ZM61.85,61.86a16.08,16.08,0,0,1-11.8,4.89A16.69,16.69,0,0,1,33.37,50.06,16.69,16.69,0,0,1,50.06,33.37,16.69,16.69,0,0,1,66.74,50.06a16.08,16.08,0,0,1-4.89,11.8Zm0,0"></path></svg></p>
-			<p><?php _e('All of the Firewall settings are now located here. This includes configuration options for the web application firewall, brute force protection, rate limiting, whitelisted URLs, and blocking.', 'wordfence'); ?></p>
+			<p><?php esc_html_e('All of the Firewall settings are now located here. This includes configuration options for the web application firewall, brute force protection, rate limiting, allowlisted URLs, and blocking.', 'wordfence'); ?></p>
 			<div class="wf-pointer-footer">
 				<ul class="wf-tour-pagination">
 					<li class="wf-active">&bullet;</li>
 				</ul>
-				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php _e('Got it', 'wordfence'); ?></a></div>
+				<div id="wf-tour-continue"><a href="#" class="wf-onboarding-btn wf-onboarding-btn-primary"><?php esc_html_e('Got it', 'wordfence'); ?></a></div>
 			</div>
 			<div id="wf-tour-close"><a href="#"><i class="wf-fa wf-fa-times-circle" aria-hidden="true"></i></a></div>
 		</div>

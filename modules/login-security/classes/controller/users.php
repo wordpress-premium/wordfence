@@ -346,7 +346,7 @@ class Controller_Users {
 			$total_users = (int) $wpdb->get_var("SELECT COUNT(ID) as c FROM {$wpdb->users}");
 		}
 		$active_users = $this->active_count();
-		return array('active_users' => $active_users, 'inactive_users' => max($total_users - $active_users, '-'));
+		return array('active_users' => $active_users, 'inactive_users' => max($total_users - $active_users, 0));
 	}
 	
 	public function detailed_user_counts() {
@@ -580,7 +580,7 @@ class Controller_Users {
 		//Format is 'view' => '<a href="https://wfpremium.dev1.ryanbritton.com/author/ryan/" aria-label="View posts by ryan">View</a>'
 		if (user_can(wp_get_current_user(), Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS) && (Controller_Users::shared()->can_activate_2fa($user) || Controller_Users::shared()->has_2fa_active($user))) {
 			$url = (is_multisite() ? network_admin_url('admin.php?page=WFLS&user=' . $user->ID) : admin_url('admin.php?page=WFLS&user=' . $user->ID));
-			$actions['wf2fa'] = '<a href="' . esc_url($url) . '" aria-label="' . esc_attr(sprintf(__('Edit two-factor authentication for %s', 'wordfence-2fa'), $user->user_login)) . '">' . __('2FA', 'wordfence-2fa') . '</a>';
+			$actions['wf2fa'] = '<a href="' . esc_url($url) . '" aria-label="' . esc_attr(sprintf(__('Edit two-factor authentication for %s', 'wordfence-2fa'), $user->user_login)) . '">' . esc_html__('2FA', 'wordfence-2fa') . '</a>';
 		}
 		return $actions;
 	}
@@ -591,8 +591,8 @@ class Controller_Users {
 		if (user_can(wp_get_current_user(), Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS) && version_compare($wp_version, '4.4.0', '>=')) {
 			$counts = $this->user_counts();
 			$views['all'] = str_replace(' class="current" aria-current="page"', '', $views['all']);
-			$views['wfls-active'] = '<a href="' . esc_url(add_query_arg('wf2fa', 'active', 'users.php')) . '"' . (isset($_GET['wf2fa']) && $_GET['wf2fa'] == 'active' ? ' class="current" aria-current="page"' : '') . '>' . __('2FA Active', 'wordfence-2fa') . ' <span class="count">(' . number_format($counts['active_users']) . ')</span></a>';
-			$views['wfls-inactive'] = '<a href="' . esc_url(add_query_arg('wf2fa', 'inactive', 'users.php')) . '"' . (isset($_GET['wf2fa']) && $_GET['wf2fa'] == 'inactive' ? ' class="current" aria-current="page"' : '') . '>' . __('2FA Inactive', 'wordfence-2fa') . ' <span class="count">(' . number_format($counts['inactive_users']) . ')</span></a>';
+			$views['wfls-active'] = '<a href="' . esc_url(add_query_arg('wf2fa', 'active', 'users.php')) . '"' . (isset($_GET['wf2fa']) && $_GET['wf2fa'] == 'active' ? ' class="current" aria-current="page"' : '') . '>' . esc_html__('2FA Active', 'wordfence-2fa') . ' <span class="count">(' . number_format($counts['active_users']) . ')</span></a>';
+			$views['wfls-inactive'] = '<a href="' . esc_url(add_query_arg('wf2fa', 'inactive', 'users.php')) . '"' . (isset($_GET['wf2fa']) && $_GET['wf2fa'] == 'inactive' ? ' class="current" aria-current="page"' : '') . '>' . esc_html__('2FA Inactive', 'wordfence-2fa') . ' <span class="count">(' . number_format($counts['inactive_users']) . ')</span></a>';
 		}
 		return $views;
 	}

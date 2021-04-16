@@ -46,7 +46,9 @@ if (isset($_GET['source']) && wfPage::isValidPage($_GET['source'])) {
 			<?php
 			echo wfView::create('options/block-controls', array(
 				'backLink' => $backPage->url(),
-				'backLabelHTML' => sprintf(__('<span class="wf-hidden-xs">Back to </span>%s', 'wordfence'), $backPage->label()),
+				'backLabelHTML' => wp_kses(sprintf(
+						/* translators: Page title/label. */
+						__('<span class="wf-hidden-xs">Back to </span>%s', 'wordfence'), $backPage->label()), array('span'=>array('class'=>array()))),
 				'restoreDefaultsSection' => wfConfig::OPTIONS_TYPE_BLOCKING,
 				'restoreDefaultsMessage' => __('Are you sure you want to restore the default Blocking settings? This will undo any custom changes you have made to the options on this page. Any existing blocks will be preserved.', 'wordfence'),
 			))->render();
@@ -89,7 +91,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 					echo wfView::create('common/section-title', array(
 						'title' => __('Blocking Options', 'wordfence'),
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING),
-						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about Blocking</span>', 'wordfence'),
+						'helpLabelHTML' => wp_kses(__('Learn more<span class="wf-hidden-xs"> about Blocking</span>', 'wordfence'), array('span'=>array('class'=>array()))),
 						'showIcon' => true,
 					))->render();
 					?>
@@ -99,7 +101,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 								<div class="wf-block-header">
 									<div class="wf-block-header-content">
 										<div class="wf-block-title">
-											<strong><?php _e('General', 'wordfence'); ?></strong>
+											<strong><?php esc_html_e('General', 'wordfence'); ?></strong>
 										</div>
 										<div class="wf-block-header-action"></div>
 									</div>

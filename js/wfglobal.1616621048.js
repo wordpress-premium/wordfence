@@ -1,4 +1,6 @@
 (function($) {
+	var __, sprintf;
+
 	if (!window['wordfenceExt']) {
 		window['wordfenceExt'] = {
 			nonce: false,
@@ -11,7 +13,7 @@
 			showLoading: function(){
 				this.loadingCount++;
 				if (this.loadingCount == 1) {
-					jQuery('<div id="wordfenceWorking">Wordfence is working...</div>').appendTo('body');
+					jQuery('<div id="wordfenceWorking">' + __('Wordfence is working...') + '</div>').appendTo('body');
 				}
 			},
 			removeLoading: function(){
@@ -120,9 +122,10 @@
 
 				var rawEmails = raw.replace(/\s/g, '').split(',');
 				for (var i = 0; i < rawEmails.length; i++) {
+					var e = rawEmails[i].toLowerCase();
 					//From https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
-					if (/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(rawEmails[i]) && !this.isEmailBlacklisted(rawEmails[i])) {
-						emails.push(rawEmails[i]);
+					if (/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(rawEmails[i]) && !this.isEmailBlacklisted(e)) {
+						emails.push(e);
 					}
 				}
 				return emails;
@@ -155,19 +158,12 @@
 			}
 		};
 	}
-	
+
+	__ = window.wfi18n.__;
+	sprintf = window.wfi18n.sprintf;
+
 	$(function() {
 		wordfenceExt.init();
-
-		$('.wf-dismiss-link').on('click', function() {
-			$('#wf-extended-protection-notice').css({
-				opacity: .75
-			});
-			$.get(this.href, function() {
-				$('#wf-extended-protection-notice').fadeOut(1000);
-			});
-			return false;
-		});
 	});
 })(jQuery);
 

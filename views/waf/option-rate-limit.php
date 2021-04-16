@@ -8,6 +8,7 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
  * @var string $rateOptionName The option name for the rate portion.
  * @var array $rateOptions An array of the possible values for $rateOptionName. The array is of the format array(array('value' => <the internal value>, 'label' => <a display label>), ...)
  * @var string $rateValue The current value of $rateOptionName.
+ * @var int $lowValue The value below which the false positive warning should begin showing
  * @var string $actionOptionName The option name for the rate portion.
  * @var array $actionOptions An array of the possible values for $actionOptionName. The array is of the format array(array('value' => <the internal value>, 'label' => <a display label>), ...)
  * @var string $actionValue The current value of $actionOptionName.
@@ -19,23 +20,24 @@ if (!defined('WORDFENCE_VERSION')) { exit; }
 $rateID = 'wf-option-' . preg_replace('/[^a-z0-9]/i', '-', $rateOptionName);
 $actionID = 'wf-option-' . preg_replace('/[^a-z0-9]/i', '-', $actionOptionName);
 ?>
-<ul class="wf-option wf-option-rate-limit<?php if (!wfConfig::p() && isset($premium) && $premium) { echo ' wf-option-premium'; } ?>" data-rate-option="<?php echo esc_attr($rateOptionName); ?>" data-original-rate-value="<?php echo esc_attr($rateValue); ?>" data-action-option="<?php echo esc_attr($actionOptionName); ?>" data-original-action-value="<?php echo esc_attr($actionValue); ?>">
+<ul class="wf-option wf-option-rate-limit<?php if (!wfConfig::p() && isset($premium) && $premium) { echo ' wf-option-premium'; } ?>" data-rate-option="<?php echo esc_attr($rateOptionName); ?>" data-original-rate-value="<?php echo esc_attr($rateValue); ?>" data-action-option="<?php echo esc_attr($actionOptionName); ?>" data-original-action-value="<?php echo esc_attr($actionValue); ?>" data-low-value="<?php echo (int) $lowValue; ?>">
 	<li class="wf-option-spacer"></li>
 	<li class="wf-option-content">
 		<ul>
-			<li class="wf-option-title"><span id="<?php echo esc_attr($rateID); ?>-label"><?php echo esc_html($title); ?></span><?php if (!wfConfig::p() && isset($premium) && $premium) { echo ' <a href="https://www.wordfence.com/gnl1optionUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer" class="wf-premium-link">' . __('Premium Feature', 'wordfence') . '</a>'; } ?><?php if (isset($helpLink)) { echo ' <a href="' . esc_attr($helpLink) . '"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a>'; } ?></li>
+			<li class="wf-option-title"><span id="<?php echo esc_attr($rateID); ?>-label"><?php echo esc_html($title); ?></span><?php if (!wfConfig::p() && isset($premium) && $premium) { echo ' <a href="https://www.wordfence.com/gnl1optionUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer" class="wf-premium-link">' . esc_html__('Premium Feature', 'wordfence') . '</a>'; } ?><?php if (isset($helpLink)) { echo ' <a href="' . esc_attr($helpLink) . '"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a>'; } ?></li>
 			<li class="wf-option-select wf-left-xs wf-padding-add-top-xs-small wf-nowrap">
 				<select<?php echo (!(!wfConfig::p() && isset($premium) && $premium) ? '' : ' disabled'); ?> id="<?php echo esc_attr($rateID); ?>" class="wf-rate-limit-rate" aria-labelledby="<?php echo esc_attr($rateID); ?>-label">
 					<?php foreach ($rateOptions as $o): ?>
 						<option class="wf-option-select-option" value="<?php echo esc_attr($o['value']); ?>"<?php if ($o['value'] == $rateValue) { echo ' selected'; } ?>><?php echo esc_html($o['label']); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<span class="wf-padding-add-left-small wf-padding-add-right-small wf-padding-add-top-xs-small wf-padding-add-bottom-xs-small wf-inline-block-xs"><?php _e('then', 'wordfence'); ?></span>
+				<span class="wf-padding-add-left-small wf-padding-add-right-small wf-padding-add-top-xs-small wf-padding-add-bottom-xs-small wf-inline-block-xs"><?php esc_html_e('then', 'wordfence'); ?></span>
 				<select<?php echo (!(!wfConfig::p() && isset($premium) && $premium) ? '' : ' disabled'); ?> id="<?php echo esc_attr($actionID); ?>" class="wf-rate-limit-action" aria-labelledby="<?php echo esc_attr($rateID); ?>-label">
 					<?php foreach ($actionOptions as $o): ?>
 						<option class="wf-option-select-option" value="<?php echo esc_attr($o['value']); ?>"<?php if ($o['value'] == $actionValue) { echo ' selected'; } ?>><?php echo esc_html($o['label']); ?></option>
 					<?php endforeach; ?>
 				</select>
+				<div class="wf-rate-limit-warning"><div class="wf-inline-notice"><i class="wf-fa wf-fa-exclamation-triangle" aria-hidden="true"></i><span>Very strict. May cause false positives.</span></div></div>
 			</li>
 		</ul>
 	</li>

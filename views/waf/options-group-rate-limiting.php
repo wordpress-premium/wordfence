@@ -23,7 +23,7 @@ if (!isset($collapseable)) {
 			<div class="wf-block-header">
 				<div class="wf-block-header-content">
 					<div class="wf-block-title">
-						<strong><?php _e('Rate Limiting', 'wordfence'); ?></strong>
+						<strong><?php esc_html_e('Rate Limiting', 'wordfence'); ?></strong>
 					</div>
 					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
@@ -49,23 +49,11 @@ if (!isset($collapseable)) {
 					</li>
 					<li>
 						<?php
-						echo wfView::create('options/option-toggled', array(
-							'optionName' => 'blockFakeBots',
-							'enabledValue' => 1,
-							'disabledValue' => 0,
-							'value' => wfConfig::get('blockFakeBots') ? 1 : 0,
-							'title' => __('Immediately block fake Google crawlers', 'wordfence'),
-							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_IMMEDIATELY_BLOCK_FAKE_GOOGLE),
-						))->render();
-						?>
-					</li>
-					<li>
-						<?php
 						echo wfView::create('options/option-select', array(
 							'selectOptionName' => 'neverBlockBG',
 							'selectOptions' => array(
-								array('value' => 'neverBlockVerified', 'label' => __('Verified Google crawlers have unlimited access to this site', 'wordfence')),
-								array('value' => 'neverBlockUA', 'label' => __('Anyone claiming to be Google has unlimited access', 'wordfence')),
+								array('value' => 'neverBlockVerified', 'label' => __('Verified Google crawlers will not be rate-limited', 'wordfence')),
+								array('value' => 'neverBlockUA', 'label' => __('Anyone claiming to be Google will not be rate-limited', 'wordfence')),
 								array('value' => 'treatAsOtherCrawlers', 'label' => __('Treat Google like any other Crawler', 'wordfence')),
 							),
 							'selectValue' => wfConfig::get('neverBlockBG'),
@@ -77,20 +65,20 @@ if (!isset($collapseable)) {
 					<?php
 					$rateOptions = array(
 						array('value' => 'DISABLED', 'label' => __('Unlimited', 'wordfence')),
-						array('value' => 1, 'label' => sprintf(__('%d per minute', 'wordfence'), 1)),
-						array('value' => 2, 'label' => sprintf(__('%d per minute', 'wordfence'), 2)),
-						array('value' => 3, 'label' => sprintf(__('%d per minute', 'wordfence'), 3)),
-						array('value' => 4, 'label' => sprintf(__('%d per minute', 'wordfence'), 4)),
-						array('value' => 5, 'label' => sprintf(__('%d per minute', 'wordfence'), 5)),
-						array('value' => 10, 'label' => sprintf(__('%d per minute', 'wordfence'), 10)),
-						array('value' => 15, 'label' => sprintf(__('%d per minute', 'wordfence'), 15)),
-						array('value' => 30, 'label' => sprintf(__('%d per minute', 'wordfence'), 30)),
-						array('value' => 60, 'label' => sprintf(__('%d per minute', 'wordfence'), 60)),
-						array('value' => 120, 'label' => sprintf(__('%d per minute', 'wordfence'), 120)),
-						array('value' => 240, 'label' => sprintf(__('%d per minute', 'wordfence'), 240)),
-						array('value' => 480, 'label' => sprintf(__('%d per minute', 'wordfence'), 480)),
-						array('value' => 960, 'label' => sprintf(__('%d per minute', 'wordfence'), 960)),
-						array('value' => 1920, 'label' => sprintf(__('%d per minute', 'wordfence'), 1920)),
+						array('value' => 1920, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 1920)),
+						array('value' => 960, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 960)),
+						array('value' => 480, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 480)),
+						array('value' => 240, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 240)),
+						array('value' => 120, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 120)),
+						array('value' => 60, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 60)),
+						array('value' => 30, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 30)),
+						array('value' => 15, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 15)),
+						array('value' => 10, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 10)),
+						array('value' => 5, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 5)),
+						array('value' => 4, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 4)),
+						array('value' => 3, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 3)),
+						array('value' => 2, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 2)),
+						array('value' => 1, 'label' => sprintf(/* translators: Number of HTTP requests. */__('%d per minute', 'wordfence'), 1)),
 					);
 					$actionOptions = array(
 						array('value' => 'throttle', 'label' => __('throttle it', 'wordfence')),
@@ -105,6 +93,7 @@ if (!isset($collapseable)) {
 							'rateOptionName' => 'maxGlobalRequests',
 							'rateOptions' => $rateOptions,
 							'rateValue' => wfConfig::get('maxGlobalRequests'),
+							'lowValue' => 120,
 							'actionOptionName' => 'maxGlobalRequests_action',
 							'actionOptions' => $actionOptions,
 							'actionValue' => wfConfig::get('maxGlobalRequests_action'),
@@ -121,6 +110,7 @@ if (!isset($collapseable)) {
 							'rateOptionName' => 'maxRequestsCrawlers',
 							'rateOptions' => $rateOptions,
 							'rateValue' => wfConfig::get('maxRequestsCrawlers'),
+							'lowValue' => 120,
 							'actionOptionName' => 'maxRequestsCrawlers_action',
 							'actionOptions' => $actionOptions,
 							'actionValue' => wfConfig::get('maxRequestsCrawlers_action'),
@@ -137,6 +127,7 @@ if (!isset($collapseable)) {
 							'rateOptionName' => 'max404Crawlers',
 							'rateOptions' => $rateOptions,
 							'rateValue' => wfConfig::get('max404Crawlers'),
+							'lowValue' => 60,
 							'actionOptionName' => 'max404Crawlers_action',
 							'actionOptions' => $actionOptions,
 							'actionValue' => wfConfig::get('max404Crawlers_action'),
@@ -153,6 +144,7 @@ if (!isset($collapseable)) {
 							'rateOptionName' => 'maxRequestsHumans',
 							'rateOptions' => $rateOptions,
 							'rateValue' => wfConfig::get('maxRequestsHumans'),
+							'lowValue' => 120,
 							'actionOptionName' => 'maxRequestsHumans_action',
 							'actionOptions' => $actionOptions,
 							'actionValue' => wfConfig::get('maxRequestsHumans_action'),
@@ -169,6 +161,7 @@ if (!isset($collapseable)) {
 							'rateOptionName' => 'max404Humans',
 							'rateOptions' => $rateOptions,
 							'rateValue' => wfConfig::get('max404Humans'),
+							'lowValue' => 60,
 							'actionOptionName' => 'max404Humans_action',
 							'actionOptions' => $actionOptions,
 							'actionValue' => wfConfig::get('max404Humans_action'),
@@ -198,7 +191,7 @@ if (!isset($collapseable)) {
 						echo wfView::create('options/option-textarea', array(
 							'textOptionName' => 'allowed404s',
 							'textValue' => wfUtils::cleanupOneEntryPerLine(wfConfig::get('allowed404s')),
-							'title' => __('Whitelisted 404 URLs', 'wordfence'),
+							'title' => __('Allowlisted 404 URLs', 'wordfence'),
 							'subtitle' => __('These URL patterns will be excluded from the throttling rules used to limit crawlers.', 'wordfence'),
 							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_WHITELISTED_404),
 						))->render();
@@ -207,6 +200,30 @@ if (!isset($collapseable)) {
 				</ul>
 				<script type="application/javascript">
 					(function($) {
+						WFAD.updateRateLimitDisplay = function(value, lowValue, warningElement) {
+							var hide = true;
+							if (Number.isNaN) { //Anything except IE
+								var originalRateValue = Number.parseInt(value);
+								var lowValue = Number.parseInt(lowValue);
+								if (!Number.isNaN(originalRateValue) && !Number.isNaN(lowValue)) {
+									if (originalRateValue < lowValue) {
+										hide = false;
+									}
+								}
+							}
+							else { //IE
+								var originalRateValue = parseInt(value);
+								var lowValue = parseInt(lowValue);
+								if (!isNaN(originalRateValue) && !isNaN(lowValue)) {
+									if (originalRateValue < lowValue) {
+										hide = false;
+									}
+								}
+							}
+
+							$(warningElement).css('display', hide ? 'none' : 'block');
+						};
+						
 						$(function() {
 							$('.wf-option.wf-option-rate-limit > .wf-option-content > ul > li.wf-option-select select').wfselect2({
 								minimumResultsForSearch: -1
@@ -223,6 +240,8 @@ if (!isset($collapseable)) {
 									else {
 										WFAD.pendingChanges[option] = value;
 									}
+
+									WFAD.updateRateLimitDisplay(value, $(optionElement).data('lowValue'), $(optionElement).find('.wf-rate-limit-warning'));
 								}
 								else if ($(this).hasClass('wf-rate-limit-action')) {
 									var option = optionElement.data('actionOption');
@@ -246,7 +265,13 @@ if (!isset($collapseable)) {
 									$(this).find('.wf-rate-limit-rate').val(originalRateValue).trigger('change');
 									var originalActionValue = $(this).data('originalActionValue');
 									$(this).find('.wf-rate-limit-action').val(originalActionValue).trigger('change');
+									WFAD.updateRateLimitDisplay($(this).data('originalRateValue'), $(this).data('lowValue'), $(this).find('.wf-rate-limit-warning'));
 								});
+							});
+
+							//Initial warning display
+							$('.wf-option.wf-option-rate-limit').each(function() {
+								WFAD.updateRateLimitDisplay($(this).data('originalRateValue'), $(this).data('lowValue'), $(this).find('.wf-rate-limit-warning'));
 							});
 						});
 					})(jQuery);

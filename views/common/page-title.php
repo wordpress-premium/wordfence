@@ -15,9 +15,9 @@
 				<?php endforeach; ?>
 			</h2>
 			<ul class="wf-nav wf-nav-pills wf-visible-xs">
-				<li class="wf-navbar-brand">Go:</li>
+				<li class="wf-navbar-brand"><?php esc_html_e('Go:', 'wordfence') ?></li>
 				<li class="wf-dropdown">
-					<a href="#" id="wordfenceTopTabsMobile" class="wf-dropdown-toggle wf-mobile-dropdown" data-toggle="wf-dropdown"><span id="wordfenceTopTabsMobileTitle">Go to</span> <span class="wf-caret"></span></a>
+					<a href="#" id="wordfenceTopTabsMobile" class="wf-dropdown-toggle wf-mobile-dropdown" data-toggle="wf-dropdown"><span id="wordfenceTopTabsMobileTitle"><?php esc_html_e('Go to', 'wordfence') ?></span> <span class="wf-caret"></span></a>
 					<ul class="wf-dropdown-menu">
 						<?php foreach ($options as $info): ?>
 							<li><a id="<?php echo esc_html($info['a']); ?>-tab-mobile" href="#top#<?php echo esc_html($info['a']); ?>"><?php echo esc_html($info['t']); ?></a></li>

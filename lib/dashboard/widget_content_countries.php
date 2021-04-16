@@ -3,8 +3,8 @@
 <table class="wf-table wf-table-hover">
 	<thead>
 		<tr>
-			<th colspan="2">Country</th>
-			<th>Block Count</th>
+			<th colspan="2"><?php esc_html_e('Country', 'wordfence') ?></th>
+			<th><?php esc_html_e('Block Count', 'wordfence') ?></th>
 		</tr>
 	</thead>
 	<tbody>
