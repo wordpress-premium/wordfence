@@ -684,7 +684,7 @@ SQL
 			wfConfig::set('email_summary_excluded_directories', implode(',', $excluded_directories));
 			wfConfig::set('migration636_email_summary_excluded_directories', 1, wfConfig::DONT_AUTOLOAD);
 		}
-    
+	
 		$fileModsTable = wfDB::networkTable('wfFileMods');
 		$hasSHAC = $wpdb->get_col($wpdb->prepare(<<<SQL
 SELECT * FROM information_schema.COLUMNS
@@ -2051,6 +2051,10 @@ SQL
 			$homeurl = wfUtils::wpHomeURL();
 			$siteurl = wfUtils::wpSiteURL();
 			
+			wfConfig::set('isPaid', 1);
+			wfConfig::set('keyType', wfAPI::KEY_TYPE_PAID_CURRENT);
+			wfConfig::set('premiumNextRenew', time()+31536000);
+			
 			//Sync the GeoIP database if needed
 			$destination = WFWAF_LOG_PATH . '/GeoLite2-Country.mmdb';
 			if (!file_exists($destination) || wfConfig::get('needsGeoIPSync')) {
@@ -2643,11 +2647,11 @@ SQL
 		
 		//Add the 2FA field
 		echo "<p>
-        <label for=\"wfAuthenticationCode\">Authentication Code<br>
-        <input type=\"text\" size=\"6\" class=\"input\" id=\"wordfence_authFactor\" name=\"wordfence_authFactor\" autofocus></label>
-        <input type=\"hidden\" id=\"wordfence_twoFactorUser\" name=\"wordfence_twoFactorUser\" value=\"" . $userID . "\">
-        <input type=\"hidden\" id=\"wordfence_twoFactorNonce\" name=\"wordfence_twoFactorNonce\" value=\"" . $twoFactorNonce . "\">
-    </p>";
+		<label for=\"wfAuthenticationCode\">Authentication Code<br>
+		<input type=\"text\" size=\"6\" class=\"input\" id=\"wordfence_authFactor\" name=\"wordfence_authFactor\" autofocus></label>
+		<input type=\"hidden\" id=\"wordfence_twoFactorUser\" name=\"wordfence_twoFactorUser\" value=\"" . $userID . "\">
+		<input type=\"hidden\" id=\"wordfence_twoFactorNonce\" name=\"wordfence_twoFactorNonce\" value=\"" . $twoFactorNonce . "\">
+	</p>";
 	}
 	private static function verifyTwoFactorIntermediateValues($userID, $twoFactorNonce) {
 		$user = get_user_by('ID', $userID);
@@ -4642,9 +4646,9 @@ SQL
 		
 		$htaccessContent = <<<HTACCESS
 <IfModule mod_rewrite.c>
-        RewriteEngine On
-        RewriteCond %{REQUEST_URI} ^/?{$regexLocalFile}$
-        RewriteRule .* - [F,L,NC]
+		RewriteEngine On
+		RewriteCond %{REQUEST_URI} ^/?{$regexLocalFile}$
+		RewriteRule .* - [F,L,NC]
 </IfModule>
 <IfModule !mod_rewrite.c>
 	<Files "{$filename}">
