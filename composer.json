@@ -1,15 +1,15 @@
 {
-    "name": "wordpress-premium/wordfence-security",
-    "type": "wordpress-plugin",
-	"homepage": "http://www.wordfence.com/",
-	"version": "7.5.2",
-    "require": {
-        "composer/installers": ">=1.0"
-    },
-    "license": "GPLv3 or later",
-	"keywords": [
-		"wordpress",
-		"security",
-		"malware"
-	]
+  "name": "wordpress-premium/wordfence-security",
+  "type": "wordpress-plugin",
+  "homepage": "https://www.wordfence.com/",
+  "version": "7.5.8",
+  "require": {
+    "composer/installers": "^1.6"
+  },
+  "license": "GPLv3 or later",
+  "keywords": [
+    "wordpress",
+    "security",
+    "malware"
+  ]
 }

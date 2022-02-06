@@ -75,5 +75,7 @@ interface wfWAFStorageInterface {
 	public function setRules($rules);
 
 	public function needsInitialRules();
+
+	public function getDescription();
 }
 }

@@ -32,7 +32,7 @@ if (!isset($collapseable)) {
 							<li>
 								<ul id="wf-option-apiKey" class="wf-option wf-option-text" data-text-option="apiKey" data-original-text-value="<?php echo esc_attr(wfConfig::get('apiKey')); ?>">
 									<li class="wf-option-title">
-										<?php esc_html_e('License Key', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_API_KEY); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i></a>
+										<?php esc_html_e('License Key', 'wordfence'); ?> <a href="<?php echo wfSupportController::esc_supportURL(wfSupportController::ITEM_DASHBOARD_OPTION_API_KEY); ?>"  target="_blank" rel="noopener noreferrer" class="wf-inline-help"><i class="wf-fa wf-fa-question-circle-o" aria-hidden="true"></i><span class="screen-reader-text"> (<?php esc_html_e('opens in new tab', 'wordfence') ?>)</span></a>
 									</li>
 									<li class="wf-option-text wf-option-full-width wf-no-right">
 										<input type="text" value="<?php echo esc_attr(wfConfig::get('apiKey')); ?>" id="wf-license-input">
@@ -43,33 +43,29 @@ if (!isset($collapseable)) {
 								<ul class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width">
 									<li><strong><?php esc_html_e('License Status:', 'wordfence'); ?></strong>
 										<?php
-										if (wfConfig::get('hasKeyConflict')) {
-											esc_html_e('Premium License already in use', 'wordfence');
+										if (wfLicense::current()->hasConflict()) {
+											esc_html_e('License already in use', 'wordfence');
 										}
-										else if (wfConfig::get('isPaid')) {
-											esc_html_e('Premium License Active', 'wordfence');
-										}
-										else if (wfConfig::get('keyType') == wfAPI::KEY_TYPE_PAID_EXPIRED) {
-											esc_html_e('Premium License Expired', 'wordfence');
+										else if (wfLicense::current()->isExpired()) {
+											echo esc_html(sprintf(__('%s License Expired', 'wordfence'), wfLicense::current()->getTypeLabel(false)));
 										}
 										else {
-											esc_html_e('Free License Active', 'wordfence');
+											echo esc_html(sprintf(__('%s License Active', 'wordfence'), wfLicense::current()->getTypeLabel()));
 										}
 										?>
 									</li>
 									<li class="wf-right wf-flex-vertical-xs wf-flex-align-left wf-left-xs wf-padding-add-top-xs" id="wf-license-controls">
-										<?php if (wfConfig::get('hasKeyConflict')): ?>
-											<a href="#" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-downgrade-license"><?php esc_html_e('Downgrade to a free license', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="https://www.wordfence.com/gnl1optMngKysReset/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Reset Premium License', 'wordfence'); ?></a>
-										<?php elseif (wfConfig::get('keyExpDays') < 30 && wfConfig::get('premiumAutoRenew', null) === '0'): ?>
-											<a href="#" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-downgrade-license"><?php esc_html_e('Downgrade to a free license', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="https://www.wordfence.com/gnl1optMngKysExpiring/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Renew Premium License', 'wordfence'); ?></a>
-										<?php elseif (wfConfig::get('keyExpDays') < 30 && (wfConfig::get('premiumPaymentExpiring') || wfConfig::get('premiumPaymentExpired') || wfConfig::get('premiumPaymentMissing') || wfConfig::get('premiumPaymentHold'))): ?>
-											<a href="#" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-downgrade-license"><?php esc_html_e('Downgrade to a free license', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="https://www.wordfence.com/gnl1optMngKysExpiring/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Renew Premium License', 'wordfence'); ?></a>
-										<?php elseif (wfConfig::get('isPaid')): ?>
-											<a href="#" class="wf-btn wf-btn-default wf-btn-callout-subtle wf-downgrade-license"><?php esc_html_e('Downgrade to a free license', 'wordfence'); ?></a>&nbsp;&nbsp;<a href="https://www.wordfence.com/gnl1optMngKysReset/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-default wf-btn-callout-subtle"><?php esc_html_e('Renew Premium License', 'wordfence'); ?></a>
-										<?php else: ?>
-											<a href="https://www.wordfence.com/gnl1optUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?></a>
+										<?php if (wfLicense::current()->isAtLeastPremium() || wfLicense::current()->hasConflict()): ?>
+											<a href="#" class="wf-downgrade-license" role="button"><?php esc_html_e('Reset site to a free license', 'wordfence'); ?></a>
 										<?php endif ?>
-										<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle" style="display: none;" id="wf-install-license"><?php esc_html_e('Install License', 'wordfence'); ?></a>
+										<?php if (wfLicense::current()->hasConflict()): ?>
+											<a href="https://www.wordfence.com/gnl1optMngKysReset/licenses/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Reset License', 'wordfence') ?><span class="screen-reader-text"> (<?php esc_html_e('opens in new tab', 'wordfence') ?>)</span></a>
+										<?php elseif (wfLicense::current()->isPaidAndCurrent()): ?>
+											<a href="https://www.wordfence.com/gnl1optMngKys/licenses/" target="_blank" rel="noopener noreferrer" class=""><?php echo esc_html_e('Click here to manage your Wordfence licenses', 'wordfence'); ?><span class="screen-reader-text"> (<?php esc_html_e('opens in new tab', 'wordfence') ?>)</span></a>
+										<?php else: ?>
+											<a href="https://www.wordfence.com/gnl1optUpgrade/products/pricing/" target="_blank" rel="noopener noreferrer" class="wf-btn wf-btn-primary wf-btn-callout-subtle"><?php esc_html_e('Upgrade to Premium', 'wordfence'); ?><span class="screen-reader-text"> (<?php esc_html_e('opens in new tab', 'wordfence') ?>)</span></a>
+										<?php endif ?>
+										<a href="#" class="wf-btn wf-btn-primary wf-btn-callout-subtle" style="display: none;" id="wf-install-license" role="button"><?php esc_html_e('Install License', 'wordfence'); ?></a>
 									</li>
 								</ul>
 								
@@ -80,11 +76,19 @@ if (!isset($collapseable)) {
 												e.preventDefault();
 												e.stopPropagation();
 
-												WFAD.setOption('apiKey', $('#wf-license-input').val(), function() {
-													delete WFAD.pendingChanges['apiKey'];
-													WFAD.updatePendingChanges();
-													window.location.reload(true);
-												});
+												WFAD.setOption(
+													'apiKey',
+													$('#wf-license-input').val(),
+													function() {
+														delete WFAD.pendingChanges['apiKey'];
+														WFAD.updatePendingChanges();
+														window.location.reload(true);
+													},
+													function() {
+														window.location.reload();
+													},
+													true
+												);
 											});
 
 											$('#wf-license-input').on('focus', function() {
@@ -145,10 +149,10 @@ if (!isset($collapseable)) {
 <script type="text/x-jquery-template" id="wfTmpl_downgradePrompt">
 	<?php
 	echo wfView::create('common/modal-prompt', array(
-		'title' => __('Confirm Downgrade', 'wordfence'),
-		'messageHTML' => wp_kses(__('<p>Are you sure you want to downgrade your Wordfence Premium License? This will disable all Premium features and return you to the free version of Wordfence.</p><p>If autorenew is enabled for the current premium license, the license will renew at the next expiration date. If you would like to turn renewal off or assign the license to another site, log into wordfence.com to change it.</p>', 'wordfence'), array('p'=>array())),
+		'title' => __('Confirm Reset', 'wordfence'),
+		'messageHTML' => wp_kses(__('<p>Are you sure you want to reset this site\'s Wordfence License? This will disable Premium features and return the site to the free version of Wordfence. Your settings will still be retained when reinstalling a license.</p><p>If autorenew is enabled for the current license, the license will renew at the next expiration date. If you would like to turn renewal off or assign the license to another site, log into wordfence.com to change it.</p>', 'wordfence'), array('p'=>array())),
 		'primaryButton' => array('id' => 'wf-downgrade-prompt-cancel', 'label' => __('Cancel', 'wordfence'), 'link' => '#'),
-		'secondaryButtons' => array(array('id' => 'wf-downgrade-prompt-downgrade', 'label' => __('Downgrade', 'wordfence'), 'link' => '#')),
+		'secondaryButtons' => array(array('id' => 'wf-downgrade-prompt-downgrade', 'label' => __('Reset', 'wordfence'), 'link' => '#')),
 	))->render();
 	?>
 </script>

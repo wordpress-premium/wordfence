@@ -131,7 +131,7 @@ h6 a:visited { color: purple !important; }
 						network_site_url(),
 						$report_start,
 						$report_end
-					), array('a'=>array('href'=>array()))); ?> <?php if (!wfConfig::get('isPaid')): ?><?php echo wp_kses(__('NOTE: You are using the free version of Wordfence and are missing out on features like cellphone sign-in, country blocking and detecting if your site IP is sending spam. <a href="http://www.wordfence.com/zz6/">Click here to upgrade to Wordfence Premium now</a>.', 'wordfence'), array('a'=>array('href'=>array()))); ?><?php endif ?>
+					), array('a'=>array('href'=>array()))); ?> <?php if (!wfConfig::get('isPaid')): ?><?php echo wp_kses(__('NOTE: You are using the free version of Wordfence and are missing out on features like real-time firewall rule and malware signature updates, country blocking, and detecting if your site IP is sending spam. <a href="http://www.wordfence.com/zz6/">Click here to upgrade to Wordfence Premium now</a>.', 'wordfence'), array('a'=>array('href'=>array()))); ?><?php endif ?>
 				</p>
 
 				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;">

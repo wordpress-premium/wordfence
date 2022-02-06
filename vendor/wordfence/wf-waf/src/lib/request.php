@@ -9,6 +9,8 @@ interface wfWAFRequestInterface {
 	
 	public function getMd5Body();
 
+	public function getJsonBody();
+
 	public function getQueryString();
 	
 	public function getMd5QueryString();
@@ -263,7 +265,8 @@ class wfWAFRequest implements wfWAFRequestInterface {
 			$request->setRawBody('');
 		}
 		else {
-			$request->setRawBody(wfWAFUtils::rawPOSTBody());
+			$rawBody=wfWAFUtils::rawPOSTBody();
+			$request->setRawBody($rawBody);
 		}
 		
 		$request->setQueryString(wfWAFUtils::stripMagicQuotes($_GET));
@@ -343,6 +346,8 @@ class wfWAFRequest implements wfWAFRequestInterface {
 	private $body;
 	private $rawBody;
 	private $md5Body;
+	private $jsonBody;
+	private $jsonParsed = false;
 	private $cookies;
 	private $fileNames;
 	private $files;
@@ -400,6 +405,18 @@ class wfWAFRequest implements wfWAFRequestInterface {
 			return $this->_arrayValueByKeys($this->md5Body, $args);
 		}
 		return $this->md5Body;
+	}
+
+	public function getJsonBody() {
+		if ($this->jsonParsed === false) {
+			if (defined('WFWAF_DISABLE_RAW_BODY') && WFWAF_DISABLE_RAW_BODY) {
+				$this->setJsonBody(null);
+			}
+			else {
+				$this->setJsonBody(wfWAFUtils::json_decode($this->getRawBody(), true));
+			}
+		}
+		return $this->jsonBody;
 	}
 
 	public function getQueryString() {
@@ -592,7 +609,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 		}
 		$queryString = $this->getQueryString();
 		if ($queryString) {
-			$uri .= '?' . http_build_query($queryString, null, '&');
+			$uri .= '?' . http_build_query($queryString, '', '&');
 		}
 		if (!empty($highlights['queryString'])) {
 			foreach ($highlights['queryString'] as $matches) {
@@ -771,7 +788,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 				}
 			}
 			
-			if (preg_match('/^multipart\/form\-data;(?:\s*(?!boundary)(?:[^\x00-\x20\(\)<>@,;:\\"\/\[\]\?\.=]+)=[^;]+;)*\s*boundary=([^;]*)(?:;\s*(?:[^\x00-\x20\(\)<>@,;:\\"\/\[\]\?\.=]+)=[^;]+)*$/i', $contentType, $boundaryMatches)) {
+			if (preg_match('/^multipart\/form\-data;(?:\s*(?!boundary)(?:[^\x00-\x20\(\)<>@,;:\\"\/\[\]\?\.=]+)=[^;]+;)*\s*boundary=([^;]*)(?:;\s*(?:[^\x00-\x20\(\)<>@,;:\\"\/\[\]\?\.=]+)=[^;]+)*$/i', (string) $contentType, $boundaryMatches)) {
 				$boundary = $boundaryMatches[1];
 				$bodyArray = array();
 				foreach ($body as $key => $value) {
@@ -851,7 +868,7 @@ FORM;
 				}
 			}
 			else { //Assume application/x-www-form-urlencoded and re-encode the body
-				$body = http_build_query($body, null, '&');
+				$body = http_build_query($body, '', '&');
 				if (!empty($highlights['body'])) {
 					foreach ($highlights['body'] as $matches) {
 						if (!empty($matches['param'])) {
@@ -987,6 +1004,11 @@ FORM;
 	 */
 	public function setMd5Body($md5Body) {
 		$this->md5Body = $md5Body;
+	}
+
+	public function setJsonBody($jsonBody) {
+		$this->jsonBody = $jsonBody;
+		$this->jsonParsed = true;
 	}
 
 	/**

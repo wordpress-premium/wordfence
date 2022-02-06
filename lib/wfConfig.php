@@ -190,7 +190,7 @@ class wfConfig {
 		//Set as default only, not included automatically in the settings import/export or options page saving
 		'defaultsOnly' => array(
 			"apiKey" => array('value' => "", 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
-			'keyType' => array('value' => wfAPI::KEY_TYPE_FREE, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
+			'keyType' => array('value' => wfLicense::KEY_TYPE_FREE, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'isPaid' => array('value' => false, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
 			'hasKeyConflict' => array('value' => false, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
 			'betaThreatDefenseFeed' => array('value' => false, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
@@ -514,7 +514,15 @@ class wfConfig {
 	public static function setJSON($key, $val, $autoload = self::AUTOLOAD) {
 		self::set($key, @json_encode($val), $autoload);
 	}
-	public static function get($key, $default = false, $allowCached = true) {
+	public static function setOrRemove($key, $value, $autoload = self::AUTOLOAD) {
+		if ($value === null) {
+			self::remove($key);
+		}
+		else {
+			self::set($key, $value, $autoload);
+		}
+	}
+	public static function get($key, $default = false, $allowCached = true, &$isDefault = false) {
 		global $wpdb;
 		
 		if ($allowCached && self::hasCachedOption($key)) {
@@ -522,11 +530,13 @@ class wfConfig {
 		}
 		
 		if (!self::$tableExists) {
+			$isDefault = true;
 			return $default;
 		}
 		
 		$table = self::table();
 		if (!($option = $wpdb->get_row($wpdb->prepare("SELECT name, val, autoload FROM {$table} WHERE name = %s", $key)))) {
+			$isDefault = true;
 			return $default;
 		}
 		
@@ -541,7 +551,9 @@ class wfConfig {
 	}
 	
 	public static function getJSON($key, $default = false, $allowCached = true) {
-		$json = self::get($key, $default, $allowCached);
+		$json = self::get($key, $default, $allowCached, $isDefault);
+		if ($isDefault)
+			return $json;
 		$decoded = @json_decode($json, true);
 		if ($decoded === null) {
 			return $default;
@@ -1771,7 +1783,7 @@ Options -ExecCGI
 					if ($keyData['ok'] && $keyData['apiKey']) {
 						wfConfig::set('apiKey', $keyData['apiKey']);
 						wfConfig::set('isPaid', false);
-						wfConfig::set('keyType', wfAPI::KEY_TYPE_FREE);
+						wfConfig::set('keyType', wfLicense::KEY_TYPE_FREE);
 						wordfence::licenseStatusChanged();
 						wfConfig::set('touppPromptNeeded', true);
 					}
@@ -1793,7 +1805,7 @@ Options -ExecCGI
 						wfConfig::set('isPaid', $isPaid); //res['isPaid'] is boolean coming back as JSON and turned back into PHP struct. Assuming JSON to PHP handles bools.
 						wordfence::licenseStatusChanged();
 						if (!$isPaid) {
-							wfConfig::set('keyType', wfAPI::KEY_TYPE_FREE);
+							wfConfig::set('keyType', wfLicense::KEY_TYPE_FREE);
 						}
 						$ping = true;
 					}
@@ -1812,7 +1824,7 @@ Options -ExecCGI
 			if ($ping) {
 				$api = new wfAPI($apiKey, wfUtils::getWPVersion());
 				try {
-					$keyType = wfAPI::KEY_TYPE_FREE;
+					$keyType = wfLicense::KEY_TYPE_FREE;
 					$keyData = $api->call('ping_api_key', array(), array('supportHash' => wfConfig::get('supportHash', ''), 'whitelistHash' => wfConfig::get('whitelistHash', ''), 'tldlistHash' => wfConfig::get('tldlistHash', '')));
 					if (isset($keyData['_isPaidKey'])) {
 						$keyType = wfConfig::get('keyType');

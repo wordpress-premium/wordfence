@@ -299,6 +299,7 @@ class wfWAFBaseParser {
 	protected $index;
 	/** @var wfWAFLexerInterface */
 	protected $lexer;
+	protected $checkpoint=0;
 
 	public function __construct($lexer) {
 		$this->lexer = $lexer;
@@ -426,6 +427,15 @@ class wfWAFBaseParser {
 	public function setTokens($tokens) {
 		$this->tokens = $tokens;
 	}
+
+	protected function setCheckpoint() {
+		$this->checkpoint=$this->index;
+	}
+
+	protected function reset() {
+		$this->index=$this->checkpoint;
+	}
+
 }
 
 /**

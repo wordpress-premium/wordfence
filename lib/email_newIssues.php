@@ -109,6 +109,8 @@ foreach ($severitySections as $severityLevel => $severityLabel):
 		}
 	}
 	if (isset($i['tmplData']['wpURL'])) {
+		if(!empty($i['tmplData']['vulnerable']))
+			echo '<br>';
 		echo $i['tmplData']['wpURL'] . '/#developers';
 	}
 	if ($showWPParagraph) {

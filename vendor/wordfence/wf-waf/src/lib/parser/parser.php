@@ -206,26 +206,63 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 		return $comparisonGroup;
 	}
 
-	private function parseComparison() {
+	private function parseComparison($expectLiteral = true) {
 		/**
 		 * @var wfWAFLexerToken $actionToken
 		 * @var wfWAFLexerToken $expectedToken
 		 */
+		$this->setCheckpoint();
 		$actionToken = $this->currentToken();
 		$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_OPEN_PARENTHESIS);
-		$value = $this->expectLiteral();
+		$value=null;
+		if($expectLiteral) {
+			try {
+				$value = $this->expectLiteral(array(wfWAFRuleLexer::T_CLOSE_PARENTHESIS));
+				if ($value === null && $expectLiteral) {
+					$this->index--;
+				}
+			}
+			catch(wfWAFParserSyntaxError $e) {
+				if($expectLiteral) {
+					$this->reset();
+					return $this->parseComparison(false);
+				}
+				throw $e;
+			}
+		}
 
 		$subjects = array();
-		while (true) {
-			$commaToken = $this->nextToken();
-			if (!($commaToken && $commaToken->getType() === wfWAFRuleLexer::T_COMMA)) {
-				$this->index--;
-				break;
+		$nextToken = $this->nextToken();
+		if ($value!==null||!$expectLiteral) {
+			while (true) {
+				if ($nextToken && $nextToken->getType() === wfWAFRuleLexer::T_CLOSE_PARENTHESIS) {
+					break;
+				}
+				if (!($nextToken && $nextToken->getType() === wfWAFRuleLexer::T_COMMA)) {
+					if(empty($subjects) && $expectLiteral) {
+						$this->reset();
+						return $this->parseComparison(false);
+					}
+					$this->index--;
+					if(!empty($subjects))
+						break;
+				}
+				list($filters, $subject) = $this->parseFilters();
+				$current = new wfWAFRuleComparisonSubject($this->getWAF(), $subject, $filters);
+				$nextToken = $this->expectNextToken();
+				if (in_array($nextToken->getType(), array(wfWAFRuleLexer::T_DOT, wfWAFRuleLexer::T_OPEN_BRACKET))) {
+					$this->index--;
+					$childSubject = $this->parseSubject(false);
+					if (!is_array($childSubject) )
+						$childSubject = array($childSubject);
+					array_unshift($childSubject, $current);
+					$current = new wfWAFRuleComparisonSubject($this->getWAF(), $childSubject, array());
+					$nextToken = $this->expectNextToken();
+				}
+				$subjects[] = $current;
 			}
-			list($filters, $subject) = $this->parseFilters();
-			$subjects[] = new wfWAFRuleComparisonSubject($this->getWAF(), $subject, $filters);
+			$this->expectTokenTypeEquals($nextToken, wfWAFRuleLexer::T_CLOSE_PARENTHESIS);
 		}
-		$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_CLOSE_PARENTHESIS);
 
 		$comparison = new wfWAFRuleComparison($this->getWAF(), $actionToken->getValue(), $value, $subjects);
 		return $comparison;
@@ -284,7 +321,7 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 					break 2;
 
 				case wfWAFRuleLexer::T_OPEN_PARENTHESIS:
-					$filters[] = $globalToken->getValue();
+					array_unshift($filters, array($globalToken->getValue()));
 					break;
 
 				default:
@@ -297,7 +334,16 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 			throw new wfWAFParserSyntaxError('No subject supplied to filter');
 		}
 		for ($i = 0; $i < count($filters); $i++) {
-			$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_CLOSE_PARENTHESIS);
+			do {
+				$next = $this->expectNextToken();
+				$this->expectTokenTypeInArray($next, array(wfWAFRuleLexer::T_CLOSE_PARENTHESIS, wfWAFRuleLexer::T_COMMA));
+				if ($next->getType() === wfWAFRuleLexer::T_COMMA) {
+					$filters[$i][] = $this->expectLiteral();
+				}
+				else {
+					break;
+				}
+			} while(true);
 		}
 		return array($filters, $subject);
 	}
@@ -305,15 +351,20 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 	/**
 	 * @throws wfWAFParserSyntaxError
 	 */
-	private function parseSubject() {
-		$globalToken = $this->expectNextToken();
-		$this->expectTokenTypeEquals($globalToken, wfWAFRuleLexer::T_IDENTIFIER);
-		$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_DOT);
-		$globalToken2 = $this->expectNextToken();
-		$this->expectTokenTypeEquals($globalToken2, wfWAFRuleLexer::T_IDENTIFIER);
-		$subject = array(
-			$globalToken->getValue() . '.' . $globalToken2->getValue(),
-		);
+	private function parseSubject($global = true) {
+		if ($global) {
+			$globalToken = $this->expectNextToken();
+			$this->expectTokenTypeEquals($globalToken, wfWAFRuleLexer::T_IDENTIFIER);
+			$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_DOT);
+			$globalToken2 = $this->expectNextToken();
+			$this->expectTokenTypeEquals($globalToken2, wfWAFRuleLexer::T_IDENTIFIER);
+			$subject = array(
+				$globalToken->getValue() . '.' . $globalToken2->getValue(),
+			);
+		}
+		else {
+			$subject = array();
+		}
 		$savePoint = $this->index;
 		while (($property = $this->parsePropertyAccessor()) !== false) {
 			$subject[] = $property;
@@ -398,15 +449,15 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 	 * @return mixed|string
 	 * @throws wfWAFRuleParserSyntaxError
 	 */
-	private function expectLiteral() {
+	private function expectLiteral($allowExtra = array()) {
 		$expectedToken = $this->expectNextToken();
-		$this->expectTokenTypeInArray($expectedToken, array(
+		$this->expectTokenTypeInArray($expectedToken, array_merge(array(
 			wfWAFRuleLexer::T_SINGLE_STRING_LITERAL,
 			wfWAFRuleLexer::T_DOUBLE_STRING_LITERAL,
 			wfWAFRuleLexer::T_IDENTIFIER,
 			wfWAFRuleLexer::T_NUMBER_LITERAL,
 			wfWAFRuleLexer::T_OPEN_BRACKET,
-		));
+		), $allowExtra));
 		if ($expectedToken->getType() === wfWAFRuleLexer::T_SINGLE_STRING_LITERAL) {
 			// Remove quotes, strip slashes
 			$value = wfWAFUtils::substr($expectedToken->getValue(), 1, -1);
@@ -431,6 +482,8 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 				$this->index--;
 				$value[] = $this->expectLiteral();
 			}
+		} else if (in_array($expectedToken->getType(), $allowExtra)) {
+		   return null;
 		} else {
 			$value = $expectedToken->getValue();
 		}

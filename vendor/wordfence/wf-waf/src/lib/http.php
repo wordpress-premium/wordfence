@@ -314,7 +314,7 @@ class wfWAFHTTPTransportCurl extends wfWAFHTTPTransport {
 		$url = $request->getUrl();
 		if ($queryString = $request->getQueryString()) {
 			if (is_array($queryString)) {
-				$queryString = http_build_query($queryString, null, '&');
+				$queryString = http_build_query($queryString, '', '&');
 			}
 			$url .= (wfWAFUtils::strpos($url, '?') !== false ? '&' : '?') . $queryString;
 		}
@@ -367,6 +367,7 @@ class wfWAFHTTPTransportCurl extends wfWAFHTTPTransport {
 			$response = new wfWAFHTTPResponse();
 			$response->setBody($body);
 			$response->setHeaders($header);
+			$response->setStatusCode(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 			return $response;
 		}
 		return false;
@@ -387,7 +388,7 @@ class wfWAFHTTPTransportStreams extends wfWAFHTTPTransport {
 		$url = $request->getUrl();
 		if ($queryString = $request->getQueryString()) {
 			if (is_array($queryString)) {
-				$queryString = http_build_query($queryString, null, '&');
+				$queryString = http_build_query($queryString, '', '&');
 			}
 			$url .= (wfWAFUtils::strpos($url, '?') !== false ? '&' : '?') . $queryString;
 		}
