@@ -3,8 +3,8 @@ Contributors: mmaunder, wfryan, wfmatt, wfmattr
 Tags: security, firewall, malware scanner, web application firewall, two factor authentication, block hackers, country blocking, clean hacked site, blocklist, waf, login security
 Requires at least: 3.9
 Requires PHP: 5.3
-Tested up to: 5.9
-Stable tag: 7.5.8
+Tested up to: 6.0
+Stable tag: 7.5.11
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,38 @@ Secure your website with Wordfence.
 9. Logging in is easy with Wordfence 2FA.
 
 == Changelog ==
+
+= 7.5.11 - June 14, 2022 =
+* Improvement: Added option to toggle display of last login column on WP Users page
+* Improvement: Improved autocomplete support for 2FA code on Apple devices
+* Improvement: Prevented Batcache from caching block pages
+* Improvement: Updated GeoIP database
+* Fix: Prevented extraneous scan results when non-existent paths are configured using UPLOADS and related constants
+* Fix: Corrected issue that prevented reCAPTCHA scores from being recorded
+* Fix: Prevented invalid JSON setting values from triggering fatal errors
+* Fix: Made text domains consistent for translation support
+* Fix: Clarified that allowlisted IP addresses also bypass reCAPTCHA
+
+= 7.5.10 - May 17, 2022 =
+* Improvement: Improved scan support for sites with non-standard directory structures
+* Improvement: Increased accuracy of executable PHP upload detection
+* Improvement: Addressed various deprecation notices with PHP 8.1
+* Improvement: Improved handling of invalidated license keys
+* Fix: Corrected lost password redirect URL when used with WooCommerce
+* Fix: Prevented errors when live traffic data exceeds database column length
+* Fix: Prevented bulk password resets from locking out admins
+* Fix: Corrected issue that prevented saving country blocking settings in certain cases
+* Change: Updated copyright information
+
+= 7.5.9 - March 22, 2022 =
+* Improvement: Updated GeoIP database
+* Improvement: Removed blocking data update logic in order to reduce timeouts
+* Improvement: Increased timeout value for API calls in order to reduce timeouts
+* Improvement: Clarified notification count on Wordfence menu
+* Improvement: Improved scan compatibility with WooCommerce
+* Improvement: Added messaging when application passwords are disabled
+* Fix: Prevented warnings and errors when constants are defined based on the value of other constants in wp-config.php
+* Fix: Corrected redundant escaping that prevented viewing or repairing files in scan results
 
 = 7.5.8 - February 1, 2022 =
 * Launch of Wordfence Care and Wordfence Response
