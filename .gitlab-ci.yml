@@ -1,0 +1,14 @@
+# Add `dast` to your `stages:` configuration
+stages:
+  - dast
+
+# Include the DAST template
+include:
+  - template: DAST.gitlab-ci.yml
+
+# Your selected site and scanner profiles:
+dast:
+  stage: dast
+  dast_configuration:
+    site_profile: "Standard"
+    scanner_profile: "Standard"
