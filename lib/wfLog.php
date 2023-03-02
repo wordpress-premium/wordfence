@@ -10,6 +10,7 @@ class wfLog {
 	private $wp_version = '';
 	private $db = false;
 	private $googlePattern = '/\.(?:googlebot\.com|google\.[a-z]{2,3}|google\.[a-z]{2}\.[a-z]{2}|1e100\.net)$/i';
+	private $loginsTable, $statusTable;
 	private static $gbSafeCache = array();
 
 	/**
@@ -89,11 +90,7 @@ class wfLog {
 		$this->wp_version = $wp_version;
 		$this->hitsTable = wfDB::networkTable('wfHits');
 		$this->loginsTable = wfDB::networkTable('wfLogins');
-		$this->blocksTable = wfBlock::blocksTable();
-		$this->lockOutTable = wfDB::networkTable('wfLockedOut');
-		$this->throttleTable = wfDB::networkTable('wfThrottleLog');
 		$this->statusTable = wfDB::networkTable('wfStatus');
-		$this->ipRangesTable = wfDB::networkTable('wfBlocksAdv');
 		
 		add_filter('determine_current_user', array($this, '_userIDDetermined'), 99, 1);
 	}
@@ -347,6 +344,15 @@ class wfLog {
 		return $results;
 	}
 
+	private function processActionDescription($description) {
+		switch ($description) {
+		case wfWAFIPBlocksController::WFWAF_BLOCK_UAREFIPRANGE:
+			return __('UA/Hostname/Referrer/IP Range not allowed', 'wordfence');
+		default:
+			return $description;
+		}
+	}
+
 	/**
 	 * @param string $type
 	 * @param array $results
@@ -370,6 +376,8 @@ class wfLog {
 			$res['blocked'] = false;
 			$res['rangeBlocked'] = false;
 			$res['ipRangeID'] = -1;
+			if (array_key_exists('actionDescription', $res))
+				$res['actionDescription'] = $this->processActionDescription($res['actionDescription']);
 			
 			$ipBlock = wfBlock::findIPBlock($res['IP']);
 			if ($ipBlock !== false) {
@@ -1987,7 +1995,7 @@ class wfErrorLogHandler {
 		if ($errorLogs === null) {
 			$searchPaths = array(ABSPATH, ABSPATH . 'wp-admin', ABSPATH . 'wp-content');
 			
-			$homePath = get_home_path();
+			$homePath = wfUtils::getHomePath();
 			if (!in_array($homePath, $searchPaths)) {
 				$searchPaths[] = $homePath;
 			}

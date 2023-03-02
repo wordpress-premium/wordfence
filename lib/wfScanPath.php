@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/wfFileUtils.php';
 require_once __DIR__ . '/wfScanFile.php';
+require_once __DIR__ . '/wfScanFileLink.php';
 
 class wfScanPath {
 
@@ -52,10 +53,15 @@ class wfScanPath {
 	}
 
 	public function createScanFile($relativePath) {
-		return new wfScanFile(
-			wfFileUtils::realPath(wfFileUtils::joinPaths($this->realPath, $relativePath)),
-			wfFileUtils::trimSeparators(wfFileUtils::joinPaths($this->wordpressPath, $relativePath), true, false)
-		);
+		$path = wfFileUtils::joinPaths($this->realPath, $relativePath);
+		$realPath = wfFileUtils::realPath($path);
+		$wordpressPath = wfFileUtils::trimSeparators(wfFileUtils::joinPaths($this->wordpressPath, $relativePath), true, false);
+		if (is_link($path)) {
+			return new wfScanFileLink($path, $realPath, $wordpressPath);
+		}
+		else {
+			return new wfScanFile($realPath, $wordpressPath);
+		}
 	}
 
 	public function __toString() {

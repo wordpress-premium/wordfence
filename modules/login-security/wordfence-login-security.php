@@ -26,8 +26,8 @@ if ($wfCoreActive && !(isset($wfCoreLoading) && $wfCoreLoading)) {
 else {
 	define('WORDFENCE_LS_FROM_CORE', ($wfCoreActive && isset($wfCoreLoading) && $wfCoreLoading));
 	
-	define('WORDFENCE_LS_VERSION', '1.0.10');
-	define('WORDFENCE_LS_BUILD_NUMBER', '1655226500');
+	define('WORDFENCE_LS_VERSION', '1.1.1');
+	define('WORDFENCE_LS_BUILD_NUMBER', '1677680064');
 
 	define('WORDFENCE_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 	
@@ -69,15 +69,8 @@ else {
 				$path .= '/' . strtolower($components[$i]);
 			}
 			
-			if (preg_match('/^Controller_([a-z0-9]+)$/i', $components[count($components) - 1], $matches)) {
-				$path = dirname(__FILE__) . '/classes/controller' . $path . '/' . strtolower($matches[1]) . '.php';
-				if (file_exists($path)) {
-					require_once($path);
-					return true;
-				}
-			}
-			else if (preg_match('/^Model_([a-z0-9]+)$/i', $components[count($components) - 1], $matches)) {
-				$path = dirname(__FILE__) . '/classes/model' . $path . '/' . strtolower($matches[1]) . '.php';
+			if (preg_match('/^(Controller|Model|Utility)_([a-z0-9]+)$/i', $components[count($components) - 1], $matches)) {
+				$path = dirname(__FILE__) . '/classes/' . strtolower($matches[1]) . $path . '/' . strtolower($matches[2]) . '.php';
 				if (file_exists($path)) {
 					require_once($path);
 					return true;

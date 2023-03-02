@@ -39,6 +39,7 @@ class wordfenceScanner {
 											);
 	/** @var wfScanEngine */
 	protected $scanEngine;
+	private $urlHoover;
 
 	public function __sleep(){
 		return array('path', 'results', 'errorMsg', 'apiKey', 'wordpressVersion', 'urlHoover', 'totalFilesScanned',
@@ -352,8 +353,7 @@ class wordfenceScanner {
 									'file' => $file,
 									'realFile' => $record->realPath,
 									'shac' => $record->SHAC,
-									'highSense' => $options['scansEnabled_highSense'],
-									'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+									'highSense' => $options['scansEnabled_highSense']
 								), $dataForFile),
 							));
 							break;
@@ -414,14 +414,13 @@ class wordfenceScanner {
 											'severity' => wfIssues::SEVERITY_CRITICAL,
 											'ignoreP' => $record->realPath,
 											'ignoreC' => $fileSum,
-											'shortMsg' => sprintf(__('File appears to be malicious or unsafe: %s', 'wordfence'), esc_html($file)),
+											'shortMsg' => sprintf(__('File appears to be malicious or unsafe: %s', 'wordfence'), esc_html($record->getDisplayPath())),
 											'longMsg' => $customMessage . ' ' . sprintf(__('The matched text in this file is: %s', 'wordfence'), '<strong style="color: #F00;" class="wf-split-word">' . wfUtils::potentialBinaryStringToHTML((wfUtils::strlen($matchString) > 200 ? wfUtils::substr($matchString, 0, 200) . '...' : $matchString)) . '</strong>') . ' ' . '<br><br>' . sprintf(/* translators: Scan result type. */ __('The issue type is: %s', 'wordfence'), '<strong>' . esc_html($rule[7]) . '</strong>') . '<br>' . sprintf(/* translators: Scan result description. */ __('Description: %s', 'wordfence'), '<strong>' . esc_html($rule[3]) . '</strong>') . $extraMsg,
 											'data' => array_merge(array(
 												'file' => $file,
 												'realFile' => $record->realPath,
 												'shac' => $record->SHAC,
-												'highSense' => $options['scansEnabled_highSense'],
-												'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+												'highSense' => $options['scansEnabled_highSense']
 											), $dataForFile),
 										));
 									}
@@ -456,14 +455,13 @@ class wordfenceScanner {
 									'severity' => wfIssues::SEVERITY_CRITICAL,
 									'ignoreP' => $record->realPath,
 									'ignoreC' => $fileSum,
-									'shortMsg' => __('This file may contain malicious executable code: ', 'wordfence') . esc_html($file),
+									'shortMsg' => __('This file may contain malicious executable code: ', 'wordfence') . esc_html($record->getDisplayPath()),
 									'longMsg' => sprintf(/* translators: Malware signature matched text. */ __('This file is a PHP executable file and contains the word "eval" (without quotes) and the word "%s" (without quotes). The eval() function along with an encoding function like the one mentioned are commonly used by hackers to hide their code. If you know about this file you can choose to ignore it to exclude it from future scans. This file was detected because you have enabled HIGH SENSITIVITY scanning. This option is more aggressive than the usual scans, and may cause false positives.', 'wordfence'), '<span class="wf-split-word">' . esc_html($badStringFound) . '</span>'),
  									'data' => array_merge(array(
 										'file' => $file,
 										'realFile' => $record->realPath,
 										'shac' => $record->SHAC,
-										'highSense' => $options['scansEnabled_highSense'],
-										'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+										'highSense' => $options['scansEnabled_highSense']
 									), $dataForFile),
 								));
 								break;
@@ -523,7 +521,7 @@ class wordfenceScanner {
 							'severity' => wfIssues::SEVERITY_CRITICAL,
 							'ignoreP' => $record->realPath,
 							'ignoreC' => md5_file($record->realPath),
-							'shortMsg' => __('File contains suspected malware URL: ', 'wordfence') . esc_html($file),
+							'shortMsg' => __('File contains suspected malware URL: ', 'wordfence') . esc_html($record->getDisplayPath()),
 							'longMsg' => wp_kses(sprintf(
 								/* translators: 1. Malware signature matched text. 2. Malicious URL. 3. Malicious URL. */
 								__('This file contains a suspected malware URL listed on Google\'s list of malware sites. Wordfence decodes %1$s when scanning files so the URL may not be visible if you view this file. The URL is: %2$s - More info available at <a href="http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%3$s&client=googlechrome&hl=en-US" target="_blank" rel="noopener noreferrer">Google Safe Browsing diagnostic page<span class="screen-reader-text"> (opens in new tab)</span></a>.', 'wordfence'),
@@ -537,8 +535,7 @@ class wordfenceScanner {
 								'shac' => $record->SHAC,
 								'badURL' => $result['URL'],
 								'gsb' => 'goog-malware-shavar',
-								'highSense' => $options['scansEnabled_highSense'],
-								'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+								'highSense' => $options['scansEnabled_highSense']
 							), $dataForFile),
 						));
 					}
@@ -548,7 +545,7 @@ class wordfenceScanner {
 							'severity' => wfIssues::SEVERITY_CRITICAL,
 							'ignoreP' => $record->realPath,
 							'ignoreC' => md5_file($record->realPath),
-							'shortMsg' => __('File contains suspected phishing URL: ', 'wordfence') . esc_html($file),
+							'shortMsg' => __('File contains suspected phishing URL: ', 'wordfence') . esc_html($record->getDisplayPath()),
 							'longMsg' => __('This file contains a URL that is a suspected phishing site that is currently listed on Google\'s list of known phishing sites. The URL is: ', 'wordfence') . esc_html($result['URL']),
 							'data' => array_merge(array(
 								'file' => $file,
@@ -556,8 +553,7 @@ class wordfenceScanner {
 								'shac' => $record->SHAC,
 								'badURL' => $result['URL'],
 								'gsb' => 'googpub-phish-shavar',
-								'highSense' => $options['scansEnabled_highSense'],
-								'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+								'highSense' => $options['scansEnabled_highSense']
 							), $dataForFile),
 						));
 					}
@@ -567,7 +563,7 @@ class wordfenceScanner {
 							'severity' => wfIssues::SEVERITY_CRITICAL,
 							'ignoreP' => $record->realFile,
 							'ignoreC' => md5_file($record->realPath),
-							'shortMsg' => __('File contains suspected malware URL: ', 'wordfence') . esc_html($file),
+							'shortMsg' => __('File contains suspected malware URL: ', 'wordfence') . esc_html($record->getDisplayPath()),
 							'longMsg' => __('This file contains a URL that is currently listed on Wordfence\'s domain blocklist. The URL is: ', 'wordfence') . esc_html($result['URL']),
 							'data' => array_merge(array(
 								'file' => $file,
@@ -575,8 +571,7 @@ class wordfenceScanner {
 								'shac' => $record->SHAC,
 								'badURL' => $result['URL'],
 								'gsb' => 'wordfence-dbl',
-								'highSense' => $options['scansEnabled_highSense'],
-								'betaSigs' => wfConfig::get('betaThreatDefenseFeed'),
+								'highSense' => $options['scansEnabled_highSense']
 							), $dataForFile),
 						));
 					}
@@ -688,11 +683,11 @@ class wordfenceScanner {
 		$canRegenerate = false;
 		if ($fullPath !== null) {
 			$bootstrapPath = wordfence::getWAFBootstrapPath();
-			$htaccessPath = get_home_path() . '.htaccess';
+			$htaccessPath = wfUtils::getHomePath() . '.htaccess';
 			$userIni = ini_get('user_ini.filename');
 			$userIniPath = false;
 			if ($userIni) {
-				$userIniPath = get_home_path() . $userIni;
+				$userIniPath = wfUtils::getHomePath() . $userIni;
 			}
 			
 			if ($fullPath == $htaccessPath) {
@@ -828,5 +823,11 @@ class wordfenceMalwareScanFile {
 		$db = self::getDB();
 		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET isSafeFile = '0' WHERE filenameMD5 = '%s'", $this->filenameMD5);
 		$this->isSafeFile = '0';
+	}
+
+	public function getDisplayPath() {
+		if (preg_match('#(^|/)..(/|$)#', $this->filename))
+			return $this->realPath;
+		return $this->filename;
 	}
 }

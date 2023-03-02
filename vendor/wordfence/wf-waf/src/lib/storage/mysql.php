@@ -30,7 +30,7 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 	public function __construct($engine, $tablePrefix = 'wp_', $shutdownRegistry = null) {
 		$this->db = $engine;
 		$this->tablePrefix = $tablePrefix;
-		$this->shutdownRegistry = $shutdownRegistry;
+		$this->shutdownRegistry = $shutdownRegistry === null ? wfShutdownRegistry::getDefaultInstance() : $shutdownRegistry;
 	}
 
 	public function usingLowercase() {
@@ -576,7 +576,6 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 				'disableWAFIPBlocking',
 				'advancedBlockingEnabled',
 				'blockCustomText',
-				'betaThreatDefenseFeed',
 				'whitelistedServiceIPs'
 			),
 		);

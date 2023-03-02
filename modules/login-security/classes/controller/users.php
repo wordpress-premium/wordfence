@@ -4,6 +4,7 @@ namespace WordfenceLS;
 
 use WordfenceLS\Crypto\Model_JWT;
 use WordfenceLS\Crypto\Model_Symmetric;
+use RuntimeException;
 
 class Controller_Users {
 	const RECOVERY_CODE_COUNT = 5;
@@ -12,6 +13,12 @@ class Controller_Users {
 	const META_KEY_GRACE_PERIOD_RESET = 'wfls-grace-period-reset';
 	const META_KEY_GRACE_PERIOD_OVERRIDE = 'wfls-grace-period-override';
 	const META_KEY_ALLOW_GRACE_PERIOD = 'wfls-allow-grace-period';
+	const META_KEY_VERIFICATION_TOKENS = 'wfls-verification-tokens';
+	const VERIFICATION_TOKEN_BYTES = 64;
+	const VERIFICATION_TOKEN_LIMIT = 5; //Max number of concurrent tokens
+	const VERIFICATION_TOKEN_TRANSIENT_PREFIX = 'wfls_verify_';
+	const LARGE_USER_BASE_THRESHOLD = 1000;
+	const TRUNCATED_ROLE_KEY = 1;
 	
 	/**
 	 * Returns the singleton Controller_Users.
@@ -369,59 +376,110 @@ class Controller_Users {
 		return array('active_users' => $active_users, 'inactive_users' => max($total_users - $active_users, 0));
 	}
 	
-	public function detailed_user_counts() {
+	public function detailed_user_counts($force = false) {
 		global $wpdb;
 		
-		//Base counts
-		$counts = count_users();
-		
-		//Adaptation of the source of the above call to get enabled counts
-		$site_id = get_current_blog_id();
-		$blog_prefix = $wpdb->get_blog_prefix($site_id);
-		$roles = new \WP_Roles();
-		if (is_multisite() && get_current_blog_id() != $site_id) {
-			switch_to_blog($site_id);
-			$avail_roles = $roles->get_names();
-			restore_current_blog();
+		$blog_prefix = $wpdb->get_blog_prefix();
+		$wp_roles = new \WP_Roles();
+		$roles = $wp_roles->get_names();
+
+		$counts = array();
+		$groups = array('avail_roles' => 0, 'active_avail_roles' => 0);
+
+		foreach ($groups as $group => $count) {
+			$counts[$group] = array();
+			foreach ($roles as $role_key => $role_name) {
+				$counts[$group][$role_key] = 0;
+			}
+			$counts[$group][self::TRUNCATED_ROLE_KEY] = 0;
+		}
+
+		$dbController = Controller_DB::shared();
+
+		if ($dbController->create_temporary_role_counts_table()) {
+			$lock = new Utility_NullLock();
+			$role_counts_table = $dbController->role_counts_temporary;
 		}
 		else {
-			$avail_roles = $roles->get_names();
+			$lock = new Utility_DatabaseLock($dbController, 'role-count-calculation');
+			$role_counts_table = $dbController->role_counts;
 		}
-		
-		// Build a CPU-intensive query that will return concise information.
-		$select_count = array();
-		foreach ($avail_roles as $this_role => $name) {
-			if (!method_exists($wpdb, 'esc_like')) {
-				$like = addcslashes('"' . $this_role . '"', '_%\\'); //for WP < 4.0
-			}
-			else {
-				$like = $wpdb->esc_like('"' . $this_role . '"');
-			}
-			$select_count[] = $wpdb->prepare("COUNT(NULLIF(`meta_value` LIKE %s, false))", '%' . $like . '%');
+
+		try {
+			$lock->acquire();
+
+			if(!$force && Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE))
+				throw new RuntimeException('Previous user count query failed to completed successfully. User count queries are currently disabled');
+			Controller_Settings::shared()->set(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE, true);
+
+			$dbController->require_schema_version(2);
+			$secrets_table = $dbController->secrets;
+
+			$dbController->query("TRUNCATE {$role_counts_table}");
+			$dbController->query($wpdb->prepare(<<<SQL
+				INSERT INTO {$role_counts_table}
+				SELECT
+					um.meta_value AS serialized_roles,
+					s.user_id IS NULL AS two_factor_inactive,
+					1 AS user_count
+				FROM
+					{$wpdb->usermeta} um
+				INNER JOIN {$wpdb->users} u ON u.ID = um.user_id
+				LEFT JOIN {$secrets_table} s ON s.user_id = u.ID
+				WHERE
+					meta_key = %s
+				ON DUPLICATE KEY
+					UPDATE user_count = user_count + 1;
+SQL
+			, "{$blog_prefix}capabilities"));
+
+			$results = $wpdb->get_results(<<<SQL
+				SELECT
+					serialized_roles AS serialized_roles,
+					two_factor_inactive,
+					user_count
+				FROM
+					{$role_counts_table};
+SQL
+			, OBJECT);
+
+			Controller_Settings::shared()->set(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE, false);
 		}
-		$select_count[] = "COUNT(NULLIF(`meta_value` = 'a:0:{}', false))";
-		$select_count = implode(', ', $select_count);
-		
-		// Add the meta_value index to the selection list, then run the query.
-		$table = Controller_DB::shared()->secrets;
-		$row = $wpdb->get_row("
-			SELECT {$select_count}, COUNT(*)
-			FROM {$wpdb->usermeta} um
-			INNER JOIN {$table} tf ON um.user_id = tf.user_id
-			WHERE meta_key = '{$blog_prefix}capabilities'
-		", ARRAY_N);
-		
-		// Run the previous loop again to associate results with role names.
-		$col = 0;
-		$role_counts = array();
-		foreach ($avail_roles as $this_role => $name) {
-			$count = (int) $row[$col++];
-			if ($count > 0) {
-				$role_counts[$this_role] = $count;
+		catch (RuntimeException $e) {
+			$lock->release(); //Finally is not supported in older PHP versions, so it is necessary to release the lock in two places
+			return false;
+		}
+		$lock->release();
+
+		foreach ($results as $row) {
+			$truncated_role = false;
+			try {
+				$row_roles = Utility_Serialization::unserialize($row->serialized_roles, array('allowed_classes' => false), 'is_array');
+			}
+			catch (RuntimeException $e) {
+				$row_roles = array(self::TRUNCATED_ROLE_KEY => true);
+				$truncated_role = true;
+			}
+			foreach ($row_roles as $row_role => $state) {
+				if ($state !== true || (!$truncated_role && !is_string($row_role)))
+					continue;
+				if (array_key_exists($row_role, $roles) || $row_role === self::TRUNCATED_ROLE_KEY) {
+					foreach ($groups as $group => &$group_count) {
+						if ($group === 'active_avail_roles' && $row->two_factor_inactive)
+							continue;
+						$counts[$group][$row_role] += $row->user_count;
+						$group_count += $row->user_count;
+					}
+				}
 			}
 		}
-		
-		$role_counts['none'] = (int) $row[$col++];
+
+		foreach ($roles as $role_key => $role_name) {
+			if ($counts['avail_roles'][$role_key] === 0 && $counts['active_avail_roles'][$role_key] === 0) {
+				unset($counts['avail_roles'][$role_key]);
+				unset($counts['active_avail_roles'][$role_key]);
+			}
+		}
 
 		// Separately add super admins for multisite
 		if (is_multisite()) {
@@ -435,14 +493,11 @@ class Controller_Users {
 				}
 			}
 			$counts['avail_roles']['super-admin'] = $superAdmins;
-			$role_counts['super-admin'] = $activeSuperAdmins;
+			$counts['active_avail_roles']['super-admin'] = $activeSuperAdmins;
 		}
 		
-		// Get the meta_value index from the end of the result set.
-		$total_users = (int) $row[$col];
-		
-		$counts['active_total_users'] = $total_users;
-		$counts['active_avail_roles'] =& $role_counts;
+		$counts['total_users'] = $groups['avail_roles'];
+		$counts['active_total_users'] = $groups['active_avail_roles'];
 
 		return $counts;
 	}
@@ -527,7 +582,7 @@ class Controller_Users {
 				break;
 			case 'wfls_last_login':
 				$value = '-';
-				if (($last = get_user_meta($user_id, 'wfls-last-login', true))) {
+				if (($last = get_user_meta($user_id, 'wfls-last-login', true)) && Utility_Number::isUnixTimestamp($last)) {
 					$value = Controller_Time::format_local_time(get_option('date_format') . ' ' . get_option('time_format'), $last);
 				}
 				break;
@@ -875,4 +930,77 @@ SQL;
 			return $results;
 		}
 	}
+
+	private function get_verification_token_transient_key($hash) {
+		return self::VERIFICATION_TOKEN_TRANSIENT_PREFIX . $hash;
+	}
+
+	private function load_verification_token($hash) {
+		$key = $this->get_verification_token_transient_key($hash);
+		$userId = get_transient($key);
+		if ($userId === false)
+			return null;
+		return intval($userId);
+	}
+
+	private function load_verification_tokens($user) {
+		$storedHashes = get_user_meta($user->ID, self::META_KEY_VERIFICATION_TOKENS, true);
+		$validHashes = array();
+		if (is_array($storedHashes)) {
+			foreach ($storedHashes as $hash) {
+				$userId = $this->load_verification_token($hash);
+				if ($userId === $user->ID)
+					$validHashes[] = $hash;
+			}
+		}
+		return $validHashes;
+	}
+
+	private function hash_verification_token($token) {
+		return wp_hash($token);
+	}
+
+	public function generate_verification_token($user) {
+		$token = Model_Crypto::random_bytes(self::VERIFICATION_TOKEN_BYTES);
+		$hash = $this->hash_verification_token($token);
+		$tokens = $this->load_verification_tokens($user);
+		array_unshift($tokens, $hash);
+		while (count($tokens) > self::VERIFICATION_TOKEN_LIMIT) {
+			$excessHash = array_pop($tokens);
+			delete_transient($this->get_verification_token_transient_key($excessHash));
+		}
+		$key = $this->get_verification_token_transient_key($hash);
+		set_transient($key, $user->ID, WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * 60);
+		update_user_meta($user->ID, self::META_KEY_VERIFICATION_TOKENS, $tokens);
+		return base64_encode($token);
+	}
+
+	public function validate_verification_token($token, $user = null) {
+		$hash = $this->hash_verification_token(base64_decode($token));
+		$userId = $this->load_verification_token($hash);
+		return $userId !== null && ($user === null || $userId === $user->ID);
+	}
+
+	public function get_user_count() {
+		global $wpdb;
+		if (function_exists('get_user_count'))
+			return get_user_count();
+		return $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->users}");
+	}
+
+	public function has_large_user_base() {
+		return $this->get_user_count() >= self::LARGE_USER_BASE_THRESHOLD;
+	}
+
+	public function should_force_user_counts() {
+		return isset($_GET['wfls-show-user-counts']);
+	}
+
+	public function get_detailed_user_counts_if_enabled() {
+		$force = $this->should_force_user_counts();
+		if ($this->has_large_user_base() && !$force)
+			return null;
+		return $this->detailed_user_counts($force);
+	}
+
 }

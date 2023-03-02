@@ -26,7 +26,10 @@ class Controller_Settings {
 	const OPTION_DELETE_ON_DEACTIVATION = 'delete-deactivation';
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE = 'required-2fa-role';
 	const OPTION_ENABLE_WOOCOMMERCE_INTEGRATION = 'enable-woocommerce-integration';
+	const OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION = 'enable-woocommerce-account-integration';
+	const OPTION_ENABLE_SHORTCODE = 'enable-shortcode';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS = 'enable-login-history-columns';
+	const OPTION_STACK_UI_COLUMNS = 'stack-ui-columns';
 	
 	//Internal
 	const OPTION_GLOBAL_NOTICES = 'global-notices';
@@ -39,6 +42,9 @@ class Controller_Settings {
 	const OPTION_SHARED_SYMMETRIC_SECRET_KEY = 'shared-symmetric-secret';
 	const OPTION_DISMISSED_FRESH_INSTALL_MODAL = 'dismissed-fresh-install-modal';
 	const OPTION_CAPTCHA_STATS = 'captcha-stats';
+	const OPTION_SCHEMA_VERSION = 'schema-version';
+	const OPTION_USER_COUNT_QUERY_STATE = 'user-count-query-state';
+	const OPTION_DISABLE_TEMPORARY_TABLES = 'disable-temporary-tables';
 
 	const DEFAULT_REQUIRE_2FA_USER_GRACE_PERIOD = 10;
 	const MAX_REQUIRE_2FA_USER_GRACE_PERIOD = 99;
@@ -89,7 +95,13 @@ class Controller_Settings {
 			self::OPTION_LAST_SECRET_REFRESH => array('value' => 0, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
 			self::OPTION_DELETE_ON_DEACTIVATION => array('value' => false, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
 			self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION => array('value' => false, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
-			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS => array('value' => true, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false)
+			self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION => array('value' => false, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_ENABLE_SHORTCODE => array('value' => false, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS => array('value' => true, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_STACK_UI_COLUMNS => array('value' => true, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_SCHEMA_VERSION => array('value' => 0, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_USER_COUNT_QUERY_STATE => array('value' => 0, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false),
+			self::OPTION_DISABLE_TEMPORARY_TABLES => array('value' => 0, 'autoload' => Model_Settings::AUTOLOAD_YES, 'allowOverwrite' => false)
 		));
 	}
 	
@@ -162,12 +174,19 @@ class Controller_Settings {
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
+			case self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION:
+			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
+			case self::OPTION_STACK_UI_COLUMNS:
+			case self::OPTION_USER_COUNT_QUERY_STATE:
+			case self::OPTION_DISABLE_TEMPORARY_TABLES:
 				return true;
 				
 			//Int
 			case self::OPTION_LAST_SECRET_REFRESH:
-				return is_numeric($value);
+				return is_numeric($value); //Left using is_numeric to prevent issues with existing values
+			case self::OPTION_SCHEMA_VERSION:
+				return Utility_Number::isInteger($value, 0);
 				
 			//Array
 			case self::OPTION_GLOBAL_NOTICES:
@@ -261,13 +280,19 @@ class Controller_Settings {
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
+			case self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION:
+			case self::OPTION_ENABLE_SHORTCODE;
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
+			case self::OPTION_STACK_UI_COLUMNS:
+			case self::OPTION_USER_COUNT_QUERY_STATE:
+			case self::OPTION_DISABLE_TEMPORARY_TABLES:
 				return $this->_truthy_to_bool($value);
 				
 			//Int
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 			case self::OPTION_LAST_SECRET_REFRESH:
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
+			case self::OPTION_SCHEMA_VERSION:
 				return (int) $value;
 				
 			//Float
@@ -432,6 +457,10 @@ class Controller_Settings {
 
 	public function are_login_history_columns_enabled() {
 		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS, true);
+	}
+
+	public function should_stack_ui_columns() {
+		return self::shared()->get_bool(Controller_Settings::OPTION_STACK_UI_COLUMNS, true);
 	}
 
 	/**

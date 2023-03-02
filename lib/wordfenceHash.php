@@ -41,7 +41,7 @@ class wordfenceHash {
 	 * @param wfScanEngine $engine
 	 * @throws Exception
 	 */
-	public function __construct($scannedFiles, $themes, $plugins, $engine, $malwarePrefixesHash, $coreHashesHash, $scanMode) {
+	public function __construct($scannedFiles, $engine, $malwarePrefixesHash, $coreHashesHash, $scanMode) {
 		$this->scannedFiles = $scannedFiles;
 		$this->engine = $engine;
 
@@ -161,7 +161,7 @@ class wordfenceHash {
 		}
 	}
 	public function __sleep(){
-		return array('totalFiles', 'totalDirs', 'totalData', 'stoppedOnFile', 'coreEnabled', 'pluginsEnabled', 'themesEnabled', 'malwareEnabled', 'coreUnknownEnabled', 'knownFiles', 'haveIssues', 'status', 'possibleMalware', 'scannedFiles', 'totalForks', 'alertedOnUnknownWordPressVersion', 'foldersProcessed', 'suspectedFiles', 'indexed', 'indexSize', 'currentIndex', 'foldersEntered', 'coalescingIssues', 'pathMap');
+		return array('totalFiles', 'totalDirs', 'totalData', 'stoppedOnFile', 'coreEnabled', 'pluginsEnabled', 'themesEnabled', 'malwareEnabled', 'coreUnknownEnabled', 'knownFiles', 'haveIssues', 'status', 'possibleMalware', 'scannedFiles', 'totalForks', 'alertedOnUnknownWordPressVersion', 'foldersProcessed', 'suspectedFiles', 'indexed', 'indexSize', 'currentIndex', 'coalescingIssues', 'pathMap');
 	}
 	public function __wakeup(){
 		$this->db = new wfDB();
@@ -263,9 +263,8 @@ class wordfenceHash {
 		if (!$this->_shouldProcessFile($file))
 			return;
 		if (is_dir($realPath)) {
-			if ((!$this->stoppedOnFile || $this->stoppedOnFile != $file->getWordpressPath()) && isset($this->foldersEntered[$realPath])) { //Not resuming and already entered this path
+			if (isset($this->foldersEntered[$realPath]))
 				return;
-			}
 			
 			$this->foldersEntered[$file->getRealPath()] = 1;
 			
@@ -283,7 +282,7 @@ class wordfenceHash {
 				}
 				if (is_file($child->getRealPath())) {
 					$relativeFile = $child->getWordpressPath();
-					if ($this->stoppedOnFile && $relativeFile != $this->stoppedOnFile) {
+					if ($this->stoppedOnFile && $child->getRealPath() != $this->stoppedOnFile) {
 						continue;
 					}
 					
@@ -312,7 +311,7 @@ class wordfenceHash {
 		else {
 			if (is_file($realPath)) {
 				$relativeFile = $file->getWordpressPath();
-				if ($this->stoppedOnFile && $relativeFile != $this->stoppedOnFile) {
+				if ($this->stoppedOnFile && $realPath != $this->stoppedOnFile) {
 					return;
 				}
 				
@@ -341,8 +340,9 @@ class wordfenceHash {
 			$files = $indexedFiles;
 			$indexedFiles = array();
 		}
-		
-		if (count($files) > 0) {
+
+		$fileCount = count($files);
+		if ($fileCount > 0) {
 			$payload = array();
 			foreach ($files as $file) {
 				$payload[] = (string) $file;
@@ -352,7 +352,7 @@ class wordfenceHash {
 			$table_wfKnownFileList = wfDB::networkTable('wfKnownFileList');
 			$query = substr("INSERT INTO {$table_wfKnownFileList} (path, wordpress_path) VALUES " . str_repeat("('%s', '%s'), ", count($files)), 0, -2);
 			$wpdb->query($wpdb->prepare($query, $payload));
-			$this->indexSize += count($payload);
+			$this->indexSize += $fileCount;
 			wordfence::status(2, 'info', sprintf(/* translators: Number of files. */ __("%d files indexed", 'wordfence'), $this->indexSize));
 		}
 	}
@@ -385,11 +385,11 @@ class wordfenceHash {
 		return $file;
 	}
 	private function _checkForTimeout($file = null, $indexQueue = false) {
-		$wordpressPath = $file ? $file->getWordpressPath() : null;
-		if (($this->stoppedOnFile !== $wordpressPath) && $this->engine->shouldFork()) { //max X seconds but don't allow fork if we're looking for the file we stopped on. Search mode is VERY fast.
+		$realPath = $file ? $file->getRealPath() : null;
+		if (($this->stoppedOnFile !== $realPath) && $this->engine->shouldFork()) { //max X seconds but don't allow fork if we're looking for the file we stopped on. Search mode is VERY fast.
 			if ($indexQueue !== false) {
 				$this->_serviceIndexQueue($indexQueue, true);
-				$this->stoppedOnFile = $wordpressPath;
+				$this->stoppedOnFile = $realPath;
 				wordfence::status(4, 'info', sprintf(/* translators: File path. */ __("Forking during indexing: %s", 'wordfence'), (string) $file));
 			}
 			else {
@@ -399,10 +399,10 @@ class wordfenceHash {
 			//exits
 		}
 		
-		if ($this->stoppedOnFile && $wordpressPath != $this->stoppedOnFile && $indexQueue !== false) {
+		if ($this->stoppedOnFile && $realPath != $this->stoppedOnFile && $indexQueue !== false) {
 			return;
 		}
-		else if ($this->stoppedOnFile && $wordpressPath == $this->stoppedOnFile) {
+		else if ($this->stoppedOnFile && $realPath == $this->stoppedOnFile) {
 			$this->stoppedOnFile = false; //Continue indexing
 		}
 	}
